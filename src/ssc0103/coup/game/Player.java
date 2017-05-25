@@ -4,11 +4,19 @@ import java.util.Random;
 
 public class Player {
 	private Deck hand;
-	public int money;
+	private int money;
 	
 	public Player() {
-		hand = new Deck();
+		hand = new Deck();		
 		money = 2;
+	}
+	
+	public Deck getHand() {
+		return hand;
+	}
+
+	public int getMoney() {
+		return money;
 	}
 	
 	public boolean Income() {
@@ -59,8 +67,5 @@ public class Player {
 	
 	public boolean checkCard(String card) {
 		return hand.contains(card);
-	}
-
-	public static void main(String[] args) {
 	}
 }
