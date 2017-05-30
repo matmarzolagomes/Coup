@@ -6,4 +6,8 @@ import java.util.LinkedList;
 public class Deck extends LinkedList<String> {
 	public Deck() {
 	}
+	
+	public static void main(String[] args) {
+		
+	}
 }

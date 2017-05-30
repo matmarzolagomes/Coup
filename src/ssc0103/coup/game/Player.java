@@ -90,4 +90,8 @@ public class Player {
 	public boolean checkCard(String card) {
 		return hand.contains(card);
 	}
+	
+	public static void main(String[] args) {
+		
+	}
 }
