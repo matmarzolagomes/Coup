@@ -6,7 +6,7 @@ public class Player {
 	private String name;
 	private Deck hand;
 	private int money;
-
+	
 	public Player(String name) {
 		this.name = name;
 		hand = new Deck();
@@ -76,14 +76,16 @@ public class Player {
 
 	public boolean draw(Deck board) {
 		Random randomizer = new Random();
-		hand.add(board.get(randomizer.nextInt(board.size())));
-		hand.add(board.get(randomizer.nextInt(board.size())));
+		hand.add(board.remove(randomizer.nextInt(board.size())));
+		hand.add(board.remove(randomizer.nextInt(board.size())));
 		return true;
 	}
 
-	public boolean removeCard(String card) {
-		if (hand.remove(card))
+	public boolean removeCard(String card, Deck dead) {
+		if (hand.remove(card)){
+			dead.add(card);
 			return true;
+		}
 		return false;
 	}
 
