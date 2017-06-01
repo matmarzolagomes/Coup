@@ -39,7 +39,8 @@ public class Client {
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		int porta = Integer.parseInt(JOptionPane.showInputDialog("Informe a porta que deseja se conectar."));
-		new Client("127.0.0.1", porta).executa();
+		String string = JOptionPane.showInputDialog("Informe o ip de conexão. Exemplo: 127.0.0.1");
+		int porta = Integer.parseInt(JOptionPane.showInputDialog("Informe a porta que deseja se conectar."));		
+		new Client(string, porta).executa();
 	}
 }
