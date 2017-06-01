@@ -32,7 +32,7 @@ public abstract class Coup {
 		if(players.get(index).getHand().size() == 0) players.remove(index);
 	}
 	
-	public boolean play(int action, int from, int to, boolean contest, boolean contest2, boolean block) throws PException {
+	public boolean play(int action, int from, int to, boolean contest, boolean block) throws PException {
 		boolean ret = false;
 		
 		switch (action) {
@@ -81,7 +81,7 @@ public abstract class Coup {
 		case(4):
 			// Assassinate
 			if (players.get(from).assassinate()) {
-				if (contest) {
+				if (contest && !block) {
 					// Se contestar
 					if (players.get(from).checkCard("Assassino")) {
 						while(!ret)ret = players.get(to).removeCard(getInput(), dead);
@@ -93,7 +93,7 @@ public abstract class Coup {
 					
 				} else if (block) {
 					// se bloquear com a condessa
-					if (contest2) {
+					if (contest) {
 						// se contestar que o cara tem a condessa
 						if (players.get(to).checkCard("Condessa")) {
 							while(!ret) ret = players.get(from).removeCard(getInput(), dead);
@@ -113,7 +113,7 @@ public abstract class Coup {
 			break;
 		case(5):
 			// Steal
-			if (contest) {
+			if (contest && !block) {
 				// se o cara que for roubado contestar o que tentou roubar
 				if (players.get(from).checkCard("Capitao")) {
 					while(!ret) ret = players.get(to).removeCard(getInput(), dead);
@@ -123,7 +123,7 @@ public abstract class Coup {
 				
 			} else if (block){
 				// se o segundo cara tentar bloquear com o capitao ou embaixador
-				if (contest2) {
+				if (contest) {
 					// se o primeiro contestar o bloqueio do segundo
 					if (players.get(to).checkCard("Embaixador") || players.get(to).checkCard("Capitao"))
 						while(!ret) ret = players.get(from).removeCard(getInput(), dead);
