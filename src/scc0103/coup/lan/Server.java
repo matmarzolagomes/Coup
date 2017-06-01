@@ -13,7 +13,7 @@ public class Server {
 
 		try {
 			server = new ServerSocket(8080);
-			System.out.println("Porta 30000 aberta!");
+			System.out.println("Porta 8080 aberta!");
 			client = server.accept();
 
 			System.out.println("Nova conexão com o cliente " + client.getInetAddress().getHostAddress());
