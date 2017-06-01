@@ -12,7 +12,7 @@ public class Client {
 
 		Socket cliente = null;
 		try {
-			cliente = new Socket("172.26.205.23", 8080);
+			cliente = new Socket("192.168.182.158", 8080);
 
 			System.out.println("O cliente se conectou ao servidor!");
 
