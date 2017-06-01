@@ -7,28 +7,29 @@ import java.util.Scanner;
 
 public class Server {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		ServerSocket server = null;
 		Socket client = null;
+		Scanner s = null;
 
 		try {
-			server = new ServerSocket(8080);
-			System.out.println("Porta 8080 aberta!");
+			server = new ServerSocket(12345);
+			System.out.println("Porta 12345 aberta!");
 			client = server.accept();
 
 			System.out.println("Nova conexão com o cliente " + client.getInetAddress().getHostAddress());
 
-			Scanner s = new Scanner(client.getInputStream());
+			s = new Scanner(client.getInputStream());
 			while (s.hasNextLine()) {
 				System.out.println(s.nextLine());
 			}
-
-			s.close();
-			server.close();
-			client.close();
 		} catch (IOException e) {
 			e.getMessage();
 			e.printStackTrace();
+		} finally {
+			s.close();
+			server.close();
+			client.close();
 		}
 	}
 
