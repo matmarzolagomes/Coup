@@ -12,6 +12,11 @@ public class Player {
 		hand = new Deck();
 		money = 2;
 	}
+	
+	public Player() {		
+		hand = new Deck();
+		money = 2;
+	}
 
 	public String getName() {
 		return name;
