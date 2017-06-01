@@ -12,7 +12,7 @@ public class Server {
 		Socket client = null;
 
 		try {
-			server = new ServerSocket(30000);
+			server = new ServerSocket(8080);
 			System.out.println("Porta 30000 aberta!");
 			client = server.accept();
 
