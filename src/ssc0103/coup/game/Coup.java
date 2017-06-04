@@ -1,18 +1,18 @@
 package ssc0103.coup.game;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 import ssc0103.coup.exception.PException;
 
 public abstract class Coup {
-	private LinkedList<Player> players;
+	private HashMap<String,Player> players;
 	private Deck board;
 	private Deck dead;
 	
-	public Coup(int nplayers) {
-		players = new LinkedList<Player>();
+	public Coup(int nplayers, String[] order) {
+		players = new HashMap<String,Player>();
 		for(int i = 0; i < nplayers; i++) 
-			players.add(new Player());
+			players.put(order[i], new Player());
 		dead = new Deck();
 		board = new Deck();
 		board.startGame(nplayers);
@@ -28,11 +28,11 @@ public abstract class Coup {
 		return dead;
 	}
 	
-	private void isDead(int index) {
+	private void isDead(String index) {
 		if(players.get(index).getHand().size() == 0) players.remove(index);
 	}
 	
-	public boolean play(int action, int from, int to, boolean contest, boolean block) throws PException {
+	public boolean play(int action, String from, String to, boolean contest, boolean block) throws PException {
 		boolean ret = false;
 		
 		switch (action) {
