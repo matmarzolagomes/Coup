@@ -20,11 +20,16 @@ public class Board {
 	}
 
 	public void execute(int numPlayers) {
+		Actions actions;
+		ObjectInputStream input;
+		ObjectOutputStream output;
+
 		try {
 			ServerSocket board = new ServerSocket(this.port);
 			System.out.println("Mesa Ativada.");
 			System.out.println("Porta " + this.port + " aberta!");
-
+			
+			/* Espera todos os players se conectarem. */
 			for (int i = 0; i < numPlayers; ++i) {
 				/* Aceita uma conexao com um player. */
 				Socket player = board.accept();
@@ -34,56 +39,38 @@ public class Board {
 				/* Adiciona player a lista a lista de players. */
 				this.players.add(player);
 
-				/* Cria Tratador de Cliente em uma nova thread. */
-				// TrataCliente tc = new TrataCliente(player.getInputStream(),
-				// this);
-				// new Thread(tc).start();
-			}
-
-			Actions actions;
-
-			ObjectInputStream input;
-			ObjectOutputStream output;
-
-			/* Solicita a todos os jogadores o nome. */
-			for (Socket player : players) {
-				/* Objeto que o cliente enviou para o servidor. */
-				//input = new ObjectInputStream(player.getInputStream());
-
-				/* Objeto que o servidor vai enviar para o cliente. */
+				/* Solicita ao jogador um nome. */
 				output = new ObjectOutputStream(player.getOutputStream());
-				
+
+				/*
+				 * Envia ao player uma solicitaÁ„o de aÁ„o para inserir o nome.
+				 */
 				actions = new Actions();
 				actions.setId(Actions.GET_NAME);
 				output.writeObject(actions);
 				output.flush();
-				// output.reset();
-				// output.close();
-
-				// new PrintStream(player.getOutputStream()).println("Informe o
-				// seu nome:");
+				output.reset();
 			}
 
 			/* Recebe o nome de todos os jogadores. */
 			for (Socket player : players) {
-				/* Objeto que o cliente enviou para o servidor. */
-				input = new ObjectInputStream(player.getInputStream());
+				new Thread(() -> {					
+					try {
+						/* Objeto que o cliente enviou para o servidor. */
+						ObjectInputStream ois = new ObjectInputStream(player.getInputStream());
+						Actions act = (Actions) ois.readObject();
 
-				/* Objeto que o servidor vai enviar para o cliente. */
-				//output = new ObjectOutputStream(player.getOutputStream());
+						if (act.getId() == Actions.GET_NAME) {
+							JOptionPane.showMessageDialog(null, "O nome do jogador eh: " + act.getFrom());
+						}
 
-				Object object;
-
-				while (!((object = input.readObject()) instanceof Actions));
-
-				actions = (Actions) object;
-
-				if (actions.getId() == Actions.GET_NAME) {
-					JOptionPane.showMessageDialog(null, "O nome do jogador √©: " + actions.getFrom());
-				}
+					} catch (IOException | ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}).start();
 			}
 
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -91,7 +78,7 @@ public class Board {
 	public static void main(String[] args) throws IOException {
 		/* Inicia o Servidor. */
 		int port = Integer.parseInt(JOptionPane.showInputDialog("Informe a porta de conexao."));
-		int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Informe o n√∫mero de jogadores."));
+		int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Informe o numero de jogadores."));
 		new Board(port).execute(numPlayers);
 	}
 }
