@@ -26,65 +26,104 @@ public class Player {
 			System.out.println("Player Conectado.");
 			System.out.println("O player se juntou a mesa!");
 
-			input = new ObjectInputStream(player.getInputStream());
+			while (true) {
 
-			Actions actions = (Actions) input.readObject();
+				input = new ObjectInputStream(player.getInputStream());
 
-			if (actions.getId() == Actions.GET_NAME) {
-				String name = JOptionPane.showInputDialog("Informe o seu nick no jogo.:");
-				actions.setFrom(name);				
+				Actions actions = (Actions) input.readObject();
 				output = new ObjectOutputStream(player.getOutputStream());
-				output.writeObject(actions);
-				output.flush();
-				output.reset();
+
+				if (actions.getId() == Actions.GET_NAME) {
+					String name = JOptionPane.showInputDialog("Informe o seu nick no jogo.:");
+					actions.setFrom(name);
+					output.writeObject(actions);
+					output.flush();					
+				}
+
+				else if (actions.getId() == Actions.ASSASSINATE) {
+					int op = JOptionPane.showConfirmDialog(null,
+							"Vc está sendo Assassinado pelo Player " + actions.getFrom() + ". Informe a sua ação",
+							"Assassinate", JOptionPane.YES_NO_CANCEL_OPTION);
+					switch (op) {
+					/* Permitiu. */
+					case 0:
+						actions = new Actions();
+						actions.setId(Actions.ASSASSINATE_RESPOND);
+						actions.setAllow(true);
+						output.writeObject(actions);
+						output.flush();
+						//output.reset();
+						break;
+
+					/* Contestou. */
+					case 1:
+						actions = new Actions();
+						actions.setId(Actions.ASSASSINATE_RESPOND);
+						actions.setContest(true);
+						output.writeObject(actions);
+						output.flush();
+						//output.reset();
+						break;
+
+					/* Bloqueou. */
+					case 2:
+						actions = new Actions();
+						actions.setId(Actions.ASSASSINATE_RESPOND);
+						actions.setBlock(true);
+						output.writeObject(actions);
+						output.flush();
+						//output.reset();
+						break;
+					default:
+						break;
+					}
+				}
+
+				else if (actions.getId() == Actions.COUP) {
+
+				}
+
+				else if (actions.getId() == Actions.FOREIGN) {
+
+				}
+
+				else if (actions.getId() == Actions.INCOME) {
+
+				}
+
+				else if (actions.getId() == Actions.LOAD_INTERFACE) {
+
+				}
+
+				else if (actions.getId() == Actions.LOAD_PLAYER_ACTIONS) {
+
+				}
+
+				else if (actions.getId() == Actions.STEAL) {
+
+				}
+
+				else if (actions.getId() == Actions.SWAP) {
+
+				}
+
+				else if (actions.getId() == Actions.TAXES) {
+
+				}
+
+				else if (actions.getId() == Actions.UPDATE_ALL_INTERFACE
+						|| actions.getId() == Actions.UPDATE_INTERFACE) {
+
+				}
+
 			}
-
-			else if (actions.getId() == Actions.ASSASSINATE) {
-				
-			}
-
-			else if (actions.getId() == Actions.COUP) {
-
-			}
-
-			else if (actions.getId() == Actions.FOREIGN) {
-
-			}
-
-			else if (actions.getId() == Actions.INCOME) {
-
-			}
-
-			else if (actions.getId() == Actions.LOAD_INTERFACE) {
-
-			}
-
-			else if (actions.getId() == Actions.LOAD_PLAYER_ACTIONS) {
-
-			}
-
-			else if (actions.getId() == Actions.STEAL) {
-
-			}
-
-			else if (actions.getId() == Actions.SWAP) {
-
-			}
-			
-			else if (actions.getId() == Actions.TAXES) {
-
-			}
-			
-			else if (actions.getId() == Actions.UPDATE_ALL_INTERFACE || actions.getId() == Actions.UPDATE_INTERFACE) {
-
-			}
-			
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 
 		}
+
 	}
 
 	public static void main(String[] args) {

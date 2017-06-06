@@ -19,11 +19,13 @@ public class Actions implements Serializable {
 	public static final int UPDATE_ALL_INTERFACE = 9;
 	public static final int LOAD_PLAYER_ACTIONS = 10;
 	public static final int GET_NAME = 11;
+	public static final int ASSASSINATE_RESPOND = 12;
 		
 	// ATRIBUTOS
 	private int id;	
 	private String from;
 	private String to;
+	private boolean allow;
 	private boolean contest;
 	private boolean block;
 	private List<String> log;
@@ -32,6 +34,22 @@ public class Actions implements Serializable {
 
 	public Actions() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public boolean isAllow() {
+		return allow;
+	}
+
+	public void setAllow(boolean allow) {
+		this.allow = allow;
+	}
+
+	public boolean isBlock() {
+		return block;
+	}
+
+	public void setBlock(boolean block) {
+		this.block = block;
 	}
 
 	public int getId() {

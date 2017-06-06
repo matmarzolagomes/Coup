@@ -1,11 +1,13 @@
 package scc0103.coup.lan;
 
+import java.awt.Desktop.Action;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -48,8 +50,7 @@ public class Board {
 				actions = new Actions();
 				actions.setId(Actions.GET_NAME);
 				output.writeObject(actions);
-				output.flush();
-				output.reset();
+				output.flush();				
 			}
 
 			/* Recebe o nome de todos os jogadores. */
@@ -62,15 +63,40 @@ public class Board {
 
 						if (act.getId() == Actions.GET_NAME) {
 							JOptionPane.showMessageDialog(null, "O nome do jogador eh: " + act.getFrom());
-						}
-
+						}								
+						
 					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
-					}
+					} 
 				}).start();
 			}
+			
+			for (Socket socket : players) {
+				actions = new Actions();
+				actions.setId(Actions.ASSASSINATE);
+				actions.setFrom(socket.getInetAddress().getHostAddress());
+				
+				output = new ObjectOutputStream(socket.getOutputStream());
+				output.writeObject(actions);
+				output.flush();
+							
+				input = new ObjectInputStream(socket.getInputStream());
+				actions = (Actions) input.readObject();
+				
+				if(actions.getId() == Actions.ASSASSINATE_RESPOND) {
+					if(actions.isAllow()) {
+						JOptionPane.showMessageDialog(null, "O jogador permitiu o Assassinato.");
+						
+					} else if(actions.isBlock()) {
+						JOptionPane.showMessageDialog(null, "O jogador tentou bloquear o Assassinato.");
+						
+					} else if(actions.isContest()) {
+						JOptionPane.showMessageDialog(null, "O jogador contestou a ação de Assassinato.");						
+					}
+				}				
+			}			
 
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
