@@ -28,7 +28,7 @@ public class Board {
 			ServerSocket board = new ServerSocket(this.port);
 			System.out.println("Mesa Ativada.");
 			System.out.println("Porta " + this.port + " aberta!");
-			
+
 			/* Espera todos os players se conectarem. */
 			for (int i = 0; i < numPlayers; ++i) {
 				/* Aceita uma conexao com um player. */
@@ -54,7 +54,7 @@ public class Board {
 
 			/* Recebe o nome de todos os jogadores. */
 			for (Socket player : players) {
-				new Thread(() -> {					
+				new Thread(() -> {
 					try {
 						/* Objeto que o cliente enviou para o servidor. */
 						ObjectInputStream ois = new ObjectInputStream(player.getInputStream());

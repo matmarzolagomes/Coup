@@ -28,20 +28,15 @@ public class Player {
 
 			input = new ObjectInputStream(player.getInputStream());
 
-			Object object;
-			while (!((object = input.readObject()) instanceof Actions))
-				;
-
-			Actions actions = (Actions) object;
+			Actions actions = (Actions) input.readObject();
 
 			if (actions.getId() == Actions.GET_NAME) {
-				String name = JOptionPane.showInputDialog("Informe o seu nome:");
-				actions.setFrom(name);
-				actions.setPlayerResponse(true);
-
+				String name = JOptionPane.showInputDialog("Informe o seu nick no jogo.:");
+				actions.setFrom(name);				
 				output = new ObjectOutputStream(player.getOutputStream());
 				output.writeObject(actions);
 				output.flush();
+				output.reset();
 			}
 
 			else if (actions.getId() == Actions.ASSASSINATE) {
