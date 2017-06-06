@@ -20,32 +20,75 @@ public class Player {
 		Socket player = null;
 		ObjectInputStream input;
 		ObjectOutputStream output;
-		
+
 		try {
 			player = new Socket(this.host, this.port);
 			System.out.println("Player Conectado.");
 			System.out.println("O player se juntou a mesa!");
 
 			input = new ObjectInputStream(player.getInputStream());
-						
+
 			Object object;
-			while(!((object = input.readObject()) instanceof Actions));
-			
-			Actions actions = (Actions) object;			
-						
+			while (!((object = input.readObject()) instanceof Actions))
+				;
+
+			Actions actions = (Actions) object;
+
 			if (actions.getId() == Actions.GET_NAME) {
 				String name = JOptionPane.showInputDialog("Informe o seu nome:");
 				actions.setFrom(name);
 				actions.setPlayerResponse(true);
-				
+
 				output = new ObjectOutputStream(player.getOutputStream());
 				output.writeObject(actions);
 				output.flush();
 			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();		
-		} finally {			
+
+			else if (actions.getId() == Actions.ASSASSINATE) {
+				
+			}
+
+			else if (actions.getId() == Actions.COUP) {
+
+			}
+
+			else if (actions.getId() == Actions.FOREIGN) {
+
+			}
+
+			else if (actions.getId() == Actions.INCOME) {
+
+			}
+
+			else if (actions.getId() == Actions.LOAD_INTERFACE) {
+
+			}
+
+			else if (actions.getId() == Actions.LOAD_PLAYER_ACTIONS) {
+
+			}
+
+			else if (actions.getId() == Actions.STEAL) {
+
+			}
+
+			else if (actions.getId() == Actions.SWAP) {
+
+			}
 			
+			else if (actions.getId() == Actions.TAXES) {
+
+			}
+			
+			else if (actions.getId() == Actions.UPDATE_ALL_INTERFACE || actions.getId() == Actions.UPDATE_INTERFACE) {
+
+			}
+			
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+
 		}
 	}
 
