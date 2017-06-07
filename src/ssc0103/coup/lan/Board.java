@@ -13,6 +13,8 @@ import java.util.concurrent.DelayQueue;
 
 import javax.swing.JOptionPane;
 
+import ssc0103.coup.game.Coup;
+
 public class Board {
 	private static final int LIMITE = 100;
 	private int port;
@@ -141,6 +143,9 @@ public class Board {
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 			while (Thread.activeCount() > 1);
 			
+			/* Inicializa a mecânica do jogo.*/
+			//Coup coup = new Coup(this.numPlayers, players.keySet());
+						
 			/* Roda o Jogo até que reste apenas 1 player. */
 			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
 					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
