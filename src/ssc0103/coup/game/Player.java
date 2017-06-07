@@ -86,12 +86,15 @@ public class Player {
 		return true;
 	}
 
-	public boolean removeCard(String card, Deck dead) {
-		if (hand.remove(card)){
+	public boolean removeCard(String[] cards, Deck dead) {
+		for(String card : cards) 
+			if(!hand.contains(card)) return false;
+		
+		for(String card : cards) {
+			hand.remove(card);
 			dead.add(card);
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean checkCard(String card) {

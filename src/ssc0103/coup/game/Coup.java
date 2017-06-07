@@ -18,7 +18,7 @@ public abstract class Coup {
 		board.startGame(nplayers);
 	}
 
-	abstract public String getInput();
+	abstract public String[] getInput();
 	
 	public Deck getBoard() {
 		return board;
@@ -61,7 +61,6 @@ public abstract class Coup {
 			if(players.get(from).coup())
 				while(!ret)
 					ret = players.get(to).removeCard(getInput(), dead);
-				
 			break;
 		case(3):
 			// Taxes
@@ -76,7 +75,6 @@ public abstract class Coup {
 					ret = players.get(from).taxes();
 				}
 			} else ret = players.get(from).taxes();
-		
 			break;
 		case(4):
 			// Assassinate
@@ -87,24 +85,19 @@ public abstract class Coup {
 						while(!ret)ret = players.get(to).removeCard(getInput(), dead);
 						ret = false;
 						while(!ret) ret = players.get(to).removeCard(getInput(), dead);
-						
 					} else
 						while (!ret) ret = players.get(from).removeCard(getInput(), dead);
-					
 				} else if (block) {
 					// se bloquear com a condessa
 					if (contest) {
 						// se contestar que o cara tem a condessa
 						if (players.get(to).checkCard("Condessa")) {
 							while(!ret) ret = players.get(from).removeCard(getInput(), dead);
-							
 						} else {
 							while(!ret) ret = players.get(to).removeCard(getInput(), dead);
 							ret = false;
 							while(!ret) ret = players.get(to).removeCard(getInput(), dead);
-							
 						}
-						
 					} else ret = true;
 				} else 
 					while(!ret) ret = players.get(to).removeCard(getInput(), dead);
@@ -146,10 +139,7 @@ public abstract class Coup {
 				}
 			} else {
 				players.get(from).draw(board);
-				while(!ret) ret = players.get(from).removeCard(getInput(), dead);
-				ret = false;
-				while(!ret) ret = players.get(from).removeCard(getInput(), dead);
-				
+				while(!ret) ret = players.get(from).removeCard(getInput(), dead);				
 			}
 			
 			break;
@@ -157,7 +147,6 @@ public abstract class Coup {
 			throw new PException("Invalid play.");
 		
 		}
-		
 		
 		isDead(from);
 		isDead(to);
