@@ -20,6 +20,7 @@ public class Actions implements Serializable {
 	public static final int LOAD_PLAYER_ACTIONS = 10;
 	public static final int GET_NAME = 11;
 	public static final int ASSASSINATE_RESPOND = 12;
+	public static final int SERVER_MESSAGE = 12;
 		
 	// ATRIBUTOS
 	private int id;	
@@ -31,25 +32,10 @@ public class Actions implements Serializable {
 	private List<String> log;
 	private Coup coup;
 	private boolean playerResponse;
+	private String message;
 
 	public Actions() {
 		// TODO Auto-generated constructor stub
-	}
-
-	public boolean isAllow() {
-		return allow;
-	}
-
-	public void setAllow(boolean allow) {
-		this.allow = allow;
-	}
-
-	public boolean isBlock() {
-		return block;
-	}
-
-	public void setBlock(boolean block) {
-		this.block = block;
 	}
 
 	public int getId() {
@@ -64,8 +50,16 @@ public class Actions implements Serializable {
 		return to;
 	}
 
+	public boolean isAllow() {
+		return allow;
+	}
+
 	public boolean isContest() {
 		return contest;
+	}
+
+	public boolean isBlock() {
+		return block;
 	}
 
 	public List<String> getLog() {
@@ -80,6 +74,10 @@ public class Actions implements Serializable {
 		return playerResponse;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -92,8 +90,16 @@ public class Actions implements Serializable {
 		this.to = to;
 	}
 
+	public void setAllow(boolean allow) {
+		this.allow = allow;
+	}
+
 	public void setContest(boolean contest) {
 		this.contest = contest;
+	}
+
+	public void setBlock(boolean block) {
+		this.block = block;
 	}
 
 	public void setLog(List<String> log) {
@@ -107,6 +113,8 @@ public class Actions implements Serializable {
 	public void setPlayerResponse(boolean playerResponse) {
 		this.playerResponse = playerResponse;
 	}
-	
-	
+
+	public void setMessage(String message) {
+		this.message = message;
+	}		
 }
