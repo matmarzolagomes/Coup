@@ -1,4 +1,4 @@
-package scc0103.coup.lan;
+package ssc0103.coup.help;
 
 import java.io.IOException;
 import java.io.PrintStream;

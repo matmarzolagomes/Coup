@@ -1,4 +1,4 @@
-package scc0103.coup.lan;
+package ssc0103.coup.lan;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

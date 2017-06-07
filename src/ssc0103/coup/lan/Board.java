@@ -1,4 +1,4 @@
-package scc0103.coup.lan;
+package ssc0103.coup.lan;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,7 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.DelayQueue;
 
 import javax.swing.JOptionPane;
 
@@ -22,7 +25,8 @@ public class Board {
 		while (true) {
 			try {
 				String msg = JOptionPane.showInputDialog("Informe a porta de conexão com o jogo:");
-				if (msg == null) System.exit(0);;					
+				if (msg == null)
+					System.exit(0);				
 
 				this.port = Integer.parseInt(msg);
 				board = new ServerSocket(this.port);
@@ -38,12 +42,11 @@ public class Board {
 		/* Obtém número de jogadores e verifica validade. */
 		while (true) {
 			try {
-				String msg = JOptionPane.showInputDialog(
-						"Informe o número de jogadores da partida:\nMínimo 2. \nMáximo " + LIMITE + ".");
-				
+				String msg = JOptionPane.showInputDialog("Informe o número de jogadores da partida:\nMínimo 2. \nMáximo " + LIMITE + ".");
+
 				if (msg == null) {
 					board.close();
-					System.exit(0);;
+					System.exit(0);					
 				}
 
 				this.numPlayers = Integer.parseInt(msg);
@@ -55,14 +58,15 @@ public class Board {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
-				
+
 		this.players = new HashMap<String, Socket>(this.numPlayers);
 	}
 
 	public void execute() throws IOException {
 		Actions actions;
 		ObjectInputStream input;
-		ObjectOutputStream output;
+		ObjectOutputStream output;		
+		String playerName;
 
 		try {
 			/* Aguarda até que todos os players tenham se conectado. */
@@ -82,26 +86,78 @@ public class Board {
 				/* Recebe o nome do jogador e o insere em um HashMap. */
 				new Thread(() -> {
 					try {
-						/* Objeto que o cliente enviou para o servidor. */
-						ObjectInputStream ois = new ObjectInputStream(player.getInputStream());
-						Actions act = (Actions) ois.readObject();
+						while (true) {
+							/* Objeto que o cliente enviou para o servidor. */
+							ObjectInputStream ois = new ObjectInputStream(player.getInputStream());
 
-						if (act.getId() == Actions.GET_NAME) {
-							/*
-							 * Adiciona player a lista de conexões de players.
-							 */
-							players.put(act.getFrom(), player);
-							System.out.println("Jogador " + act.getFrom() + " se juntou a mesa.");
+							Actions act = (Actions) ois.readObject();
+							String msg;
+
+							if (act.getId() == Actions.GET_NAME) {
+								/* Verifica se o nome é válido. */
+								if (act.getFrom() == null || act.getFrom().isEmpty()) {
+									msg = "Nomes nulos não são permitidos.";
+								} else if (players.containsKey(act.getFrom())) {
+									msg = "Já existe um jogador com este nome.";
+								} else if (act.getFrom().length() > 16) {
+									msg = "O nome do jogador é muito extenso." + "\nTamanho Máximo = 16 caracteres.";
+								} else {
+									msg = "Aguadando demais jogadores.";
+									/* Insere na lista de conexões de players. */
+									players.put(act.getFrom(), player);
+									System.out.println("Jogador " + act.getFrom() + " se juntou a mesa.");
+
+									/*Envia mensagem de aguardando demais jogadores. */
+									ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
+									act = new Actions();
+									act.setId(Actions.SERVER_MESSAGE);
+									act.setMessage(msg);
+									oos.writeObject(act);
+									oos.flush();
+									break;
+								}
+
+								/* Envia uma notificação ao jogador. */
+								ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
+								act = new Actions();
+								act.setId(Actions.SERVER_MESSAGE);
+								act.setMessage(msg);
+								oos.writeObject(act);
+								oos.flush();
+
+								/* Solicita novamente ao player um nickanme. */
+								oos = new ObjectOutputStream(player.getOutputStream());
+								act.setId(Actions.GET_NAME);
+								oos.writeObject(act);
+								oos.flush();
+							}
 						}
 					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 				}).start();
 			}
-							
+
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
-			while(Thread.activeCount() > 1);
+			while (Thread.activeCount() > 1);
 			
+			/* Roda o Jogo até que reste apenas 1 player. */
+			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
+					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
+				
+				/* Obtém a conexão do player do turno. */
+				playerName = (String) iterator.next();
+				Socket player = players.get(playerName);				
+				System.out.println("Turno do Jogador " + playerName + ".");
+				
+				/*
+				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI. 
+				 */
+
+				// Método para remover.
+				// iterator.remove();
+			}
+
 			// for (Socket socket : players.values()) {
 			// actions = new Actions();
 			// actions.setId(Actions.ASSASSINATE);
@@ -129,6 +185,9 @@ public class Board {
 			// }
 			// }
 			// }
+
+			/* Mantem o Servidor Rodando. */
+			while (true);
 
 		} catch (IOException e) {
 			e.printStackTrace();

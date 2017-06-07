@@ -1,4 +1,4 @@
-package scc0103.coup.lan;
+package ssc0103.coup.lan;
 
 import java.io.Serializable;
 import java.util.List;
