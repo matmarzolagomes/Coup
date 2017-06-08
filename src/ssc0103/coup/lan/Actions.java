@@ -1,7 +1,6 @@
 package ssc0103.coup.lan;
 
 import java.io.Serializable;
-import java.util.List;
 
 import ssc0103.coup.game.Coup;
 
@@ -20,7 +19,8 @@ public class Actions implements Serializable {
 	public static final int LOAD_PLAYER_ACTIONS = 10;
 	public static final int GET_NAME = 11;
 	public static final int ASSASSINATE_RESPOND = 12;
-	public static final int SERVER_MESSAGE = 12;
+	public static final int SERVER_MESSAGE = 13;
+	public static final int PLAYER_RESPONSE = 14;
 		
 	// ATRIBUTOS
 	private int id;	
@@ -29,7 +29,7 @@ public class Actions implements Serializable {
 	private boolean allow;
 	private boolean contest;
 	private boolean block;
-	private List<String> log;
+	private String log;
 	private Coup coup;
 	private boolean playerResponse;
 	private String message;
@@ -42,79 +42,81 @@ public class Actions implements Serializable {
 		return id;
 	}
 
-	public String getFrom() {
-		return from;
-	}
-
-	public String getTo() {
-		return to;
-	}
-
-	public boolean isAllow() {
-		return allow;
-	}
-
-	public boolean isContest() {
-		return contest;
-	}
-
-	public boolean isBlock() {
-		return block;
-	}
-
-	public List<String> getLog() {
-		return log;
-	}
-
-	public Coup getCoup() {
-		return coup;
-	}
-
-	public boolean isPlayerResponse() {
-		return playerResponse;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getFrom() {
+		return from;
 	}
 
 	public void setFrom(String from) {
 		this.from = from;
 	}
 
+	public String getTo() {
+		return to;
+	}
+
 	public void setTo(String to) {
 		this.to = to;
+	}
+
+	public boolean isAllow() {
+		return allow;
 	}
 
 	public void setAllow(boolean allow) {
 		this.allow = allow;
 	}
 
+	public boolean isContest() {
+		return contest;
+	}
+
 	public void setContest(boolean contest) {
 		this.contest = contest;
+	}
+
+	public boolean isBlock() {
+		return block;
 	}
 
 	public void setBlock(boolean block) {
 		this.block = block;
 	}
 
-	public void setLog(List<String> log) {
+	public String getLog() {
+		return log;
+	}
+
+	public void setLog(String log) {
 		this.log = log;
+	}
+
+	public Coup getCoup() {
+		return coup;
 	}
 
 	public void setCoup(Coup coup) {
 		this.coup = coup;
 	}
 
+	public boolean isPlayerResponse() {
+		return playerResponse;
+	}
+
 	public void setPlayerResponse(boolean playerResponse) {
 		this.playerResponse = playerResponse;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
 	public void setMessage(String message) {
 		this.message = message;
-	}		
+	}
+	
+	
 }

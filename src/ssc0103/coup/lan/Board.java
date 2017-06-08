@@ -5,15 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.DelayQueue;
 
 import javax.swing.JOptionPane;
-
-import ssc0103.coup.game.Coup;
 
 public class Board {
 	private static final int LIMITE = 100;
@@ -28,7 +25,7 @@ public class Board {
 			try {
 				String msg = JOptionPane.showInputDialog("Informe a porta de conexão com o jogo:");
 				if (msg == null)
-					System.exit(0);				
+					System.exit(0);
 
 				this.port = Integer.parseInt(msg);
 				board = new ServerSocket(this.port);
@@ -44,11 +41,12 @@ public class Board {
 		/* Obtém número de jogadores e verifica validade. */
 		while (true) {
 			try {
-				String msg = JOptionPane.showInputDialog("Informe o número de jogadores da partida:\nMínimo 2. \nMáximo " + LIMITE + ".");
+				String msg = JOptionPane.showInputDialog(
+						"Informe o número de jogadores da partida:\nMínimo 2. \nMáximo " + LIMITE + ".");
 
 				if (msg == null) {
 					board.close();
-					System.exit(0);					
+					System.exit(0);
 				}
 
 				this.numPlayers = Integer.parseInt(msg);
@@ -67,8 +65,9 @@ public class Board {
 	public void execute() throws IOException {
 		Actions actions;
 		ObjectInputStream input;
-		ObjectOutputStream output;		
+		ObjectOutputStream output;
 		String playerName;
+		List<String> log = new ArrayList<>();		
 
 		try {
 			/* Aguarda até que todos os players tenham se conectado. */
@@ -91,6 +90,8 @@ public class Board {
 						while (true) {
 							/* Objeto que o cliente enviou para o servidor. */
 							ObjectInputStream ois = new ObjectInputStream(player.getInputStream());
+							/* Objeto que será enviado pelo servidor. */
+							ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
 
 							Actions act = (Actions) ois.readObject();
 							String msg;
@@ -109,8 +110,7 @@ public class Board {
 									players.put(act.getFrom(), player);
 									System.out.println("Jogador " + act.getFrom() + " se juntou a mesa.");
 
-									/*Envia mensagem de aguardando demais jogadores. */
-									ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
+									/* Envia mensagem de aguardando demais jogadores. */									
 									act = new Actions();
 									act.setId(Actions.SERVER_MESSAGE);
 									act.setMessage(msg);
@@ -119,8 +119,7 @@ public class Board {
 									break;
 								}
 
-								/* Envia uma notificação ao jogador. */
-								ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
+								/* Envia uma notificação ao jogador. */								
 								act = new Actions();
 								act.setId(Actions.SERVER_MESSAGE);
 								act.setMessage(msg);
@@ -128,7 +127,6 @@ public class Board {
 								oos.flush();
 
 								/* Solicita novamente ao player um nickanme. */
-								oos = new ObjectOutputStream(player.getOutputStream());
 								act.setId(Actions.GET_NAME);
 								oos.writeObject(act);
 								oos.flush();
@@ -139,29 +137,63 @@ public class Board {
 					}
 				}).start();
 			}
+			
+			System.out.println(Thread.activeCount());
+			System.out.println("Aqui");
 
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 			while (Thread.activeCount() > 1);
 			
-			/* Inicializa a mecânica do jogo.*/
-			//Coup coup = new Coup(this.numPlayers, players.keySet());
-						
-			/* Roda o Jogo até que reste apenas 1 player. */
-			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
-					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
-				
-				/* Obtém a conexão do player do turno. */
-				playerName = (String) iterator.next();
-				Socket player = players.get(playerName);				
-				System.out.println("Turno do Jogador " + playerName + ".");
-				
-				/*
-				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI. 
-				 */
+			System.out.println(Thread.activeCount());
+			System.out.println("Aqui2");
 
-				// Método para remover.
-				// iterator.remove();
+			/* Inicializa a mecânica do jogo. */
+			//CoupLan coup = new CoupLan(this.numPlayers, (String[]) players.keySet().toArray());
+			
+			System.out.println("Aqui3");
+						
+			/* Notifica todos os players para iniciar o jogo. */
+			for (Socket player : players.values()) {
+				new Thread(() -> {
+					try {
+						System.out.println("Player conectado? " + player.isConnected());
+						System.out.println("Conexão foi fechada? " + player.isClosed());						
+						
+						ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
+						Actions action = new Actions();
+						//action.setCoup(coup);
+						action.setLog("Início do Jogo.");
+						log.add(action.getLog());												
+						action.setId(Actions.LOAD_INTERFACE);						
+						oos.writeObject(action);
+						oos.flush();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}).start();
 			}
+			
+			System.out.println("Aqui4");
+						
+			/* Aguarda até que todas as Threads tenham sido finalizadas. */
+//			while (Thread.activeCount() > 1);
+//
+//			/* Roda o Jogo até que reste apenas 1 player. */
+//			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
+//					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
+//
+//				/* Obtém a conexão do player do turno. */
+//				playerName = (String) iterator.next();
+//				Socket player = players.get(playerName);
+//				System.out.println("Turno do Jogador " + playerName + ".");
+//
+//				/*
+//				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI.
+//				 */
+//
+//				// Método para remover.
+//				// iterator.remove();
+//			}
 
 			// for (Socket socket : players.values()) {
 			// actions = new Actions();
