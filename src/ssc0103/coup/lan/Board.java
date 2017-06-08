@@ -138,19 +138,17 @@ public class Board {
 				}).start();
 			}
 			
-			System.out.println(Thread.activeCount());
-			System.out.println("Aqui");
+			System.out.println(Thread.activeCount());			
 
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 			while (Thread.activeCount() > 1);
 			
-			System.out.println(Thread.activeCount());
-			System.out.println("Aqui2");
+			System.out.println(Thread.activeCount());			
 
 			/* Inicializa a mecânica do jogo. */
 			//CoupLan coup = new CoupLan(this.numPlayers, (String[]) players.keySet().toArray());
 			
-			System.out.println("Aqui3");
+			System.out.println("Mecânica Instanciada.");
 						
 			/* Notifica todos os players para iniciar o jogo. */
 			for (Socket player : players.values()) {
@@ -171,9 +169,7 @@ public class Board {
 						e.printStackTrace();
 					}
 				}).start();
-			}
-			
-			System.out.println("Aqui4");
+			}						
 						
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 //			while (Thread.activeCount() > 1);
