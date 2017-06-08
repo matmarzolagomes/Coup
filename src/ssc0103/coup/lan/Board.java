@@ -238,11 +238,7 @@ public class Board {
 					
 				} else if(actions.getId() == Actions.SWAP) {
 					
-				}												
-
-				/*
-				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI.
-				 */
+				}										
 
 				// Método para remover.
 				// iterator.remove();
