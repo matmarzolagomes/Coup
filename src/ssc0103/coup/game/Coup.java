@@ -1,10 +1,12 @@
 package ssc0103.coup.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import ssc0103.coup.exception.PException;
+import ssc0103.coup.lan.Actions;
 
-public abstract class Coup {
+public abstract class Coup implements Serializable {
 	private HashMap<String,Player> players;
 	private Deck board;
 	private Deck dead;
@@ -36,12 +38,12 @@ public abstract class Coup {
 		boolean ret = false;
 		
 		switch (action) {
-		case(0):
+		case(Actions.INCOME):
 			// Income
 			ret = players.get(from).income();
 		
 			break;
-		case(1):
+		case(Actions.FOREIGN):
 			// Foreign
 			if(block && contest) {
 				// to == blocker
@@ -56,13 +58,13 @@ public abstract class Coup {
 			} else if(!block) ret = players.get(from).foreign();
 		
 			break;
-		case(2):
+		case(Actions.COUP):
 			// Coup
 			if(players.get(from).coup())
 				while(!ret)
 					ret = players.get(to).removeCard(getInput(), dead);
 			break;
-		case(3):
+		case(Actions.TAXES):
 			// Taxes
 			if(contest) {
 				// to == blocker
@@ -76,7 +78,7 @@ public abstract class Coup {
 				}
 			} else ret = players.get(from).taxes();
 			break;
-		case(4):
+		case(Actions.ASSASSINATE):
 			// Assassinate
 			if (players.get(from).assassinate()) {
 				if (contest && !block) {
@@ -104,7 +106,7 @@ public abstract class Coup {
 			}
 			
 			break;
-		case(5):
+		case(Actions.STEAL):
 			// Steal
 			if (contest && !block) {
 				// se o cara que for roubado contestar o que tentou roubar
@@ -129,7 +131,7 @@ public abstract class Coup {
 			} else ret = players.get(from).steal(players.get(to));
 			
 			break;
-		case(6):
+		case(Actions.SWAP):
 			// Swap
 			if (contest) {
 				if (players.get(from).checkCard("Embaixador")) {

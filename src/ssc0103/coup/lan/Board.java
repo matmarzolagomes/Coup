@@ -7,10 +7,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import ssc0103.coup.exception.PException;
 
 public class Board {
 	private static final int LIMITE = 100;
@@ -62,7 +65,7 @@ public class Board {
 		this.players = new HashMap<String, Socket>(this.numPlayers);
 	}
 
-	public void execute() throws IOException {
+	public void execute() throws IOException, ClassNotFoundException, PException {
 		Actions actions;
 		ObjectInputStream input;
 		ObjectOutputStream output;
@@ -154,7 +157,7 @@ public class Board {
 					try {
 						ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
 						Actions action = new Actions();
-						//action.setCoup(coup);
+						action.setCoup(coup);
 						action.setLog("Início do Jogo.");
 						log.add(action.getLog());												
 						action.setId(Actions.LOAD_INTERFACE);						
@@ -169,22 +172,81 @@ public class Board {
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 			while (Thread.activeCount() > 1);
 
-//			/* Roda o Jogo até que reste apenas 1 player. */
-//			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
-//					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
-//
-//				/* Obtém a conexão do player do turno. */
-//				playerName = (String) iterator.next();
-//				Socket player = players.get(playerName);
-//				System.out.println("Turno do Jogador " + playerName + ".");
-//
-//				/*
-//				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI.
-//				 */
-//
-//				// Método para remover.
-//				// iterator.remove();
-//			}
+			/* Roda o Jogo até que reste apenas 1 player. */
+			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
+					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
+
+				/* Obtém a conexão do player do turno. */
+				playerName = (String) iterator.next();
+				Socket player = players.get(playerName);
+				System.out.println("Turno do Jogador " + playerName + ".");
+				
+				/* Envia ao player as suas ações. */
+				output = new ObjectOutputStream(player.getOutputStream());
+				actions = new Actions();
+				actions.setId(Actions.LOAD_PLAYER_ACTIONS);
+				actions.setCoup(coup);
+				actions.setFrom(playerName);
+				output.writeObject(actions);
+				output.flush();
+				
+				/* Recebe a resposta do jogador. */
+				input = new ObjectInputStream(player.getInputStream());				
+				actions = (Actions) input.readObject();
+												
+				if(actions.getId() == Actions.INCOME) {
+					coup.play(Actions.INCOME, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+					
+					/* Atualiza o jogo de todos os players. */
+					String msg = "O jogador " + actions.getFrom() + " recebeu 1 moeda.";
+					actions.setId(Actions.UPDATE_ALL_INTERFACE);
+					actions.setCoup(coup);
+					actions.setLog(msg);
+					log.add(msg);
+					
+					/* Envia a ação para todos os players. */
+					for (Socket p : players.values()) {						
+						output = new ObjectOutputStream(p.getOutputStream());
+						output.writeObject(actions);
+						output.flush();
+					}														
+				} else if(actions.getId() == Actions.FOREIGN) {
+					//coup.play(Actions.FOREIGN, actions.getFrom(), actions.getTo(), contest, block)
+					
+				} else if(actions.getId() == Actions.COUP) {
+					coup.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());					
+					/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE. */
+					
+					/* Atualiza o jogo de todos os players. */
+					String msg = "O jogador " + actions.getFrom() + " deu um golpe de estado no jogador " + actions.getTo() + ".";
+					actions.setId(Actions.UPDATE_ALL_INTERFACE);
+					actions.setCoup(coup);
+					actions.setLog(msg);
+					log.add(msg);
+					
+					/* Envia a ação para todos os players. */
+					for (Socket p : players.values()) {						
+						output = new ObjectOutputStream(p.getOutputStream());
+						output.writeObject(actions);
+						output.flush();
+					}							
+				} else if(actions.getId() == Actions.TAXES) {
+					
+				} else if(actions.getId() == Actions.ASSASSINATE) {
+					
+				} else if(actions.getId() == Actions.STEAL) {
+					
+				} else if(actions.getId() == Actions.SWAP) {
+					
+				}												
+
+				/*
+				 * PROGRAMAR AÇÕES ENTRE O SERVIDOR E O CLIENTE AQUI.
+				 */
+
+				// Método para remover.
+				// iterator.remove();
+			}
 
 			// for (Socket socket : players.values()) {
 			// actions = new Actions();
