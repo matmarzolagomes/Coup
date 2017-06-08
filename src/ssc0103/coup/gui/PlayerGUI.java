@@ -1,11 +1,7 @@
 package ssc0103.coup.gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
