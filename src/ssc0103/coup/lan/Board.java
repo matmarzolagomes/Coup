@@ -238,8 +238,7 @@ public class Board {
 					
 				} else if(actions.getId() == Actions.SWAP) {
 					
-				}										
-
+				}
 				// Método para remover.
 				// iterator.remove();
 			}
