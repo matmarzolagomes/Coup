@@ -143,20 +143,15 @@ public class Board {
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
 			while (Thread.activeCount() > 1);
 			
-			System.out.println(Thread.activeCount());			
-
-			/* Inicializa a mecânica do jogo. */
-			//CoupLan coup = new CoupLan(this.numPlayers, (String[]) players.keySet().toArray());
-			
-			System.out.println("Mecânica Instanciada.");
+			System.out.println(Thread.activeCount());
 						
+			/* Inicializa a mecânica do jogo. */
+			CoupLan coup = new CoupLan(this.numPlayers, players.keySet().toArray(new String[players.size()]));			
+												
 			/* Notifica todos os players para iniciar o jogo. */
 			for (Socket player : players.values()) {
 				new Thread(() -> {
 					try {
-						System.out.println("Player conectado? " + player.isConnected());
-						System.out.println("Conexão foi fechada? " + player.isClosed());						
-						
 						ObjectOutputStream oos = new ObjectOutputStream(player.getOutputStream());
 						Actions action = new Actions();
 						//action.setCoup(coup);
@@ -172,8 +167,8 @@ public class Board {
 			}						
 						
 			/* Aguarda até que todas as Threads tenham sido finalizadas. */
-//			while (Thread.activeCount() > 1);
-//
+			while (Thread.activeCount() > 1);
+
 //			/* Roda o Jogo até que reste apenas 1 player. */
 //			for (Iterator<String> iterator = players.keySet().iterator(); players.size() > 1; 
 //					iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
