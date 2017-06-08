@@ -1,8 +1,9 @@
 package ssc0103.coup.game;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable{
 	private String name;
 	private Deck hand;
 	private int money;
