@@ -49,6 +49,9 @@ public class Player {
 		try {
 			int i = 0;
 			while (true) {
+				System.out.println("Player conectado? " + player.isConnected());
+				System.out.println("Conexão foi fechada? " + player.isClosed());
+				
 				/* Recebe um objeto do servidor. */
 				input = new ObjectInputStream(player.getInputStream());
 				System.out.println(i++);
@@ -124,7 +127,12 @@ public class Player {
 				}
 
 				else if (actions.getId() == Actions.LOAD_INTERFACE) {
-
+					JOptionPane.showMessageDialog(null, "Interface Carregada.");
+					actions = new Actions();
+					actions.setId(Actions.PLAYER_RESPONSE);
+					actions.setPlayerResponse(true);
+					output.writeObject(actions);
+					output.flush();
 				}
 
 				else if (actions.getId() == Actions.LOAD_PLAYER_ACTIONS) {
