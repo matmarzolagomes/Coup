@@ -6,6 +6,7 @@ import ssc0103.coup.game.Coup;
 
 public class Actions implements Serializable {
 	// CONSTANTES
+    	public static final int LEFT = -1;
 	public static final int INCOME = 0;
 	public static final int FOREIGN = 1;
 	public static final int COUP = 2;
@@ -20,7 +21,7 @@ public class Actions implements Serializable {
 	public static final int GET_NAME = 11;
 	public static final int ASSASSINATE_RESPOND = 12;
 	public static final int SERVER_MESSAGE = 13;
-	public static final int PLAYER_RESPONSE = 14;
+	public static final int PLAYER_RESPONSE = 14;	
 		
 	// ATRIBUTOS
 	private int id;	
