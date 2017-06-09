@@ -1,8 +1,8 @@
 package ssc0103.coup.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.HashMap;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,7 +19,6 @@ public class PlayerGUI extends JPanel{
 	Object[][] data;
 	JScrollPane scrollPane;
 	
-	
 	public PlayerGUI(HashMap<String,Player> players) {
 		super();
 		this.players = players;
@@ -27,7 +26,6 @@ public class PlayerGUI extends JPanel{
 		table = new JTable();
 		column = new String[] {"Jogadores", "Moedas", "Cartas"};
 		data = new Object[players.size()][3];
-		
 		createTable();
 	}
 	
@@ -42,6 +40,8 @@ public class PlayerGUI extends JPanel{
 		}
 		
 		table = new JTable(data, column);
+		table.setEnabled(false);
+		table.setSelectionBackground(Color.LIGHT_GRAY);
 		
 		scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
@@ -56,10 +56,14 @@ public class PlayerGUI extends JPanel{
 		for (Player player : players.values()) {
 			if((int)data[i][1] != player.getMoney()) {
 				data[i][1] = player.getMoney();
-			};
+			}
 			if((int)data[i][2] != player.getHand().size()) {
 				data[i][2] = player.getHand().size();
 			}
+			
+			if ((int)data[i][2] == 0) 
+				table.addRowSelectionInterval(i, i);
+			
 			i++;
 		}
 		
