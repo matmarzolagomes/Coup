@@ -34,6 +34,10 @@ public abstract class Coup implements Serializable {
 		if(players.get(index).getHand().size() == 0) players.remove(index);
 	}
 	
+	public HashMap<String, Player> getPlayers() {
+	    return players;
+	}
+
 	public boolean play(int action, String from, String to, boolean contest, boolean block) throws PException {
 		boolean ret = false;
 		
