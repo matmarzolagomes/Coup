@@ -233,7 +233,7 @@ public class Board {
 					.size() > 1; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator) {
 
 				/* Obtém a conexão do player do turno. */
-				playerName = (String) iterator.next();
+				playerName = iterator.next();
 				Socket player = players.get(playerName);
 				System.out.println("Turno do Jogador " + playerName + ".");
 
@@ -338,15 +338,6 @@ public class Board {
 			e.printStackTrace();
 		} finally {
 			board.close();
-		}
-	}
-
-	public static void main(String[] args) throws IOException {
-		try {
-			/* Inicia o Servidor. */
-			new Board().execute();
-		} catch (Exception e) {
-			System.exit(0);
 		}
 	}
 }
