@@ -11,7 +11,7 @@ import ssc0103.coup.game.Coup;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
-public class CoupGUI extends Coup {
+public class CoupGUI extends JPanel {
     private DeadGUI deadg;
     private final CoinGUI coing;
     private final HandGUI handg;
@@ -90,25 +90,6 @@ public class CoupGUI extends Coup {
         window.add(playerg, cons);
         
         frame.add(window);
-    }
-
-    @Override
-    public String[] getInput(Deck hand) {
-        String[] ret = null;
-        
-        try {
-            boolean cont = true;
-            while(cont) {
-                PopUp pop = new PopUp(hand, hand.size()/2);
-                ret = (String[]) pop.showPopUp().toArray();
-                if(ret.length == hand.size()/2) cont = false;
-            }
-        } catch (GUIException ex) {
-            System.out.println(ex.getMessage());
-            System.exit(-1);
-        }
-        
-        return ret;
     }
     
     public void updateAll(Deck dead, Deck hand, String log) {

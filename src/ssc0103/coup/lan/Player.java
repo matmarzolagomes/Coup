@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
+import ssc0103.coup.exception.GUIException;
+import ssc0103.coup.game.Deck;
+import ssc0103.coup.gui.PopUp;
 
 /**
  * Classe Player, caracteriza-se por executar as ações recebidas pelo servidor e enviar uma resposta.
@@ -236,5 +239,23 @@ public class Player {
 	actions.setFrom(name);
 	output.writeObject(actions);
 	output.flush();
+    }
+    
+    public String[] PopUp(Deck hand) {
+        String[] ret = null;
+        
+        try {
+            boolean cont = true;
+            while(cont) {
+                PopUp pop = new PopUp(hand, hand.size()/2);
+                ret = (String[]) pop.showPopUp().toArray();
+                if(ret.length == hand.size()/2) cont = false;
+            }
+        } catch (GUIException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
+        
+        return ret;
     }
 }
