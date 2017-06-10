@@ -1,6 +1,9 @@
 eclipse.preferences.version=1
+encoding//src/ssc0103/coup/lan/Actions.java=UTF-8
+encoding//src/ssc0103/coup/lan/Board.java=UTF-8
+encoding//src/ssc0103/coup/lan/Player.java=UTF-8
 encoding//src/ssc0103/coup/lan/Teste.java=UTF-8
-encoding/<project>=ISO-8859-1
+encoding/<project>=UTF-8
 encoding/GameMechanics.md=UTF-8
 encoding/ScriptCoup.md=UTF-8
 separateDerivedEncodings=true

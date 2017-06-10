@@ -19,7 +19,7 @@ import ssc0103.coup.game.Deck;
 
 /**
  * Classe Board, caracteriza-se por ser o servidor local do jogo, gerenciando as
- * conexıes com os jogadores da partida.
+ * conex√µes com os jogadores da partida.
  * 
  * @author Bruno M.
  *
@@ -38,14 +38,14 @@ public class Board extends Coup {
     private List<String> gameLog;
 
     /**
-     * Construtor da Classe Board, respons·vel por iniciliazar o servidor do
+     * Construtor da Classe Board, respons√°vel por iniciliazar o servidor do
      * jogo.
      */
     public Board() {
 	/* Ativa o servidor na rede. */
 	serverUp();
 
-	/* ObtÈm n˙mero de jogadores da partida. */
+	/* Obt√©m n√∫mero de jogadores da partida. */
 	getNumPlayers();
 
 	/* Indica status do servidor em tempo real. */
@@ -59,7 +59,7 @@ public class Board extends Coup {
     }
 
     /**
-     * Indica em tempo real as informaÁıes e o status do servidor.
+     * Indica em tempo real as informa√ß√µes e o status do servidor.
      */
     private void serverStatus() {
 	new Thread(() -> {
@@ -69,10 +69,10 @@ public class Board extends Coup {
     }
 
     /**
-     * ObtÈm o n˙mero de players da partida e verifica a sua validade.
+     * Obt√©m o n√∫mero de players da partida e verifica a sua validade.
      */
     private void getNumPlayers() {
-	String msg = "Informe o n˙mero de jogadores da partida:\nMÌnimo 2.\nM·ximo " + CONNECTIONS_LIMIT + ".";
+	String msg = "Informe o n√∫mero de jogadores da partida:\nM√≠nimo 2.\nM√°ximo " + CONNECTIONS_LIMIT + ".";
 	try {
 	    msg = JOptionPane.showInputDialog(msg);
 
@@ -87,7 +87,7 @@ public class Board extends Coup {
 		throw new IllegalArgumentException();
 
 	} catch (IllegalArgumentException e) {
-	    msg = "O n˙mero de jogares informado È inv·lido.";
+	    msg = "O n√∫mero de jogares informado √© inv√°lido.";
 	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
 	    getNumPlayers();
 
@@ -97,10 +97,10 @@ public class Board extends Coup {
     }
 
     /**
-     * ObtÈm a porta de conex„o com o servidor e verifica a sua validade.
+     * Obt√©m a porta de conex√£o com o servidor e verifica a sua validade.
      */
     private void serverUp() {
-	String msg = "Informe a porta de conex„o com o jogo:";
+	String msg = "Informe a porta de conex√£o com o jogo:";
 
 	try {
 	    msg = JOptionPane.showInputDialog(msg);
@@ -112,33 +112,33 @@ public class Board extends Coup {
 	    board = new ServerSocket(this.port);
 
 	} catch (IOException | IllegalArgumentException e) {
-	    msg = "Porta de conex„o inv·lida.";
+	    msg = "Porta de conex√£o inv√°lida.";
 	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
 	    serverUp();
 	}
     }
 
     /**
-     * MÈtodo respons·vel por gerenciar as conexıes do servidor e da partida.
+     * M√©todo respons√°vel por gerenciar as conex√µes do servidor e da partida.
      * 
      */
     public void execute() {
 	try {
-	    /* ObtÈm todos os jogadores da partida. */
+	    /* Obt√©m todos os jogadores da partida. */
 	    getPlayersSockets();
 
-	    /* Inicializa a mec‚nica do jogo. */
+	    /* Inicializa a mec√¢nica do jogo. */
 	    instanceGame(numPlayers, players.keySet().toArray(new String[players.size()]));
 
 	    /* Inicia o jogo em todos os players. */
 	    startGame();
 
-	    /* Roda o Jogo atÈ que reste apenas 1 player. */
+	    /* Roda o Jogo at√© que reste apenas 1 player. */
 	    for (Iterator<String> iterator = players.keySet().iterator(); players
 		    .size() > 1; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator)
 		coupHandler(iterator);
 
-	    /* Finaliza o servidor e fecha as conexıes restantes. */
+	    /* Finaliza o servidor e fecha as conex√µes restantes. */
 	    board.close();
 	} catch (IOException e) {
 	    e.printStackTrace();
@@ -172,11 +172,11 @@ public class Board extends Coup {
 	    return;
 	}
 
-	/* ObtÈm a conex„o do jogador do turno. */
+	/* Obt√©m a conex√£o do jogador do turno. */
 	Socket player = players.get(playerName);
 	System.out.println("Turno do Jogador " + playerName + ".");
 
-	/* Envia ao jogador as suas aÁıes. */
+	/* Envia ao jogador as suas a√ß√µes. */
 	output = new ObjectOutputStream(player.getOutputStream());
 	actions = new Actions();
 	actions.setId(Actions.LOAD_PLAYER_ACTIONS);
@@ -190,7 +190,7 @@ public class Board extends Coup {
 	input = new ObjectInputStream(player.getInputStream());
 	actions = (Actions) input.readObject();
 
-	/* Executa a aÁ„o do jogador. */
+	/* Executa a a√ß√£o do jogador. */
 	switch (actions.getId()) {
 
 	case Actions.LEFT:
@@ -273,20 +273,19 @@ public class Board extends Coup {
 	actions.setLog(msg);
 	gameLog.add(msg);
 
-	/* Envia aÁ„o para todos os jogadores. */
+	/* Envia a√ß√£o para todos os jogadores. */
 	spreadAction(actions);
     }
 
     /**
-     * @param actions 
-     * @param playerName 
+     * @param actions
+     * @param playerName
      * 
      */
     private void foreign(Actions actions, String playerName) {
 	actions.setId(Actions.FOREIGN);
 	actions.setFrom(playerName);
-	
-	
+
 	System.out.println("FOREIGN");
 	// coup.play(Actions.FOREIGN, actions.getFrom(),
 	// actions.getTo(), contest, block)
@@ -309,12 +308,12 @@ public class Board extends Coup {
 	actions.setLog(msg);
 	gameLog.add(msg);
 
-	/* Envia aÁ„o para todos os jogadores. */
+	/* Envia a√ß√£o para todos os jogadores. */
 	spreadAction(actions);
     }
 
     /**
-     * Envia a aÁ„o para todos os players.
+     * Envia a a√ß√£o para todos os players.
      * 
      * @param actions
      * @throws IOException
@@ -343,7 +342,7 @@ public class Board extends Coup {
 
 		    action.setPlayers(super.getPlayers());
 		    action.setDead(super.getDead());
-		    action.setLog("InÌcio do Jogo.");
+		    action.setLog("In√≠cio do Jogo.");
 		    gameLog.add(action.getLog());
 		    action.setId(Actions.LOAD_INTERFACE);
 
@@ -362,19 +361,19 @@ public class Board extends Coup {
     }
 
     /**
-     * Recebe a conex„o de todos os players com a partida.
+     * Recebe a conex√£o de todos os players com a partida.
      * 
      * @throws IOException
      */
     private void getPlayersSockets() throws IOException {
-	/* Aguarda atÈ que todos os players tenham se conectado. */
+	/* Aguarda at√© que todos os players tenham se conectado. */
 	for (int i = 0; i < this.numPlayers; ++i) {
 
-	    /* Aceita uma conex„o com um player. */
+	    /* Aceita uma conex√£o com um player. */
 	    Socket player = board.accept();
 	    System.out.println("Player: " + player.getInetAddress().getHostAddress() + " conectado.");
 
-	    /* ObtÈm o nome do player. */
+	    /* Obt√©m o nome do player. */
 	    new Thread(() -> {
 		try {
 		    getPlayerName(player);
@@ -396,16 +395,16 @@ public class Board extends Coup {
      * @throws ClassNotFoundException
      */
     private void getPlayerName(Socket player) throws IOException, ClassNotFoundException {
-	/* Canal de comunicaÁ„o do cliente para o servidor. */
+	/* Canal de comunica√ß√£o do cliente para o servidor. */
 	ObjectInputStream input = new ObjectInputStream(player.getInputStream());
 
-	/* Canal de comunicaÁ„o do servidor para o cliente. */
+	/* Canal de comunica√ß√£o do servidor para o cliente. */
 	ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
 
-	/* Objeto que serve como meio de comunicaÁ„o. */
+	/* Objeto que serve como meio de comunica√ß√£o. */
 	Actions actions = new Actions();
 
-	/* Mensagem que ser· enviada. */
+	/* Mensagem que ser√° enviada. */
 	String msg;
 
 	try {
@@ -418,22 +417,22 @@ public class Board extends Coup {
 	    actions = (Actions) input.readObject();
 
 	    if (actions.getId() == Actions.GET_NAME) {
-		/* Verifica se o nome È v·lido. */
+		/* Verifica se o nome √© v√°lido. */
 		if (actions.getFrom() == null || actions.getFrom().isEmpty()) {
-		    msg = "Nomes nulos n„o s„o permitidos.";
+		    msg = "Nomes nulos n√£o s√£o permitidos.";
 
 		} else if (players.containsKey(actions.getFrom())) {
-		    msg = "J· existe um jogador com este nome.";
+		    msg = "J√° existe um jogador com este nome.";
 
 		} else if (actions.getFrom().length() < MIN_PLAYER_NAME) {
-		    msg = "O nome do jogador È muito curto.\nTamanho MÌnimo = " + MIN_PLAYER_NAME + " caracteres.";
+		    msg = "O nome do jogador √© muito curto.\nTamanho M√≠nimo = " + MIN_PLAYER_NAME + " caracteres.";
 
 		} else if (actions.getFrom().length() > MAX_PLAYER_NAME) {
-		    msg = "O nome do jogador È muito extenso.\nTamanho M·ximo = " + MAX_PLAYER_NAME + " caracteres.";
+		    msg = "O nome do jogador √© muito extenso.\nTamanho M√°ximo = " + MAX_PLAYER_NAME + " caracteres.";
 
 		} else {
 		    msg = "Aguardando demais jogadores.";
-		    /* Insere na lista de conexıes de players. */
+		    /* Insere na lista de conex√µes de players. */
 		    players.put(actions.getFrom(), player);
 		    System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
 
@@ -449,7 +448,7 @@ public class Board extends Coup {
 		throw new PException(msg);
 	    }
 	} catch (PException f) {
-	    /* Envia uma notificaÁ„o ao jogador. */
+	    /* Envia uma notifica√ß√£o ao jogador. */
 	    actions = new Actions();
 	    actions.setId(Actions.SERVER_MESSAGE);
 	    actions.setMessage(f.getMessage());
@@ -462,7 +461,7 @@ public class Board extends Coup {
     }
 
     /**
-     * Espera atÈ que todas as Threads adicionais tenham sido finalizadas.
+     * Espera at√© que todas as Threads adicionais tenham sido finalizadas.
      */
     private void waitThreads() {
 	System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
@@ -477,13 +476,13 @@ public class Board extends Coup {
 	Actions action;
 
 	try {
-	    /* Envia requisiÁ„o de carta ao jogador. */
+	    /* Envia requisi√ß√£o de carta ao jogador. */
 	    output = new ObjectOutputStream(player.getOutputStream());
 	    action = new Actions();
 	    action.setId(Actions.GET_INPUT);
 	    output.flush();
 
-	    /* ObtÈm cartas selecionadas pelo jogador. */
+	    /* Obt√©m cartas selecionadas pelo jogador. */
 	    input = new ObjectInputStream(player.getInputStream());
 	    action = (Actions) input.readObject();
 	    return action.getCards();

@@ -39,8 +39,8 @@ public class Actions implements Serializable {
     private boolean contest;
     private boolean block;
     private String log;
-    private HashMap<String,Player> players;
-    private Deck dead;    
+    private HashMap<String, Player> players;
+    private Deck dead;
     private boolean playerResponse;
     private String message;
     private String[] cards;
@@ -50,98 +50,98 @@ public class Actions implements Serializable {
     }
 
     public int getId() {
-        return id;
+	return id;
     }
 
     public String getFrom() {
-        return from;
+	return from;
     }
 
     public String getTo() {
-        return to;
+	return to;
     }
 
     public boolean isAllow() {
-        return allow;
+	return allow;
     }
 
     public boolean isContest() {
-        return contest;
+	return contest;
     }
 
     public boolean isBlock() {
-        return block;
+	return block;
     }
 
     public String getLog() {
-        return log;
+	return log;
     }
 
     public HashMap<String, Player> getPlayers() {
-        return players;
+	return players;
     }
 
     public Deck getDead() {
-        return dead;
+	return dead;
     }
 
     public boolean isPlayerResponse() {
-        return playerResponse;
+	return playerResponse;
     }
 
     public String getMessage() {
-        return message;
+	return message;
     }
 
     public String[] getCards() {
-        return cards;
+	return cards;
     }
 
     public void setId(int id) {
-        this.id = id;
+	this.id = id;
     }
 
     public void setFrom(String from) {
-        this.from = from;
+	this.from = from;
     }
 
     public void setTo(String to) {
-        this.to = to;
+	this.to = to;
     }
 
     public void setAllow(boolean allow) {
-        this.allow = allow;
+	this.allow = allow;
     }
 
     public void setContest(boolean contest) {
-        this.contest = contest;
+	this.contest = contest;
     }
 
     public void setBlock(boolean block) {
-        this.block = block;
+	this.block = block;
     }
 
     public void setLog(String log) {
-        this.log = log;
+	this.log = log;
     }
 
     public void setPlayers(HashMap<String, Player> players) {
-        this.players = players;
+	this.players = players;
     }
 
     public void setDead(Deck dead) {
-        this.dead = dead;
+	this.dead = dead;
     }
 
     public void setPlayerResponse(boolean playerResponse) {
-        this.playerResponse = playerResponse;
+	this.playerResponse = playerResponse;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+	this.message = message;
     }
 
     public void setCards(String[] cards) {
-        this.cards = cards;
-    } 
+	this.cards = cards;
+    }
 }

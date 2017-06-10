@@ -11,7 +11,9 @@ import ssc0103.coup.game.Deck;
 import ssc0103.coup.gui.PopUp;
 
 /**
- * Classe Player, caracteriza-se por executar as aÁıes recebidas pelo servidor e enviar uma resposta.
+ * Classe Player, caracteriza-se por executar as a√ß√µes recebidas pelo servidor e
+ * enviar uma resposta.
+ * 
  * @author Bruno M.
  *
  */
@@ -21,7 +23,7 @@ public class Player {
     private Socket player;
 
     /**
-     * Construtor do Player, respons·vel por conectar o jogador com o servidor.
+     * Construtor do Player, respons√°vel por conectar o jogador com o servidor.
      */
     public Player() {
 	/* Conecta ao servidor do jogo. */
@@ -32,10 +34,10 @@ public class Player {
     }
 
     /**
-     * Realiza uma conex„o com o servidor do jogo.
+     * Realiza uma conex√£o com o servidor do jogo.
      */
     private void connectHost() {
-	String msg = "Informe o IP de conex„o com o servidor do jogo:\nDefault: 127.0.0.1";
+	String msg = "Informe o IP de conex√£o com o servidor do jogo:\nDefault: 127.0.0.1";
 	try {
 	    this.host = JOptionPane.showInputDialog(msg);
 
@@ -44,7 +46,7 @@ public class Player {
 	    else if (host.isEmpty())
 		host = "127.0.0.1";
 
-	    msg = "Informe a porta de conex„o com o servidor do jogo:";
+	    msg = "Informe a porta de conex√£o com o servidor do jogo:";
 	    msg = JOptionPane.showInputDialog(msg);
 
 	    if (msg == null)
@@ -54,7 +56,7 @@ public class Player {
 	    player = new Socket(this.host, this.port);
 
 	} catch (IOException | IllegalArgumentException e) {
-	    msg = "N„o foi possÌvel realizar a conex„o no host e porta informados.\nTente outra conex„o.";
+	    msg = "N√£o foi poss√≠vel realizar a conex√£o no host e porta informados.\nTente outra conex√£o.";
 	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
 	    connectHost();
 	}
@@ -73,7 +75,7 @@ public class Player {
 
 	    Actions actions = (Actions) input.readObject();
 
-	    /* Objeto que ser· enviado ao servidor. */
+	    /* Objeto que ser√° enviado ao servidor. */
 	    output = new ObjectOutputStream(player.getOutputStream());
 
 	    switch (actions.getId()) {
@@ -89,11 +91,11 @@ public class Player {
 		if (assassinate(output, actions))
 		    return;
 		break;
-		
+
 	    case Actions.ASSASSINATE_BLOCK:
-		//PEGA A«¬O DO JOGADOR
-		//SE ELE PERMITE O BLOQUEIO OU CONTESTA
-		//ENVIA RESPOSTA AO SERVIDOR
+		// PEGA A√á√ÇO DO JOGADOR
+		// SE ELE PERMITE O BLOQUEIO OU CONTESTA
+		// ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.COUP:
@@ -109,41 +111,41 @@ public class Player {
 		break;
 
 	    case Actions.STEAL:
-		//TENTA CONTESTAR OU BLOQUEAR
-		//ENVIA REPOSTA AO SERVIDOR
+		// TENTA CONTESTAR OU BLOQUEAR
+		// ENVIA REPOSTA AO SERVIDOR
 		break;
-		
+
 	    case Actions.STEAL_BLOCK:
-		//PEGA A«¬O DO JOGADOR
-		//SE ELE PERMITE O BLOQUEIO OU CONTESTA
-		//ENVIA RESPOSTA AO SERVIDOR
+		// PEGA A√á√ÇO DO JOGADOR
+		// SE ELE PERMITE O BLOQUEIO OU CONTESTA
+		// ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.LOAD_INTERFACE:
-		// CARREGA PELA PRIMEIRA VEZ A INTERFACE GR¡FICA
+		// CARREGA PELA PRIMEIRA VEZ A INTERFACE GR√ÅFICA
 		loadInterface(output, actions);
 		break;
 
 	    case Actions.LOAD_PLAYER_ACTIONS:
-		// CARREGA AS A«’ES DO JOGADOR E OBT»M UMA RESPOSTA
+		// CARREGA AS A√á√ïES DO JOGADOR E OBT√àM UMA RESPOSTA
 		// ENVIA AO SERVIDOR A RESPOSTA
 		break;
 
 	    case Actions.TAXES:
 		// ALGUM JOGADOR SE PROCLAMOU DUQUE
-		// CARREGA A A«√O DO JOGADOR
+		// CARREGA A A√á√ÉO DO JOGADOR
 		// ENVIA RESPOSTA AS SERVIDOR
 		break;
 
 	    case Actions.SWAP:
 		// ALGUM JOGADOR SE PROCLAMOU EMBAIXADOR
-		// CARREGA A«√O DO JOGADOR
+		// CARREGA A√á√ÉO DO JOGADOR
 		// ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.UPDATE_ALL_INTERFACE:
 	    case Actions.UPDATE_INTERFACE:
-		// ATUALIZA A INTERFACE GR¿FICA
+		// ATUALIZA A INTERFACE GR√ÄFICA
 		break;
 	    }
 	    execute();
@@ -162,7 +164,7 @@ public class Player {
      */
     private boolean assassinate(ObjectOutputStream output, Actions actions) throws IOException {
 	int op = JOptionPane.showConfirmDialog(null,
-		"Vc est· sendo Assassinado pelo Player " + actions.getFrom() + ". Informe a sua aÁ„o", "Assassinate",
+		"Vc est√° sendo Assassinado pelo Player " + actions.getFrom() + ". Informe a sua a√ß√£o", "Assassinate",
 		JOptionPane.YES_NO_CANCEL_OPTION);
 	switch (op) {
 	/* Permitiu. */
@@ -198,7 +200,7 @@ public class Player {
     }
 
     /**
-     * Carrega a interface gr·fica do jogador.
+     * Carrega a interface gr√°fica do jogador.
      * 
      * @param output
      * @throws IOException
@@ -240,22 +242,23 @@ public class Player {
 	output.writeObject(actions);
 	output.flush();
     }
-    
+
     public String[] PopUp(Deck hand) {
-        String[] ret = null;
-        
-        try {
-            boolean cont = true;
-            while(cont) {
-                PopUp pop = new PopUp(hand, hand.size()/2);
-                ret = (String[]) pop.showPopUp().toArray();
-                if(ret.length == hand.size()/2) cont = false;
-            }
-        } catch (GUIException ex) {
-            System.out.println(ex.getMessage());
-            System.exit(-1);
-        }
-        
-        return ret;
+	String[] ret = null;
+
+	try {
+	    boolean cont = true;
+	    while (cont) {
+		PopUp pop = new PopUp(hand, hand.size() / 2);
+		ret = (String[]) pop.showPopUp().toArray();
+		if (ret.length == hand.size() / 2)
+		    cont = false;
+	    }
+	} catch (GUIException ex) {
+	    System.out.println(ex.getMessage());
+	    System.exit(-1);
+	}
+
+	return ret;
     }
 }
