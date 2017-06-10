@@ -20,7 +20,7 @@ public class DeadGUI extends JPanel {
     private final String maxcards;
     
     public DeadGUI(int nplayers) throws GUIException {
-        super(new GridLayout(6, 1));
+        super(new GridLayout(5, 1));
         
         if(nplayers > 6){
             maxcards = Integer.toString((int) Math.ceil(nplayers/2.0));
@@ -35,24 +35,55 @@ public class DeadGUI extends JPanel {
         HashMap<String, JLabel> count = new HashMap<>();
         JLabel aux;
         Pattern r = Pattern.compile("x([0-9]+)/.*");
+        
+        Image img = new ImageIcon("images/Assassino.jpeg").getImage();
+        img = scaleImage(img, 60, 100);
+        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
+        
+        add(aux);
+        
+        count.put("Assassino", aux);
+        
+        img = new ImageIcon("images/Capitao.jpeg").getImage();
+        img = scaleImage(img, 60, 100);
+        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
+        
+        add(aux);
+        
+        count.put("Capitao", aux);
+        
+        img = new ImageIcon("images/Condessa.jpeg").getImage();
+        img = scaleImage(img, 60, 100);
+        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
+        
+        add(aux);
+        
+        count.put("Condessa", aux);
+        
+        img = new ImageIcon("images/Duque.jpeg").getImage();
+        img = scaleImage(img, 60, 100);
+        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
+        
+        add(aux);
+        
+        count.put("Duque", aux);
+        
+        img = new ImageIcon("images/Embaixador.jpeg").getImage();
+        img = scaleImage(img, 60, 100);
+        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
+        
+        add(aux);
+        
+        count.put("Embaixador", aux);
+        
         for(String card : dead) {
-            if(count.containsKey(card)) {
-                aux = count.get(card);
+            aux = count.get(card);
                 
-                Matcher m = r.matcher(aux.getText());
-                if(!m.find()) throw new GUIException("Inválid dead.");
+            Matcher m = r.matcher(aux.getText());
+            if(!m.find()) throw new GUIException("Inválid dead.");
                 
-                int c = Integer.parseInt(m.group(1))+1;
-                aux.setText("x" + c + "/" + maxcards);
-            } else {
-                Image img = new ImageIcon("images/" + card + ".jpeg").getImage();
-                img = scaleImage(img, 60, 100);
-                aux = new JLabel("x1" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-                
-                add(aux);
-                
-                count.put(card, aux);
-            }
+            int c = Integer.parseInt(m.group(1))+1;
+            aux.setText("x" + c + "/" + maxcards);
         }
         
         count.values().forEach((JLabel label) -> {
