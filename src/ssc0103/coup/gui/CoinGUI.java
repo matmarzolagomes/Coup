@@ -19,7 +19,6 @@ public class CoinGUI extends JPanel{
 	ImageIcon image;
 	JLabel numCoins;
 	JLabel text;
-	JLabel time;
 	Timer tm;
 	TimerTask task;
 	private int counter, seconds, minutes, hours;
@@ -31,16 +30,12 @@ public class CoinGUI extends JPanel{
 		setLayout(new GridBagLayout());
 		image = new ImageIcon("images/coin.png");
 		
-		numCoins = new JLabel();
+		numCoins = new JLabel(image);
 		numCoins.setFont(new Font("Serif", Font.BOLD, 40));
 		numCoins.setText(String.format("x %02d", player.getMoney()));
 		
-		text = new JLabel("Time: ");
+		text = new JLabel("Time: 00:00:00");
 		text.setFont(new Font("Serif", Font.BOLD, 30));
-		
-		
-		time = new JLabel();
-		time.setFont(new Font("Serif", Font.BOLD, 30));
 		
 		addComponents();		
 		runCounter();
@@ -48,31 +43,16 @@ public class CoinGUI extends JPanel{
 	
 	private void addComponents() {
 		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.CENTER;
 		
 		c.gridx = 0;
 		c.gridy = 0;
-		c.weightx = 0.3;
 		c.weighty = 0.7;
-		
-		add(new JLabel(image), c);
-		
-		c.gridx = 1;
-		c.weightx = 0.7;
-		c.anchor = GridBagConstraints.WEST;
-		
 		add(numCoins, c);
-		
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridx = 0;
+
 		c.gridy = 1;
-		
-		add(text, c);
-		
-		c.gridx = 1;
 		c.weighty = 0.3;
-		c.anchor = GridBagConstraints.CENTER;
-		
-		add(time, c);
+		add(text, c);
 		
 	}
 	
@@ -93,7 +73,7 @@ public class CoinGUI extends JPanel{
 				
 				minutes = minutes % 60;
 				
-				time.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+				text.setText(String.format("Time: %02d:%02d:%02d", hours, minutes, seconds));
 			}
 		};
 		
@@ -103,7 +83,7 @@ public class CoinGUI extends JPanel{
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		JFrame game = new JFrame();
-		game.setSize(270, 200);
+		game.setSize(290, 200);
 		game.setVisible(true);
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
