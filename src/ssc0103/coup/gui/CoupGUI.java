@@ -4,12 +4,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
+@SuppressWarnings("serial")
 public class CoupGUI extends JPanel {
     private DeadGUI deadg;
     private final CoinGUI coing;

@@ -3,6 +3,7 @@ package ssc0103.coup.game;
 import java.io.Serializable;
 import java.util.Random;
 
+@SuppressWarnings("serial")
 public class Player implements Serializable{
 	private String name;
 	private Deck hand;

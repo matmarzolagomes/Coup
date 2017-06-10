@@ -3,13 +3,13 @@ package ssc0103.coup.gui;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
 @SuppressWarnings("serial")
 public class HandGUI extends JPanel{
+    @SuppressWarnings("unused")
     private Deck hand;
     
     public HandGUI() {

@@ -9,13 +9,15 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.ImageIcon;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
+@SuppressWarnings("serial")
 public class DeadGUI extends JPanel {
     private final String maxcards;
     
@@ -71,6 +73,7 @@ public class DeadGUI extends JPanel {
         });
     }
     
+    @SuppressWarnings("unused")
     private Image scaleImage(Image srcImg, int w, int h) {
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();

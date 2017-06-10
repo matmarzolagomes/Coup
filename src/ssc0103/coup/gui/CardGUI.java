@@ -1,6 +1,5 @@
 package ssc0103.coup.gui;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -8,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
+
 import ssc0103.coup.exception.GUIException;
 
 @SuppressWarnings("serial")
@@ -30,6 +30,7 @@ public class CardGUI extends ImageIcon {
         return resizedImg;
     }
     
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws GUIException {
         CardGUI c = new CardGUI("asodi", 100, 100);
     }
