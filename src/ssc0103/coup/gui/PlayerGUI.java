@@ -19,7 +19,7 @@ public class PlayerGUI extends JPanel{
 	Object[][] data;
 	JScrollPane scrollPane;
 	
-	public PlayerGUI(HashMap<String,Player> players) {
+	public PlayerGUI(HashMap<String, Player> players) {
 		super();
 		this.players = players;
 		this.setLayout(new BorderLayout());
