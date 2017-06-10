@@ -66,13 +66,13 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 0;
         cons.weightx = 1;
-        cons.weighty = 0.4;
+        cons.weighty = 0.05;
         
         logg = new LogGUI();
         pcenter.add(logg, cons);
         
         cons.gridy = 1;
-        cons.weighty = 0.6;
+        cons.weighty = 0.95;
         
         handg = new HandGUI();
         pcenter.add(handg, cons);

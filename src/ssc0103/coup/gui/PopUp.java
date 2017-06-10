@@ -22,13 +22,13 @@ import ssc0103.coup.game.Deck;
 
 @SuppressWarnings("serial")
 public class PopUp extends JDialog /*implements ActionListener*/ {
-    private LinkedList<String> ret;
-    private int removen;
+    private final LinkedList<String> ret;
+    private final int removen;
     
     public PopUp(Deck cards, int removen) throws GUIException {
         super();
         this.removen = removen;
-        ret = new LinkedList<String>();
+        ret = new LinkedList<>();
         
         toFront();
         setModal(true);
@@ -43,14 +43,14 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
         cons.weightx = 1/cards.size();
         cons.weighty = 0.7;
         
-        CardGUI[] panel = new CardGUI[cards.size()];
+        CardPanel[] panel = new CardPanel[cards.size()];
         PanelListener listener = new PanelListener();
         
         for(int i = 0; i < panel.length; i++) {
             cons.gridx = i;
-            panel[i] = new CardGUI(cards.get(i), 300, 500);
+            panel[i] = new CardPanel(cards.get(i), 300, 500);
             panel[i].addMouseListener(listener);
-            content.add(panel[i], cons);
+            content.add(panel[i]);
         }
         
 //        cons.gridx = 0;
@@ -81,8 +81,8 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
         @Override
         public void mouseClicked(MouseEvent event) {
             Object source = event.getSource();
-            if(source instanceof CardGUI){
-                CardGUI panelPressed = (CardGUI) source;
+            if(source instanceof CardPanel){
+                CardPanel panelPressed = (CardPanel) source;
                 if(panelPressed.getBackground() == Color.BLUE) {
                     panelPressed.setBackground(Color.WHITE);
                     ret.remove(panelPressed.getCard());
