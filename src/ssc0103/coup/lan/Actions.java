@@ -2,11 +2,11 @@ package ssc0103.coup.lan;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
+@SuppressWarnings("serial")
 public class Actions implements Serializable {
     // CONSTANTES
     public static final int LEFT = 99;
