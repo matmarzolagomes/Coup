@@ -202,7 +202,7 @@ public class Board extends Coup {
 	    break;
 
 	case Actions.FOREIGN:
-	    foregin();
+	    foreign(actions, playerName);
 	    break;
 
 	case Actions.COUP:
@@ -278,9 +278,15 @@ public class Board extends Coup {
     }
 
     /**
+     * @param actions 
+     * @param playerName 
      * 
      */
-    private void foregin() {
+    private void foreign(Actions actions, String playerName) {
+	actions.setId(Actions.FOREIGN);
+	actions.setFrom(playerName);
+	
+	
 	System.out.println("FOREIGN");
 	// coup.play(Actions.FOREIGN, actions.getFrom(),
 	// actions.getTo(), contest, block)
