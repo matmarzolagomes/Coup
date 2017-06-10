@@ -1,12 +1,10 @@
 package ssc0103.coup.gui;
 
-import java.awt.GridLayout;
-
-import javax.swing.ImageIcon;
+import java.awt.GridBagLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
 @SuppressWarnings("serial")
@@ -15,22 +13,20 @@ public class HandGUI extends JPanel{
 	
 	public HandGUI() {
 		super();
+		setLayout(new GridBagLayout());
 	}
 	
-	public void showCards(Deck hand) {
-		ImageIcon icon;
-		this.setLayout(new GridLayout(1,hand.size()));
+	public void showCards(Deck hand) throws GUIException {	
 		
 		for (String string : hand) {
-			icon = new ImageIcon("images/" + string + ".jpeg");
-			this.add(new JLabel(icon));
+			this.add(new CardGUI(string, 300, 500));
 		}
 		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws GUIException {
 		JFrame game = new JFrame();
-		game.setSize(1000, 600);
+		game.setSize(650, 550);
 		game.setVisible(true);
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -42,6 +38,7 @@ public class HandGUI extends JPanel{
 		hand.showCards(deck);
 		
 		game.add(hand);		
+		game.pack();
 
 	}
 
