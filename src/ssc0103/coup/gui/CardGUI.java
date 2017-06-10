@@ -1,6 +1,5 @@
 package ssc0103.coup.gui;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -31,6 +30,5 @@ public class CardGUI extends ImageIcon {
     }
     
     public static void main(String[] args) throws GUIException {
-        CardGUI c = new CardGUI("asodi", 100, 100);
     }
 }

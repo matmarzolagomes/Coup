@@ -9,18 +9,20 @@ import javax.swing.JPanel;
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
+import ssc0103.coup.lan.Actions;
 
+@SuppressWarnings("serial")
 public class CoupGUI extends JPanel {
     private DeadGUI deadg;
     private final CoinGUI coing;
     private final HandGUI handg;
     private final LogGUI logg;
     private final PlayerGUI playerg;
-    private final Player me;
+    private final String me;
     
     public CoupGUI(String me, HashMap<String, Player> players) {
         super(new GridBagLayout());
-        this.me = players.get(me);
+        this.me = me;
         
         GridBagConstraints cons = new GridBagConstraints();
         
@@ -53,7 +55,7 @@ public class CoupGUI extends JPanel {
         cons.gridy = 1;
         cons.weighty = 0.2;
         
-        coing = new CoinGUI(this.me);
+        coing = new CoinGUI(players.get(me));
         pleft.add(coing, cons);
         
         cons.gridx = 1;
@@ -86,12 +88,12 @@ public class CoupGUI extends JPanel {
         add(playerg, cons);
     }
     
-    public void updateAll(Deck dead, Deck hand, String log) {
+    public void updateAll(Actions data) {
         try {
-            updateCoin();
-            updateDead(dead);
-            updateHand(hand);
-            updateLog(log);
+            updateCoin(data.getPlayers().get(me));
+            updateDead(data.getDead());
+            updateHand(data.getPlayers().get(me).getHand());
+            updateLog(data.getLog());
             updatePlayer();
         } catch (GUIException ex) {
             System.out.println(ex.getMessage());
@@ -99,7 +101,7 @@ public class CoupGUI extends JPanel {
         }
     }
     
-    public void updateCoin() {
+    public void updateCoin(Player me) {
         coing.attCoins(me);
     }
     
@@ -140,8 +142,6 @@ public class CoupGUI extends JPanel {
         hand.add("Condessa");
         hand.add("Duque");
         
-        game.updateAll(dead, hand, "Testando.");
-        
         try {
             TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException ex) {
@@ -152,8 +152,6 @@ public class CoupGUI extends JPanel {
         hand.remove("Condessa");
         dead.add("Condessa");
         
-        game.updateAll(dead, hand, "Condessa is ded.");
-
         try {
             TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException ex) {
@@ -162,6 +160,5 @@ public class CoupGUI extends JPanel {
         }
         
         players.get("Rodrigo").income();
-        game.updateAll(dead, hand, "Here comes the money.");
     }
 }
