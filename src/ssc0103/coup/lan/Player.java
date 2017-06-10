@@ -8,11 +8,19 @@ import java.net.Socket;
 
 import javax.swing.JOptionPane;
 
+/**
+ * Classe Player, caracteriza-se por executar as ações recebidas pelo servidor e enviar uma resposta.
+ * @author Bruno M.
+ *
+ */
 public class Player {
     private String host;
     private int port;
     private Socket player;
 
+    /**
+     * Construtor do Player, responsável por conectar o jogador com o servidor.
+     */
     public Player() {
 	/* Conecta ao servidor do jogo. */
 	connectHost();

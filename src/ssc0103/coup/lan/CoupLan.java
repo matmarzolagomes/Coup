@@ -3,6 +3,7 @@ package ssc0103.coup.lan;
 import java.io.Serializable;
 
 import ssc0103.coup.game.Coup;
+import ssc0103.coup.game.Deck;
 
 public class CoupLan extends Coup implements Serializable {
 
@@ -11,9 +12,9 @@ public class CoupLan extends Coup implements Serializable {
 	}
 
 	@Override
-	public String[] getInput() {
-		// TODO Auto-generated method stub
-		return null;
+	public String[] getInput(Deck hand) {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 
 }

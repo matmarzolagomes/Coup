@@ -263,7 +263,7 @@ public class Board {
     private void coup(Coup coup, Actions actions) throws PException, IOException {
 	String msg;
 	coup.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-	/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE. */
+	/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE E FICOU SEM CARTAS. */
 
 	/* Atualiza o jogo de todos os players. */
 	msg = "O jogador " + actions.getFrom() + " deu um golpe de estado no jogador " + actions.getTo() + ".";
