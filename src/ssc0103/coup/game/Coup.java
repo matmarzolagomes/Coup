@@ -12,11 +12,8 @@ public abstract class Coup  {
     private Deck dead;
     protected Socket playerTurn;
     
-    public Coup() {
-        
-    }
-
     /**
+     * Inicializa os atributos do jogo.
      * @param nplayers
      * @param order
      */
