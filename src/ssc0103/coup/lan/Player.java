@@ -79,8 +79,11 @@ public class Player {
 		if (assassinate(output, actions))
 		    return;
 		break;
-
-	    case Actions.ASSASSINATE_RESPOND:
+		
+	    case Actions.ASSASSINATE_BLOCK:
+		//PEGA AÇÂO DO JOGADOR
+		//SE ELE PERMITE O BLOQUEIO OU CONTESTA
+		//ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.COUP:
@@ -95,7 +98,14 @@ public class Player {
 		break;
 
 	    case Actions.STEAL:
-		//
+		//TENTA CONTESTAR OU BLOQUEAR
+		//ENVIA REPOSTA AO SERVIDOR
+		break;
+		
+	    case Actions.STEAL_BLOCK:
+		//PEGA AÇÂO DO JOGADOR
+		//SE ELE PERMITE O BLOQUEIO OU CONTESTA
+		//ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.LOAD_INTERFACE:
@@ -147,7 +157,7 @@ public class Player {
 	/* Permitiu. */
 	case 0:
 	    actions = new Actions();
-	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setId(Actions.ALLOW);
 	    actions.setAllow(true);
 	    output.writeObject(actions);
 	    output.flush();
@@ -156,7 +166,7 @@ public class Player {
 	/* Contestou. */
 	case 1:
 	    actions = new Actions();
-	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setId(Actions.ASSASSINATE_CONTEST);
 	    actions.setContest(true);
 	    output.writeObject(actions);
 	    output.flush();
@@ -165,7 +175,7 @@ public class Player {
 	/* Bloqueou. */
 	case 2:
 	    actions = new Actions();
-	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setId(Actions.ASSASSINATE_BLOCK);
 	    actions.setBlock(true);
 	    output.writeObject(actions);
 	    output.flush();

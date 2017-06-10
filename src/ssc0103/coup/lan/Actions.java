@@ -19,9 +19,13 @@ public class Actions implements Serializable {
 	public static final int UPDATE_ALL_INTERFACE = 9;
 	public static final int LOAD_PLAYER_ACTIONS = 10;
 	public static final int GET_NAME = 11;
-	public static final int ASSASSINATE_RESPOND = 12;
+	public static final int ASSASSINATE_CONTEST = 12;
 	public static final int SERVER_MESSAGE = 13;
-	public static final int PLAYER_RESPONSE = 14;	
+	public static final int PLAYER_RESPONSE = 14;
+	public static final int	ASSASSINATE_BLOCK = 15;
+	public static final int STEAL_BLOCK = 16;
+	public static final int STEAL_CONTEST = 17;
+	public static final int ALLOW = 18;
 		
 	// ATRIBUTOS
 	private int id;	
