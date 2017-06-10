@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import ssc0103.coup.exception.PException;
 import ssc0103.coup.game.Coup;
+import ssc0103.coup.game.Deck;
 
 /**
  * Classe Board, caracteriza-se por ser o servidor local do jogo, gerenciando as
@@ -23,12 +24,12 @@ import ssc0103.coup.game.Coup;
  * @author Bruno M.
  *
  */
-public class Board {
+public class Board extends Coup {
     // CONSTANTES
     private static final int CONNECTIONS_LIMIT = 100;
     private static final int MAX_PLAYER_NAME = 16;
     private static final int MIN_PLAYER_NAME = 1;
-    
+
     // ATRIBUTOS
     private int port;
     private int numPlayers;
@@ -124,18 +125,18 @@ public class Board {
     public void execute() {
 	try {
 	    /* Obtém todos os jogadores da partida. */
-	    getPlayers();
+	    getPlayersSockets();
 
 	    /* Inicializa a mecânica do jogo. */
-	    Coup coup = new CoupLan(this.numPlayers, players.keySet().toArray(new String[players.size()]));
+	    instanceGame(numPlayers, players.keySet().toArray(new String[players.size()]));
 
 	    /* Inicia o jogo em todos os players. */
-	    startGame(coup);
+	    startGame();
 
 	    /* Roda o Jogo até que reste apenas 1 player. */
 	    for (Iterator<String> iterator = players.keySet().iterator(); players
 		    .size() > 1; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator)
-		coupHandler(coup, iterator);
+		coupHandler(iterator);
 
 	    /* Finaliza o servidor e fecha as conexões restantes. */
 	    board.close();
@@ -156,8 +157,7 @@ public class Board {
      * @throws ClassNotFoundException
      * @throws PException
      */
-    private void coupHandler(Coup coup, Iterator<String> iterator)
-	    throws IOException, ClassNotFoundException, PException {
+    private void coupHandler(Iterator<String> iterator) throws IOException, ClassNotFoundException, PException {
 	Actions actions;
 	ObjectInputStream input;
 	ObjectOutputStream output;
@@ -167,7 +167,7 @@ public class Board {
 	playerName = iterator.next();
 
 	/* Verifica se o jogador foi retirado do jogo. */
-	if (!coup.getPlayers().containsKey(iterator)) {
+	if (!super.getPlayers().containsKey(iterator)) {
 	    iterator.remove();
 	    return;
 	}
@@ -180,7 +180,8 @@ public class Board {
 	output = new ObjectOutputStream(player.getOutputStream());
 	actions = new Actions();
 	actions.setId(Actions.LOAD_PLAYER_ACTIONS);
-	actions.setCoup(coup);
+	actions.setPlayers(super.getPlayers());
+	actions.setDead(super.getDead());
 	actions.setFrom(playerName);
 	output.writeObject(actions);
 	output.flush();
@@ -197,7 +198,7 @@ public class Board {
 	    break;
 
 	case Actions.INCOME:
-	    income(coup, actions);
+	    income(actions);
 	    break;
 
 	case Actions.FOREIGN:
@@ -205,7 +206,7 @@ public class Board {
 	    break;
 
 	case Actions.COUP:
-	    coup(coup, actions);
+	    coup(actions);
 	    break;
 
 	case Actions.TAXES:
@@ -255,20 +256,20 @@ public class Board {
     }
 
     /**
-     * @param coup
      * @param actions
      * @throws PException
      * @throws IOException
      */
-    private void coup(Coup coup, Actions actions) throws PException, IOException {
+    private void coup(Actions actions) throws PException, IOException {
 	String msg;
-	coup.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+	super.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
 	/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE E FICOU SEM CARTAS. */
 
 	/* Atualiza o jogo de todos os players. */
 	msg = "O jogador " + actions.getFrom() + " deu um golpe de estado no jogador " + actions.getTo() + ".";
 	actions.setId(Actions.UPDATE_ALL_INTERFACE);
-	actions.setCoup(coup);
+	actions.setPlayers(super.getPlayers());
+	actions.setDead(super.getDead());
 	actions.setLog(msg);
 	gameLog.add(msg);
 
@@ -286,19 +287,19 @@ public class Board {
     }
 
     /**
-     * @param coup
      * @param actions
      * @throws PException
      * @throws IOException
      */
-    private void income(Coup coup, Actions actions) throws PException, IOException {
+    private void income(Actions actions) throws PException, IOException {
 	String msg;
-	coup.play(Actions.INCOME, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+	super.play(Actions.INCOME, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
 
 	/* Atualiza o jogo de todos os players. */
 	msg = "O jogador " + actions.getFrom() + " recebeu 1 moeda.";
 	actions.setId(Actions.UPDATE_ALL_INTERFACE);
-	actions.setCoup(coup);
+	actions.setPlayers(super.getPlayers());
+	actions.setDead(super.getDead());
 	actions.setLog(msg);
 	gameLog.add(msg);
 
@@ -327,14 +328,15 @@ public class Board {
      * 
      * @param coup
      */
-    private void startGame(Coup coup) {
+    private void startGame() {
 	for (String player : players.keySet()) {
 	    new Thread(() -> {
 		try {
 		    ObjectOutputStream output = new ObjectOutputStream(players.get(player).getOutputStream());
 		    Actions action = new Actions();
 
-		    action.setCoup(coup);
+		    action.setPlayers(super.getPlayers());
+		    action.setDead(super.getDead());
 		    action.setLog("Início do Jogo.");
 		    gameLog.add(action.getLog());
 		    action.setId(Actions.LOAD_INTERFACE);
@@ -358,7 +360,7 @@ public class Board {
      * 
      * @throws IOException
      */
-    private void getPlayers() throws IOException {
+    private void getPlayersSockets() throws IOException {
 	/* Aguarda até que todos os players tenham se conectado. */
 	for (int i = 0; i < this.numPlayers; ++i) {
 
@@ -460,5 +462,28 @@ public class Board {
 	System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
 	if (Thread.activeCount() > 1)
 	    waitThreads();
+    }
+
+    @Override
+    public String[] getInput(Deck hand, Socket player) {
+	ObjectOutputStream output;
+	ObjectInputStream input;
+	Actions action;
+
+	try {
+	    /* Envia requisição de carta ao jogador. */
+	    output = new ObjectOutputStream(player.getOutputStream());
+	    action = new Actions();
+	    action.setId(Actions.GET_INPUT);
+	    output.flush();
+
+	    /* Obtém cartas selecionadas pelo jogador. */
+	    input = new ObjectInputStream(player.getInputStream());
+	    action = (Actions) input.readObject();
+	    return action.getCards();
+	} catch (IOException | ClassNotFoundException e) {
+	    e.printStackTrace();
+	}
+	return null;
     }
 }
