@@ -9,161 +9,214 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 public class Player {
-	private String host;
-	private int port;
-	private Socket player;
+    private String host;
+    private int port;
+    private Socket player;
 
-	public Player() {
-		while (true) {
-			try {
-				this.host = JOptionPane.showInputDialog("Informe o IP de conexão com o servidor do jogo: \nDefault: 127.0.0.1");
+    public Player() {
+	/* Conecta ao servidor do jogo. */
+	connectHost();
 
-				if (host == null) {
-					System.exit(0);
-				} else if (host.isEmpty()) {
-					host = "127.0.0.1";
-				}
+	System.out.println("Player Conectado.");
+	System.out.println("O player se juntou a mesa!");
+    }
 
-				String msg = JOptionPane.showInputDialog("Informe a porta de conexão com o servidor do jogo:");
+    /**
+     * Realiza uma conexão com o servidor do jogo.
+     */
+    private void connectHost() {
+	String msg = "Informe o IP de conexão com o servidor do jogo:\nDefault: 127.0.0.1";
+	try {
+	    this.host = JOptionPane.showInputDialog(msg);
 
-				if (msg == null)
-					System.exit(0);
+	    if (host == null)
+		System.exit(0);
+	    else if (host.isEmpty())
+		host = "127.0.0.1";
 
-				this.port = Integer.parseInt(msg);
+	    msg = "Informe a porta de conexão com o servidor do jogo:";
+	    msg = JOptionPane.showInputDialog(msg);
 
-				player = new Socket(this.host, this.port);
-				System.out.println("Player Conectado.");
-				System.out.println("O player se juntou a mesa!");
-				break;
-			} catch (IOException | IllegalArgumentException e) {
-				JOptionPane.showMessageDialog(null,
-						"Não foi possível realizar a conexão no host e portas informados.\nTente outra conexão.",
-						"Erro", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+	    if (msg == null)
+		System.exit(0);
+
+	    this.port = Integer.parseInt(msg);
+	    player = new Socket(this.host, this.port);
+
+	} catch (IOException | IllegalArgumentException e) {
+	    msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
+	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+	    connectHost();
 	}
+    }
 
-	public void execute() {
-		ObjectInputStream input = null;
-		ObjectOutputStream output = null;
+    /**
+     * Executa o jogo.
+     */
+    public void execute() {
+	ObjectInputStream input;
+	ObjectOutputStream output;
 
-		try {
-			int i = 0;
-			while (true) {				
-				/* Recebe um objeto do servidor. */
-				input = new ObjectInputStream(player.getInputStream());
-				System.out.println(i++);
+	try {
+	    /* Recebe um objeto do servidor. */
+	    input = new ObjectInputStream(player.getInputStream());
 
-				Actions actions = (Actions) input.readObject();
+	    Actions actions = (Actions) input.readObject();
 
-				/* Objeto que será enviado ao servidor. */
-				output = new ObjectOutputStream(player.getOutputStream());
+	    /* Objeto que será enviado ao servidor. */
+	    output = new ObjectOutputStream(player.getOutputStream());
 
-				if (actions.getId() == Actions.GET_NAME) {
-					String name = JOptionPane.showInputDialog("Informe o seu nickname no jogo:");
-					actions.setFrom(name);
-					output.writeObject(actions);
-					output.flush();
-				}
+	    switch (actions.getId()) {
+	    case Actions.GET_NAME:
+		getName(output, actions);
+		break;
 
-				else if (actions.getId() == Actions.SERVER_MESSAGE) {
-					JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
-					actions.setPlayerResponse(true);
-					output.writeObject(actions);
-					output.flush();
-				}
+	    case Actions.SERVER_MESSAGE:
+		getMessage(output, actions);
+		break;
 
-				else if (actions.getId() == Actions.ASSASSINATE) {
-					int op = JOptionPane.showConfirmDialog(null,
-							"Vc está sendo Assassinado pelo Player " + actions.getFrom() + ". Informe a sua ação",
-							"Assassinate", JOptionPane.YES_NO_CANCEL_OPTION);
-					switch (op) {
-					/* Permitiu. */
-					case 0:
-						actions = new Actions();
-						actions.setId(Actions.ASSASSINATE_RESPOND);
-						actions.setAllow(true);
-						output.writeObject(actions);
-						output.flush();
-						// output.reset();
-						break;
+	    case Actions.ASSASSINATE:
+		if (assassinate(output, actions))
+		    return;
+		break;
 
-					/* Contestou. */
-					case 1:
-						actions = new Actions();
-						actions.setId(Actions.ASSASSINATE_RESPOND);
-						actions.setContest(true);
-						output.writeObject(actions);
-						output.flush();
-						// output.reset();
-						break;
+	    case Actions.ASSASSINATE_RESPOND:
+		break;
 
-					/* Bloqueou. */
-					case 2:
-						actions = new Actions();
-						actions.setId(Actions.ASSASSINATE_RESPOND);
-						actions.setBlock(true);
-						output.writeObject(actions);
-						output.flush();
-						// output.reset();
-						break;
-					default:
-						break;
-					}
-				}
+	    case Actions.COUP:
+		// CARREGA POPUP DIZENDO QUE LEVOU UM GOLPE DE ESTADO
+		// E FECHA O JOGO
+		return;
 
-				else if (actions.getId() == Actions.COUP) {
+	    case Actions.FOREIGN:
+		// ALGUM JOGADOR SOLICITOU AJUDA EXTERNA
+		// CARREGA RESPOSTA DO JOGADOR
+		// ENVIA AO SERVIDOR
+		break;
 
-				}
+	    case Actions.STEAL:
+		//
+		break;
 
-				else if (actions.getId() == Actions.FOREIGN) {
+	    case Actions.LOAD_INTERFACE:
+		// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
+		loadInterface(output, actions);
+		break;
 
-				}
+	    case Actions.LOAD_PLAYER_ACTIONS:
+		// CARREGA AS AÇÕES DO JOGADOR E OBTÈM UMA RESPOSTA
+		// ENVIA AO SERVIDOR A RESPOSTA
+		break;
 
-				else if (actions.getId() == Actions.INCOME) {
+	    case Actions.TAXES:
+		// ALGUM JOGADOR SE PROCLAMOU DUQUE
+		// CARREGA A AÇÃO DO JOGADOR
+		// ENVIA RESPOSTA AS SERVIDOR
+		break;
 
-				}
+	    case Actions.SWAP:
+		// ALGUM JOGADOR SE PROCLAMOU EMBAIXADOR
+		// CARREGA AÇÃO DO JOGADOR
+		// ENVIA RESPOSTA AO SERVIDOR
+		break;
 
-				else if (actions.getId() == Actions.LOAD_INTERFACE) {
-					JOptionPane.showMessageDialog(null, "Interface Carregada.");
-					actions = new Actions();
-					actions.setId(Actions.PLAYER_RESPONSE);
-					actions.setPlayerResponse(true);
-					output.writeObject(actions);
-					output.flush();
-				}
-
-				else if (actions.getId() == Actions.LOAD_PLAYER_ACTIONS) {
-
-				}
-
-				else if (actions.getId() == Actions.STEAL) {
-
-				}
-
-				else if (actions.getId() == Actions.SWAP) {
-
-				}
-
-				else if (actions.getId() == Actions.TAXES) {
-
-				}
-
-				else if (actions.getId() == Actions.UPDATE_ALL_INTERFACE
-						|| actions.getId() == Actions.UPDATE_INTERFACE) {
-
-				}
-			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-
-		}
-
+	    case Actions.UPDATE_ALL_INTERFACE:
+	    case Actions.UPDATE_INTERFACE:
+		// ATUALIZA A INTERFACE GRÀFICA
+		break;
+	    }
+	    execute();
+	} catch (IOException | ClassNotFoundException e) {
+	    e.printStackTrace();
 	}
+    }
 
-	public static void main(String[] args) {
-		new Player().execute();
+    /**
+     * Envia ao servidor a resposta do jogador sobre estar sendo assassinado.
+     * 
+     * @param output
+     * @param actions
+     * @return
+     * @throws IOException
+     */
+    private boolean assassinate(ObjectOutputStream output, Actions actions) throws IOException {
+	int op = JOptionPane.showConfirmDialog(null,
+		"Vc está sendo Assassinado pelo Player " + actions.getFrom() + ". Informe a sua ação", "Assassinate",
+		JOptionPane.YES_NO_CANCEL_OPTION);
+	switch (op) {
+	/* Permitiu. */
+	case 0:
+	    actions = new Actions();
+	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setAllow(true);
+	    output.writeObject(actions);
+	    output.flush();
+	    return true;
+
+	/* Contestou. */
+	case 1:
+	    actions = new Actions();
+	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setContest(true);
+	    output.writeObject(actions);
+	    output.flush();
+	    break;
+
+	/* Bloqueou. */
+	case 2:
+	    actions = new Actions();
+	    actions.setId(Actions.ASSASSINATE_RESPOND);
+	    actions.setBlock(true);
+	    output.writeObject(actions);
+	    output.flush();
+	    break;
+	default:
+	    break;
 	}
+	return false;
+    }
 
+    /**
+     * Carrega a interface gráfica do jogador.
+     * 
+     * @param output
+     * @throws IOException
+     */
+    private void loadInterface(ObjectOutputStream output, Actions actions) throws IOException {
+	JOptionPane.showMessageDialog(null, "Interface Carregada.");
+	// actions = new Actions();
+	// actions.setId(Actions.PLAYER_RESPONSE);
+	// actions.setPlayerResponse(true);
+	// output.writeObject(actions);
+	// output.flush();
+    }
+
+    /**
+     * Recebe uma mensagem do servidor e exibe na tela.
+     * 
+     * @param output
+     * @param actions
+     * @throws IOException
+     */
+    private void getMessage(ObjectOutputStream output, Actions actions) throws IOException {
+	JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
+	// actions.setPlayerResponse(true);
+	// output.writeObject(actions);
+	// output.flush();
+    }
+
+    /**
+     * Envia o nome do jogador ao servidor.
+     * 
+     * @param output
+     * @param actions
+     * @throws IOException
+     */
+    private void getName(ObjectOutputStream output, Actions actions) throws IOException {
+	String name = "Informe o seu nickname no jogo:";
+	name = JOptionPane.showInputDialog(name);
+	actions.setFrom(name);
+	output.writeObject(actions);
+	output.flush();
+    }
 }
