@@ -58,7 +58,7 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 1;
         cons.gridy = 0;
-        cons.weightx = 0.6;
+        cons.weightx = 0.7;
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
@@ -66,20 +66,20 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 0;
         cons.weightx = 1;
-        cons.weighty = 0.05;
+        cons.weighty = 0.2;
         
         logg = new LogGUI();
         pcenter.add(logg, cons);
         
         cons.gridy = 1;
-        cons.weighty = 0.95;
+        cons.weighty = 0.8;
         
         handg = new HandGUI();
         pcenter.add(handg, cons);
         
         cons.gridx = 2;
         cons.gridy = 0;
-        cons.weightx = 0.2;
+        cons.weightx = 0.1;
         cons.weighty = 1;
         
         playerg = new PlayerGUI(players);

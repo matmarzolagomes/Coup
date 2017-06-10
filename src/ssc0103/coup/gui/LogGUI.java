@@ -20,7 +20,9 @@ public class LogGUI extends JPanel{
         super(new GridBagLayout());
         
         area = new JTextArea();
+        area.setRows(4);
         area.setEditable(false);
+        area.setAutoscrolls(true);
         area.setFont(new Font("Serif", Font.PLAIN, 16));
         area.setLineWrap(true);
         scrollPane = new JScrollPane(area);
