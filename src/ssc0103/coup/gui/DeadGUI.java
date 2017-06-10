@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -18,9 +17,9 @@ import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
 public class DeadGUI extends JPanel {
-    private String maxcards;
+    private final String maxcards;
     
-    public DeadGUI(Deck dead, int nplayers) throws GUIException {
+    public DeadGUI(int nplayers) throws GUIException {
         super(new GridLayout(6, 1));
         
         if(nplayers > 6){
@@ -28,11 +27,9 @@ public class DeadGUI extends JPanel {
         } else {
             maxcards = "3";
         }
-        
-        update(dead);
     }
     
-    private void update(Deck dead) throws GUIException {
+    public void update(Deck dead) throws GUIException {
         removeAll();
 
         HashMap<String, JLabel> count = new HashMap<>();
@@ -41,8 +38,10 @@ public class DeadGUI extends JPanel {
         for(String card : dead) {
             if(count.containsKey(card)) {
                 aux = count.get(card);
+                
                 Matcher m = r.matcher(aux.getText());
                 if(!m.find()) throw new GUIException("Inválid dead.");
+                
                 int c = Integer.parseInt(m.group(1))+1;
                 aux.setText("x" + c + "/" + maxcards);
             } else {
@@ -56,8 +55,9 @@ public class DeadGUI extends JPanel {
             }
         }
         
-        for(JLabel label : count.values())
+        count.values().forEach((JLabel label) -> {
             label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 32));
+        });
     }
     
     private Image scaleImage(Image srcImg, int w, int h) {
@@ -72,26 +72,5 @@ public class DeadGUI extends JPanel {
     }
     
     public static void main(String[] args) throws GUIException {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        
-        Deck ded = new Deck();
-        ded.add("Duque");
-        ded.add("Condessa");
-        ded.add("Assassino");
-        ded.add("Capitao");
-        ded.add("Embaixador");
-        ded.add("Capitao");
-        ded.add("Inquisidor");
-        
-        DeadGUI dg = new DeadGUI(ded, 3);
-        
-        ded.add("Duque");
-        
-        dg.update(ded);
-        
-        frame.add(dg);
-        frame.pack();
     }
 }

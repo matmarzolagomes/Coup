@@ -3,6 +3,7 @@ package ssc0103.coup.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import ssc0103.coup.exception.GUIException;
@@ -11,8 +12,17 @@ import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
 public class CoupGUI extends Coup {
-    public CoupGUI(Player me, int nplayers, String[] order, Deck dead, JFrame frame, HashMap<String, Player> players, Deck deck) {
-        super(nplayers, order);
+    private DeadGUI deadg;
+    private final CoinGUI coing;
+    private final HandGUI handg;
+    private final LogGUI logg;
+    private final PlayerGUI playerg;
+    private final Player me;
+    
+    public CoupGUI(String me, String[] order, HashMap<String, Player> players, JFrame frame) {
+        super(players.size(), order);
+        
+        this.me = players.get(me);
         
         JPanel window = new JPanel(new GridBagLayout());
         
@@ -37,7 +47,7 @@ public class CoupGUI extends Coup {
         cons.weighty = 0.8;
         
         try {
-            DeadGUI deadg = new DeadGUI(dead, nplayers);
+            deadg = new DeadGUI(players.size());
             pleft.add(deadg, cons);
         } catch (GUIException ex) {
             System.out.println(ex.getMessage());
@@ -47,7 +57,7 @@ public class CoupGUI extends Coup {
         cons.gridy = 1;
         cons.weighty = 0.2;
         
-        CoinGUI coing = new CoinGUI(me);
+        coing = new CoinGUI(this.me);
         pleft.add(coing, cons);
         
         cons.gridx = 1;
@@ -62,67 +72,120 @@ public class CoupGUI extends Coup {
         cons.weightx = 1;
         cons.weighty = 0.4;
         
-        LogGUI logg = new LogGUI();
+        logg = new LogGUI();
         pcenter.add(logg, cons);
         
         cons.gridy = 1;
         cons.weighty = 0.6;
         
-        HandGUI handg = new HandGUI();
+        handg = new HandGUI();
         pcenter.add(handg, cons);
-        
-        try {
-            handg.showCards(deck);
-        } catch (GUIException ex) {
-            System.out.println(ex.getMessage());
-            System.exit(-1);
-        }
         
         cons.gridx = 2;
         cons.gridy = 0;
         cons.weightx = 0.2;
         cons.weighty = 1;
         
-        PlayerGUI playerg = new PlayerGUI(players);
+        playerg = new PlayerGUI(players);
         window.add(playerg, cons);
         
         frame.add(window);
     }
 
     @Override
-    public String[] getInput() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String[] getInput(Deck hand) {
+        String[] ret = null;
+        
+        try {
+            boolean cont = true;
+            while(cont) {
+                PopUp pop = new PopUp(hand, hand.size()/2);
+                ret = (String[]) pop.showPopUp().toArray();
+                if(ret.length == hand.size()/2) cont = false;
+            }
+        } catch (GUIException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
+        
+        return ret;
+    }
+    
+    public void updateAll(Deck dead, Deck hand, String log) {
+        try {
+            updateCoin();
+            updateDead(dead);
+            updateLog(log);
+            updatePlayer();
+        } catch (GUIException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
+    }
+    
+    public void updateCoin() {
+        coing.attCoins(me);
+    }
+    
+    public void updateDead(Deck dead) throws GUIException {
+        deadg.update(dead);
+    }
+    
+    public void updateLog(String log) {
+        logg.insertLog(log);
+    }
+    
+    public void updatePlayer() {
+        playerg.attTable();
     }
     
     public static void main(String[] args) {
-        JFrame game = new JFrame("Game");
-        game.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame frame = new JFrame("Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setVisible(true);
         
         String[] order = new String[3];
         order[0] = "Rodrigo";
-        order[1] = "Matheus";
+        order[1] = "Tico Liro";
         order[2] = "Victor";
+
+        HashMap<String, Player> players = new HashMap<>();
+        players.put("Rodrigo", new Player("Rodrigo"));
+        players.put("Tico Liro", new Player("Tico Liro"));
+        players.put("Victor", new Player("Victor"));
+        
+        CoupGUI game = new CoupGUI("Rodrigo", order, players, frame);
         
         Deck dead = new Deck();
         dead.add("Capitao");
-        dead.add("Duque");
+        
+        Deck hand = new Deck();
+        hand.add("Condessa");
+        hand.add("Duque");
+        
+        game.updateAll(dead, hand, "Testando.");
+        
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException ex) {
+            System.out.println("Deu bosta.");
+            System.exit(-1);
+        }
+        
+        hand.remove("Condessa");
         dead.add("Condessa");
-        dead.add("Inquisidor");
-        dead.add("Embaixador");
-        dead.add("Assassino");
         
-        HashMap<String, Player> players = new HashMap<>();
-        players.put("Rodrigo", new Player("Rodrigo"));
-        players.put("Matheus", new Player("Matheus"));
-        players.put("Victor", new Player("Victor"));
+        game.updateAll(dead, hand, "Condessa is ded.");
+
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException ex) {
+            System.out.println("Deu bosta.");
+            System.exit(-1);
+        }
         
-        Deck deck = new Deck();
-        deck.add("Capitao");
-        deck.add("Duque");
-        
-        CoupGUI coup = new CoupGUI(new Player(order[0]), 3, order, dead, game, players, deck);
-        
-        game.setVisible(true);
+        players.get("Rodrigo").income();
+        game.updateAll(dead, hand, "Here comes the money.");
     }
 }

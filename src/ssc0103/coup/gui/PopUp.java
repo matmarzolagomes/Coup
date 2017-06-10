@@ -69,12 +69,12 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
 //        btp.add(bt, BorderLayout.CENTER);
 //        content.add(btp, cons);
 
-add(content);
-pack();
-setResizable(false);
+        add(content);
+        pack();
+        setResizable(false);
 
-Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
     }
     
     private class PanelListener implements MouseListener {

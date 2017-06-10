@@ -9,7 +9,7 @@ import ssc0103.coup.game.Deck;
 
 @SuppressWarnings("serial")
 public class HandGUI extends JPanel{
-	Deck hand;
+	private Deck hand;
 	
 	public HandGUI() {
 		super();
