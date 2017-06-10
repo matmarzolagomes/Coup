@@ -29,6 +29,7 @@ public class Actions implements Serializable {
     public static final int STEAL_BLOCK = 16;
     public static final int STEAL_CONTEST = 17;
     public static final int ALLOW = 18;
+    public static final int GET_INPUT = 19;
 
     // ATRIBUTOS
     private int id;
@@ -42,7 +43,7 @@ public class Actions implements Serializable {
     private Deck dead;    
     private boolean playerResponse;
     private String message;
-    private List<String> cards;
+    private String[] cards;
 
     public Actions() {
 	// TODO Auto-generated constructor stub
@@ -92,7 +93,7 @@ public class Actions implements Serializable {
         return message;
     }
 
-    public List<String> getCards() {
+    public String[] getCards() {
         return cards;
     }
 
@@ -140,7 +141,7 @@ public class Actions implements Serializable {
         this.message = message;
     }
 
-    public void setCards(List<String> cards) {
+    public void setCards(String[] cards) {
         this.cards = cards;
-    }   
+    } 
 }
