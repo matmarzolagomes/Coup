@@ -1,9 +1,11 @@
 package ssc0103.coup.lan;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
-import ssc0103.coup.game.Coup;
+import ssc0103.coup.game.Deck;
+import ssc0103.coup.game.Player;
 
 public class Actions implements Serializable {
     // CONSTANTES
@@ -36,7 +38,8 @@ public class Actions implements Serializable {
     private boolean contest;
     private boolean block;
     private String log;
-    private Coup coup;
+    private HashMap<String,Player> players;
+    private Deck dead;    
     private boolean playerResponse;
     private String message;
     private List<String> cards;
@@ -73,8 +76,12 @@ public class Actions implements Serializable {
         return log;
     }
 
-    public Coup getCoup() {
-        return coup;
+    public HashMap<String, Player> getPlayers() {
+        return players;
+    }
+
+    public Deck getDead() {
+        return dead;
     }
 
     public boolean isPlayerResponse() {
@@ -117,8 +124,12 @@ public class Actions implements Serializable {
         this.log = log;
     }
 
-    public void setCoup(Coup coup) {
-        this.coup = coup;
+    public void setPlayers(HashMap<String, Player> players) {
+        this.players = players;
+    }
+
+    public void setDead(Deck dead) {
+        this.dead = dead;
     }
 
     public void setPlayerResponse(boolean playerResponse) {
@@ -131,5 +142,5 @@ public class Actions implements Serializable {
 
     public void setCards(List<String> cards) {
         this.cards = cards;
-    }  
+    }   
 }
