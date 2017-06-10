@@ -17,11 +17,11 @@ public class HandGUI extends JPanel{
 	}
 	
 	public void showCards(Deck hand) throws GUIException {	
-		
+                removeAll();
+            
 		for (String string : hand) {
 			this.add(new CardGUI(string, 300, 500));
 		}
-		
 	}
 
 	public static void main(String[] args) throws GUIException {

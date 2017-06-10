@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import ssc0103.coup.exception.GUIException;
-import ssc0103.coup.game.Coup;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
@@ -19,12 +18,9 @@ public class CoupGUI extends JPanel {
     private final PlayerGUI playerg;
     private final Player me;
     
-    public CoupGUI(String me, String[] order, HashMap<String, Player> players, JFrame frame) {
-        super(players.size(), order);
-        
+    public CoupGUI(String me, HashMap<String, Player> players) {
+        super(new GridBagLayout());
         this.me = players.get(me);
-        
-        JPanel window = new JPanel(new GridBagLayout());
         
         GridBagConstraints cons = new GridBagConstraints();
         
@@ -39,7 +35,7 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         JPanel pleft = new JPanel(new GridBagLayout());
-        window.add(pleft, cons);
+        add(pleft, cons);
         
         cons.gridx = 0;
         cons.gridy = 0;
@@ -66,7 +62,7 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
-        window.add(pcenter, cons);
+        add(pcenter, cons);
         
         cons.gridx = 0;
         cons.weightx = 1;
@@ -87,15 +83,14 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         playerg = new PlayerGUI(players);
-        window.add(playerg, cons);
-        
-        frame.add(window);
+        add(playerg, cons);
     }
     
     public void updateAll(Deck dead, Deck hand, String log) {
         try {
             updateCoin();
             updateDead(dead);
+            updateHand(hand);
             updateLog(log);
             updatePlayer();
         } catch (GUIException ex) {
@@ -106,6 +101,10 @@ public class CoupGUI extends JPanel {
     
     public void updateCoin() {
         coing.attCoins(me);
+    }
+    
+    public void updateHand(Deck hand) throws GUIException {
+        handg.showCards(hand);
     }
     
     public void updateDead(Deck dead) throws GUIException {
@@ -126,17 +125,13 @@ public class CoupGUI extends JPanel {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
         
-        String[] order = new String[3];
-        order[0] = "Rodrigo";
-        order[1] = "Tico Liro";
-        order[2] = "Victor";
-
         HashMap<String, Player> players = new HashMap<>();
         players.put("Rodrigo", new Player("Rodrigo"));
         players.put("Tico Liro", new Player("Tico Liro"));
         players.put("Victor", new Player("Victor"));
         
-        CoupGUI game = new CoupGUI("Rodrigo", order, players, frame);
+        CoupGUI game = new CoupGUI("Rodrigo", players);
+        frame.add(game);
         
         Deck dead = new Deck();
         dead.add("Capitao");
