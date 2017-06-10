@@ -36,44 +36,24 @@ public class DeadGUI extends JPanel {
         JLabel aux;
         Pattern r = Pattern.compile("x([0-9]+)/.*");
         
-        Image img = new ImageIcon("images/Assassino.jpeg").getImage();
-        img = scaleImage(img, 60, 100);
-        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-        
+        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Assassino", 60, 100), SwingConstants.LEFT);
         add(aux);
-        
         count.put("Assassino", aux);
         
-        img = new ImageIcon("images/Capitao.jpeg").getImage();
-        img = scaleImage(img, 60, 100);
-        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-        
+        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Capitao", 60, 100), SwingConstants.LEFT);
         add(aux);
-        
         count.put("Capitao", aux);
         
-        img = new ImageIcon("images/Condessa.jpeg").getImage();
-        img = scaleImage(img, 60, 100);
-        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-        
+        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Condessa", 60, 100), SwingConstants.LEFT);
         add(aux);
-        
         count.put("Condessa", aux);
         
-        img = new ImageIcon("images/Duque.jpeg").getImage();
-        img = scaleImage(img, 60, 100);
-        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-        
+        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Duque", 60, 100), SwingConstants.LEFT);
         add(aux);
-        
         count.put("Duque", aux);
         
-        img = new ImageIcon("images/Embaixador.jpeg").getImage();
-        img = scaleImage(img, 60, 100);
-        aux = new JLabel("x0" + "/" + maxcards, new ImageIcon(img), SwingConstants.LEFT);
-        
+        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Embaixador", 60, 100), SwingConstants.LEFT);
         add(aux);
-        
         count.put("Embaixador", aux);
         
         for(String card : dead) {
