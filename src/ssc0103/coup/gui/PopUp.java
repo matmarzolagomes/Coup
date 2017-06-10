@@ -117,13 +117,5 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
     }
     
     public static void main(String[] args) throws GUIException {
-        Deck cards = new Deck();
-        
-        cards.add("Duque");
-        cards.add("Assassino");
-        cards.add("Capitao");
-        
-        PopUp pu = new PopUp(cards, 2);
-        System.out.println(pu.showPopUp());
     }
 }

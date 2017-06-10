@@ -30,8 +30,6 @@ public class CardGUI extends ImageIcon {
         return resizedImg;
     }
     
-    @SuppressWarnings("unused")
     public static void main(String[] args) throws GUIException {
-        CardGUI c = new CardGUI("asodi", 100, 100);
     }
 }
