@@ -3,7 +3,6 @@ package ssc0103.coup.lan;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
@@ -96,7 +95,8 @@ public class Player {
 
 	    case Actions.COUP:
 		// CARREGA POPUP DIZENDO QUE LEVOU UM GOLPE DE ESTADO
-		// E FECHA O JOGO
+		// ESCOLHE CARTA A RETIRAR
+		// ENVIA CARTA AO SERVIDOR
 		return;
 
 	    case Actions.FOREIGN:
