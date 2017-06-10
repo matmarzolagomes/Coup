@@ -16,6 +16,7 @@ import java.util.LinkedList;
 //import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import ssc0103.coup.exception.GUIException;
 
 import ssc0103.coup.game.Deck;
 
@@ -24,7 +25,7 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
     private LinkedList<String> ret;
     private int removen;
     
-    public PopUp(Deck cards, int removen) {
+    public PopUp(Deck cards, int removen) throws GUIException {
         super();
         this.removen = removen;
         ret = new LinkedList<String>();
@@ -47,7 +48,7 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
         
         for(int i = 0; i < panel.length; i++) {
             cons.gridx = i;
-            panel[i] = new CardGUI(cards.get(i), 30, 50);
+            panel[i] = new CardGUI(cards.get(i), 300, 500);
             panel[i].addMouseListener(listener);
             content.add(panel[i], cons);
         }
@@ -115,7 +116,7 @@ setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
         return ret;
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GUIException {
         Deck cards = new Deck();
         
         cards.add("Duque");

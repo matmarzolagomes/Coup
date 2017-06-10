@@ -2,15 +2,18 @@ package ssc0103.coup.gui;
 
 import java.awt.GridLayout;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
 public class DeadGUI extends JPanel {
     private String maxcards;
     
-    public DeadGUI(Deck dead, int nplayers) {
+    public DeadGUI(Deck dead, int nplayers) throws GUIException {
         super(new GridLayout(6, 2));
         if(nplayers > 6){
             maxcards = Integer.toString((int) Math.ceil(nplayers/2.0));
@@ -20,15 +23,18 @@ public class DeadGUI extends JPanel {
         update(dead);
     }
     
-    private void update(Deck dead) {
+    private void update(Deck dead) throws GUIException {
         removeAll();
 
         HashMap<String, JLabel> count = new HashMap<>();
         JLabel aux;
+        Pattern r = Pattern.compile("x([0-9]+)/.*");
         for(String card : dead) {
             if(count.containsKey(card)) {
                 aux = count.get(card);
-                int c = Character.getNumericValue(aux.getText().charAt(aux.getText().length()-(maxcards.length()+2)))+1;
+                Matcher m = r.matcher(aux.getText());
+                if(!m.find()) throw new GUIException("Inválid dead.");
+                int c = Integer.parseInt(m.group(1))+1;
                 aux.setText("x" + c + "/" + maxcards);
             } else {
                 add(new CardGUI(card, 30, 50));
@@ -41,7 +47,7 @@ public class DeadGUI extends JPanel {
         }
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GUIException {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
