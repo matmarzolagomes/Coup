@@ -22,7 +22,7 @@ public class PopUpPlayer {
 		capitao = new ImageIcon("images/Capitao.jpeg");
 		condessa = new ImageIcon("images/Condessa.jpeg");
 		golpe = new ImageIcon("images/golpe.png");
-		coup = new ImageIcon("images/coup_logo.png");
+		coup = new ImageIcon("images/action.png");
 		icon = new ImageIcon("images/icon.png");
 		
 		golpe.setImage(golpe.getImage().getScaledInstance(150, 180, 100));
@@ -32,7 +32,7 @@ public class PopUpPlayer {
 		embaixador.setImage(embaixador.getImage().getScaledInstance(150, 250, 100));
 		capitao.setImage(capitao.getImage().getScaledInstance(150, 250, 100));
 		condessa.setImage(condessa.getImage().getScaledInstance(150, 250, 100));
-		coup.setImage(coup.getImage().getScaledInstance(400, 100, 100));
+		coup.setImage(coup.getImage().getScaledInstance(182, 207, 100));
 		icon.setImage(icon.getImage().getScaledInstance(128, 128, 100));
 		
 	}
@@ -117,10 +117,10 @@ public class PopUpPlayer {
 	}
 	
 	public int popUpAcoes(String[] acoes, String nome){
-		ret = JOptionPane.showOptionDialog(null, nome + " escolha a sua ação", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
+		ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
 		while(ret < 0){
 			popUpErro();
-			ret = JOptionPane.showOptionDialog(null, nome + " escolha a sua ação", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
+			ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
 		}
 		return ret;
 	}
