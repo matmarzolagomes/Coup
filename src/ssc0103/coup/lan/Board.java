@@ -229,17 +229,48 @@ public class Board extends Coup {
     }
 
     /**
+     * @throws IOException
+     * @throws PException
      * 
      */
-    private void swap() {
-	System.out.println("Swap");
+    private void swap() throws IOException, PException {
+	/* Notifica todos os oponentes. */
+	spreadOpponents();
+
+	/* Obtém a contestação mais rápida, se houver. */
+	getFastBlock(); // ALTERAR ISSO
+
+	/* Executa a ação. */
+	super.play(Actions.SWAP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
     }
 
     /**
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws PException
      * 
      */
-    private void steal() {
-	System.out.println("Steal");
+    private void steal() throws IOException, ClassNotFoundException, PException {
+	/* Notifica o oponente que está sendo roubado. */
+	output = new ObjectOutputStream(players.get(actions.getTo()).getOutputStream());
+	output.writeObject(actions);
+	output.flush();
+
+	/* Obtém resposta do oponente. */
+	input = new ObjectInputStream(players.get(actions.getTo()).getInputStream());
+	actions = (Actions) input.readObject();
+
+	if (actions.isBlock()) {
+	    /* Verifica se o jogador quer contestar o bloqueio do oponente. */
+	    output = new ObjectOutputStream(player.getOutputStream());
+	    output.writeObject(actions);
+	    output.flush();
+
+	    input = new ObjectInputStream(player.getInputStream());
+	    actions = (Actions) input.readObject();
+	}
+
+	super.play(Actions.STEAL, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
     }
 
     /**
