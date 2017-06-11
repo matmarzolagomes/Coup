@@ -22,6 +22,7 @@ public class Player {
     private String host;
     private int port;
     private Socket player;
+    @SuppressWarnings("unused")
     private int ret;
     private PopUpPlayer popup;
     private String player_name;
@@ -69,10 +70,12 @@ public class Player {
     /**
      * Executa o jogo.
      */
+    @SuppressWarnings("unused")
     public void execute() {
 	ObjectInputStream input;
 	ObjectOutputStream output;
 	popup = new PopUpPlayer();
+	int action;
 
 	try {
 	    /* Recebe um objeto do servidor. */
@@ -95,40 +98,40 @@ public class Player {
 		break;
 
 	    case Actions.ASSASSINATE:
-	    	//ret = popup.popUpAssassino(actions.getFrom());
+	    	ret = popup.popUpAssassino(actions.getFrom());
 		if (assassinate(output, actions))
 		    return;
 		break;
 
 	    case Actions.ASSASSINATE_BLOCK:
-	    	//ret = popup.popUpCondessa(actions.getFrom());
+	    	ret = popup.popUpCondessa(actions.getFrom());
 		// PEGA AÇÂO DO JOGADOR
 		// SE ELE PERMITE O BLOQUEIO OU CONTESTA
 		// ENVIA RESPOSTA AO SERVIDOR
 		break;
 
 	    case Actions.COUP:
-	    	//popup.popUpGolpe(actions.getFrom());
+	    	popup.popUpGolpe(actions.getFrom());
 		// CARREGA POPUP DIZENDO QUE LEVOU UM GOLPE DE ESTADO
 		// ESCOLHE CARTA A RETIRAR
 		// ENVIA CARTA AO SERVIDOR
 		return;
 
 	    case Actions.FOREIGN:
-	    	//ret = popup.popUpAjudaExterna(actions.getFrom());
+	    	ret = popup.popUpAjudaExterna(actions.getFrom());
 		// ALGUM JOGADOR SOLICITOU AJUDA EXTERNA
 		// CARREGA RESPOSTA DO JOGADOR
 		// ENVIA AO SERVIDOR
 		break;
 
 	    case Actions.STEAL:
-	    	//ret = popup.popUpExtorcao(actions.getFrom())
+	    	ret = popup.popUpExtorcao(actions.getFrom());
 		// TENTA CONTESTAR OU BLOQUEAR
 		// ENVIA REPOSTA AO SERVIDOR
 		break;
 
-	    case Actions.STEAL_BLOCK:
-	    	//ret = popup.popUpBloqueioExtorcao(actions.getFrom(), carta) preciso passar qual carta ele afirma ter (Capitao ou Embaixador)
+	    case Actions.STEAL_BLOCK:		
+	    	ret = popup.popUpBloqueioExtorcao(actions.getFrom(), actions.getCards()[0]); //preciso passar qual carta ele afirma ter (Capitao ou Embaixador)
 		// PEGA AÇÂO DO JOGADOR
 		// SE ELE PERMITE O BLOQUEIO OU CONTESTA
 		// ENVIA RESPOSTA AO SERVIDOR
@@ -140,23 +143,28 @@ public class Player {
 		break;
 
 	    case Actions.LOAD_PLAYER_ACTIONS:
+		// VERIFICAR QUAIS AÇÕES O JOGADOR PODE FAZER, CRIAR STRING BASEADA NELAS.
+		String[] act = new String[]{"Renda", "Ajuda", "Golpe", "Taxas", "Assassinar", "Extorquir", "Trocar"};
 		// CARREGA AS AÇÕES DO JOGADOR E OBTÈM UMA RESPOSTA
+		action = popup.popUpAcoes(act, player_name);
+		// CARREGA POPUP DA AÇÃO ESCOLHIDA
+		// PEGA RESPOSTA E ENVIA
 		// ENVIA AO SERVIDOR A RESPOSTA
 		break;
 
 	    case Actions.TAXES:
-	    	//ret = popup.popUpTaxas(actions.getFrom())
+	    	ret = popup.popUpTaxas(actions.getFrom());
 		// ALGUM JOGADOR SE PROCLAMOU DUQUE
 		// CARREGA A AÇÃO DO JOGADOR
 		// ENVIA RESPOSTA AS SERVIDOR
 		break;
 
 	    case Actions.SWAP:
-	    	//ret = popup.popUpTroca(actions.getFrom())
+	    	ret = popup.popUpTroca(actions.getFrom());
 		// ALGUM JOGADOR SE PROCLAMOU EMBAIXADOR
 		// CARREGA AÇÃO DO JOGADOR
 		// ENVIA RESPOSTA AO SERVIDOR
-		break;
+		break;		
 
 	    case Actions.UPDATE_ALL_INTERFACE:
 	    case Actions.UPDATE_INTERFACE:
