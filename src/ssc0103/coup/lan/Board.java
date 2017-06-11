@@ -26,9 +26,10 @@ import ssc0103.coup.game.Deck;
  */
 public class Board extends Coup {
     // CONSTANTES
-    private static final int CONNECTIONS_LIMIT = 100;
+    private static final int CONNECTIONS_LIMIT = 50;
     private static final int MAX_PLAYER_NAME = 16;
     private static final int MIN_PLAYER_NAME = 1;
+    private static final int ACTIVE_THREADS = 1;
 
     // ATRIBUTOS
     private int port;
@@ -65,13 +66,25 @@ public class Board extends Coup {
     }
 
     /**
-     * Indica em tempo real as informações e o status do servidor.
+     * Obtém a porta de conexão com o servidor e verifica a sua validade.
      */
-    private void serverStatus() {
-	new Thread(() -> {
-	    System.out.println("Mesa Ativada.");
-	    System.out.println("Porta " + this.port + " aberta!");
-	}).start();
+    private void serverUp() {
+	msg = "Informe a porta de conexão com o jogo:";
+
+	try {
+	    msg = JOptionPane.showInputDialog(msg);
+
+	    if (msg == null)
+		System.exit(0);
+
+	    this.port = Integer.parseInt(msg);
+	    board = new ServerSocket(this.port);
+
+	} catch (IOException | IllegalArgumentException e) {
+	    msg = "Porta de conexão inválida.";
+	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+	    serverUp();
+	}
     }
 
     /**
@@ -103,25 +116,32 @@ public class Board extends Coup {
     }
 
     /**
-     * Obtém a porta de conexão com o servidor e verifica a sua validade.
+     * Indica em tempo real as informações e o status do servidor.
      */
-    private void serverUp() {
-	msg = "Informe a porta de conexão com o jogo:";
+    private void serverStatus() {
+	new Thread(() -> {
+	    System.out.println("Mesa Ativada.");
+	    System.out.println("Porta " + this.port + " aberta!");
+	}).start();
+    }
 
+    @Override
+    public String[] getInput(Deck hand) {
 	try {
-	    msg = JOptionPane.showInputDialog(msg);
+	    /* Envia requisição de carta ao jogador. */
+	    output = new ObjectOutputStream(player.getOutputStream());
+	    actions = new Actions();
+	    actions.setId(Actions.GET_INPUT);
+	    output.flush();
 
-	    if (msg == null)
-		System.exit(0);
-
-	    this.port = Integer.parseInt(msg);
-	    board = new ServerSocket(this.port);
-
-	} catch (IOException | IllegalArgumentException e) {
-	    msg = "Porta de conexão inválida.";
-	    JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
-	    serverUp();
+	    /* Obtém cartas selecionadas pelo jogador. */
+	    input = new ObjectInputStream(player.getInputStream());
+	    actions = (Actions) input.readObject();
+	    return actions.getCards();
+	} catch (IOException | ClassNotFoundException e) {
+	    e.printStackTrace();
 	}
+	return null;
     }
 
     /**
@@ -134,7 +154,7 @@ public class Board extends Coup {
 	    getPlayersSockets();
 
 	    /* Inicializa a mecânica do jogo. */
-	    instanceGame(numPlayers, players.keySet().toArray(new String[players.size()]));
+	    instanceGame(this.numPlayers, this.players.keySet().toArray(new String[this.players.size()]));
 
 	    /* Inicia o jogo em todos os players. */
 	    startGame();
@@ -153,6 +173,148 @@ public class Board extends Coup {
 	} catch (PException e) {
 	    e.printStackTrace();
 	}
+    }
+
+    /**
+     * Recebe a conexão de todos os players com a partida.
+     * 
+     * @throws IOException
+     */
+    private void getPlayersSockets() throws IOException {
+	/* Aguarda até que todos os players tenham se conectado. */
+	for (int i = 0; i < this.numPlayers; ++i) {
+
+	    /* Aceita uma conexão com um player. */
+	    this.player = board.accept();
+	    System.out.println("Player: " + player.getInetAddress().getHostAddress() + " conectado.");
+
+	    /* Obtém o nome do player. */
+	    new Thread(() -> {
+		try {
+		    getPlayerName(this.player);
+		} catch (IOException | ClassNotFoundException e) {
+		    e.printStackTrace();
+		}
+	    }).start();
+	}
+
+	/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
+	waitThreads();
+    }
+
+    /**
+     * Recebe o nome do jogador e o insere em um HashMap.
+     * 
+     * @param player
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void getPlayerName(Socket player) throws IOException, ClassNotFoundException {
+	/* Canal de comunicação do cliente para o servidor. */
+	ObjectInputStream input = new ObjectInputStream(player.getInputStream());
+
+	/* Canal de comunicação do servidor para o cliente. */
+	ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
+
+	/* Objeto que serve como meio de comunicação. */
+	Actions actions = new Actions();
+
+	/* Mensagem que será enviada ao jogador. */
+	String msg;
+
+	try {
+	    /* Solicita ao jogador um nickname. */
+	    actions.setId(Actions.GET_NAME);
+	    output.writeObject(actions);
+	    output.flush();
+
+	    /* Recebe a resposta do jogador. */
+	    actions = (Actions) input.readObject();
+
+	    if (actions.getId() == Actions.GET_NAME) {
+		/* Verifica se o nome é válido. */
+		if (actions.getFrom() == null || actions.getFrom().isEmpty()) {
+		    msg = "Nomes nulos não são permitidos.";
+
+		} else if (players.containsKey(actions.getFrom())) {
+		    msg = "Já existe um jogador com este nome.";
+
+		} else if (actions.getFrom().length() < MIN_PLAYER_NAME) {
+		    msg = "O nome do jogador é muito curto.\nTamanho Mínimo = " + MIN_PLAYER_NAME + " caracteres.";
+
+		} else if (actions.getFrom().length() > MAX_PLAYER_NAME) {
+		    msg = "O nome do jogador é muito extenso.\nTamanho Máximo = " + MAX_PLAYER_NAME + " caracteres.";
+
+		} else {
+		    msg = "Aguardando demais jogadores.";
+
+		    /* Insere na lista de conexões de players. */
+		    players.put(actions.getFrom(), player);
+		    System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
+
+		    /* Envia mensagem de aguardando demais jogadores. */
+		    actions = new Actions();
+		    actions.setId(Actions.SERVER_MESSAGE);
+		    actions.setMessage(msg);
+		    output.writeObject(actions);
+		    output.flush();
+		    return;
+		}
+
+		throw new PException(msg);
+	    }
+	} catch (PException f) {
+	    /* Envia uma notificação ao jogador. */
+	    actions = new Actions();
+	    actions.setId(Actions.SERVER_MESSAGE);
+	    actions.setMessage(f.getMessage());
+	    output.writeObject(actions);
+	    output.flush();
+
+	    /* Solicita novamente ao player um nickanme. */
+	    getPlayerName(player);
+	}
+    }
+
+    /**
+     * Espera até que todas as Threads adicionais tenham sido finalizadas.
+     */
+    private void waitThreads() {
+	System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
+	if (Thread.activeCount() > ACTIVE_THREADS)
+	    waitThreads();
+    }
+
+    /**
+     * Notifica todos os players para iniciar o jogo.
+     * 
+     * @param coup
+     */
+    private void startGame() {
+	for (Iterator<String> playersList = players.keySet().iterator(); playersList.hasNext();) {
+	    this.playerName = (String) playersList.next();
+	    new Thread(() -> {
+		try {
+		    ObjectOutputStream output = new ObjectOutputStream(players.get(this.playerName).getOutputStream());
+		    Actions actions = new Actions();
+
+		    actions.setPlayers(super.getPlayers());
+		    actions.setDead(super.getDead());
+		    actions.setLog("Início do Jogo.");
+		    gameLog.add(actions.getLog());
+		    actions.setId(Actions.LOAD_INTERFACE);
+
+		    output.writeObject(actions);
+		    output.flush();
+		} catch (IOException e) {
+		    players.remove(player);
+		    e.printStackTrace();
+		}
+	    }).start();
+	}
+
+	/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
+	waitThreads();
     }
 
     /**
@@ -454,164 +616,4 @@ public class Board extends Coup {
 	}
     }
 
-    /**
-     * Notifica todos os players para iniciar o jogo.
-     * 
-     * @param coup
-     */
-    private void startGame() {
-	for (Iterator<String> playersList = players.keySet().iterator(); playersList.hasNext();) {
-	    this.playerName = (String) playersList.next();
-	    new Thread(() -> {
-		try {
-		    ObjectOutputStream output = new ObjectOutputStream(players.get(this.playerName).getOutputStream());
-		    Actions actions = new Actions();
-
-		    actions.setPlayers(super.getPlayers());
-		    actions.setDead(super.getDead());
-		    actions.setLog("Início do Jogo.");
-		    gameLog.add(actions.getLog());
-		    actions.setId(Actions.LOAD_INTERFACE);
-
-		    output.writeObject(actions);
-		    output.flush();
-		} catch (IOException e) {
-		    players.remove(player);
-		    e.printStackTrace();
-		}
-	    }).start();
-	}
-
-	/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
-	waitThreads();
-    }
-
-    /**
-     * Recebe a conexão de todos os players com a partida.
-     * 
-     * @throws IOException
-     */
-    private void getPlayersSockets() throws IOException {
-	/* Aguarda até que todos os players tenham se conectado. */
-	for (int i = 0; i < this.numPlayers; ++i) {
-
-	    /* Aceita uma conexão com um player. */
-	    this.player = board.accept();
-	    System.out.println("Player: " + player.getInetAddress().getHostAddress() + " conectado.");
-
-	    /* Obtém o nome do player. */
-	    new Thread(() -> {
-		try {
-		    getPlayerName(this.player);
-		} catch (IOException | ClassNotFoundException e) {
-		    e.printStackTrace();
-		}
-	    }).start();
-	}
-
-	/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
-	waitThreads();
-    }
-
-    /**
-     * Recebe o nome do jogador e o insere em um HashMap.
-     * 
-     * @param player
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void getPlayerName(Socket player) throws IOException, ClassNotFoundException {
-	/* Canal de comunicação do cliente para o servidor. */
-	ObjectInputStream input = new ObjectInputStream(player.getInputStream());
-
-	/* Canal de comunicação do servidor para o cliente. */
-	ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
-
-	/* Objeto que serve como meio de comunicação. */
-	Actions actions = new Actions();
-
-	/* Mensagem que será enviada ao jogador. */
-	String msg;
-
-	try {
-	    /* Solicita ao jogador um nickname. */
-	    actions.setId(Actions.GET_NAME);
-	    output.writeObject(actions);
-	    output.flush();
-
-	    /* Recebe a resposta do jogador. */
-	    actions = (Actions) input.readObject();
-
-	    if (actions.getId() == Actions.GET_NAME) {
-		/* Verifica se o nome é válido. */
-		if (actions.getFrom() == null || actions.getFrom().isEmpty()) {
-		    msg = "Nomes nulos não são permitidos.";
-
-		} else if (players.containsKey(actions.getFrom())) {
-		    msg = "Já existe um jogador com este nome.";
-
-		} else if (actions.getFrom().length() < MIN_PLAYER_NAME) {
-		    msg = "O nome do jogador é muito curto.\nTamanho Mínimo = " + MIN_PLAYER_NAME + " caracteres.";
-
-		} else if (actions.getFrom().length() > MAX_PLAYER_NAME) {
-		    msg = "O nome do jogador é muito extenso.\nTamanho Máximo = " + MAX_PLAYER_NAME + " caracteres.";
-
-		} else {
-		    msg = "Aguardando demais jogadores.";
-
-		    /* Insere na lista de conexões de players. */
-		    players.put(actions.getFrom(), player);
-		    System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
-
-		    /* Envia mensagem de aguardando demais jogadores. */
-		    actions = new Actions();
-		    actions.setId(Actions.SERVER_MESSAGE);
-		    actions.setMessage(msg);
-		    output.writeObject(actions);
-		    output.flush();
-		    return;
-		}
-
-		throw new PException(msg);
-	    }
-	} catch (PException f) {
-	    /* Envia uma notificação ao jogador. */
-	    actions = new Actions();
-	    actions.setId(Actions.SERVER_MESSAGE);
-	    actions.setMessage(f.getMessage());
-	    output.writeObject(actions);
-	    output.flush();
-
-	    /* Solicita novamente ao player um nickanme. */
-	    getPlayerName(player);
-	}
-    }
-
-    /**
-     * Espera até que todas as Threads adicionais tenham sido finalizadas.
-     */
-    private void waitThreads() {
-	System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
-	if (Thread.activeCount() > 1)
-	    waitThreads();
-    }
-
-    @Override
-    public String[] getInput(Deck hand) {
-	try {
-	    /* Envia requisição de carta ao jogador. */
-	    output = new ObjectOutputStream(player.getOutputStream());
-	    actions = new Actions();
-	    actions.setId(Actions.GET_INPUT);
-	    output.flush();
-
-	    /* Obtém cartas selecionadas pelo jogador. */
-	    input = new ObjectInputStream(player.getInputStream());
-	    actions = (Actions) input.readObject();
-	    return actions.getCards();
-	} catch (IOException | ClassNotFoundException e) {
-	    e.printStackTrace();
-	}
-	return null;
-    }
 }
