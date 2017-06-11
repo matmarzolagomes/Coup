@@ -36,6 +36,12 @@ public class Board extends Coup {
     private ServerSocket board;
     private Map<String, Socket> players;
     private List<String> gameLog;
+    private String playerName;
+    private Socket player;
+    private String msg;
+    private Actions actions;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
 
     /**
      * Construtor da Classe Board, responsável por iniciliazar o servidor do
@@ -72,7 +78,7 @@ public class Board extends Coup {
      * Obtém o número de players da partida e verifica a sua validade.
      */
     private void getNumPlayers() {
-	String msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
+	msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
 	try {
 	    msg = JOptionPane.showInputDialog(msg);
 
@@ -100,7 +106,7 @@ public class Board extends Coup {
      * Obtém a porta de conexão com o servidor e verifica a sua validade.
      */
     private void serverUp() {
-	String msg = "Informe a porta de conexão com o jogo:";
+	msg = "Informe a porta de conexão com o jogo:";
 
 	try {
 	    msg = JOptionPane.showInputDialog(msg);
@@ -158,11 +164,6 @@ public class Board extends Coup {
      * @throws PException
      */
     private void coupHandler(Iterator<String> iterator) throws IOException, ClassNotFoundException, PException {
-	Actions actions;
-	ObjectInputStream input;
-	ObjectOutputStream output;
-	String playerName;
-
 	/* Nome do jogador do turno. */
 	playerName = iterator.next();
 
@@ -173,7 +174,7 @@ public class Board extends Coup {
 	}
 
 	/* Obtém a conexão do jogador do turno. */
-	Socket player = players.get(playerName);
+	player = players.get(playerName);
 	System.out.println("Turno do Jogador " + playerName + ".");
 
 	/* Envia ao jogador as suas ações. */
@@ -198,15 +199,15 @@ public class Board extends Coup {
 	    break;
 
 	case Actions.INCOME:
-	    income(actions);
+	    income();
 	    break;
 
 	case Actions.FOREIGN:
-	    foreign(actions, playerName);
+	    foreign();
 	    break;
 
 	case Actions.COUP:
-	    coup(actions);
+	    coup();
 	    break;
 
 	case Actions.TAXES:
@@ -256,11 +257,10 @@ public class Board extends Coup {
     }
 
     /**
-     * @param actions
      * @throws PException
      * @throws IOException
      */
-    private void coup(Actions actions) throws PException, IOException {
+    private void coup() throws PException, IOException {
 	String msg;
 	super.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
 	/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE E FICOU SEM CARTAS. */
@@ -274,30 +274,73 @@ public class Board extends Coup {
 	gameLog.add(msg);
 
 	/* Envia ação para todos os jogadores. */
-	spreadAction(actions);
+	spreadAction();
     }
 
     /**
-     * @param actions
-     * @param playerName
+     * @throws IOException
+     * @throws PException
+     * @throws ClassNotFoundException
      * 
      */
-    private void foreign(Actions actions, String playerName) {
+    private void foreign() throws IOException, PException, ClassNotFoundException {
+	String opponent = null;
+	boolean block = false;
+	boolean contest = false;
+
+	/* Pergunta a todos os jogadores se alguém deseja bloquear a ação. */
+	actions = new Actions();
 	actions.setId(Actions.FOREIGN);
 	actions.setFrom(playerName);
+	spreadOpponents();
 
-	System.out.println("FOREIGN");
-	// coup.play(Actions.FOREIGN, actions.getFrom(),
-	// actions.getTo(), contest, block)
+	/* Verifica se algum jogador tentou bloquear. */
+	getFastBlock();
+	if (actions.isBlock()) {
+	    opponent = actions.getTo();
+	    block = true;
+
+	    /* Verifica se o jogador da rodada deseja contestar bloqueio. */
+	    output = new ObjectOutputStream(player.getOutputStream());
+	    output.writeObject(actions);
+	    output.flush();
+	    input = new ObjectInputStream(player.getInputStream());
+	    actions = (Actions) input.readObject();
+
+	    if (actions.isContest())
+		contest = true;
+	}
+
+	/* Executa a ação no servidor. */
+	super.play(Actions.FOREIGN, playerName, opponent, contest, block);
     }
 
     /**
-     * @param actions
+     * Obtém o bloqueio mais rápido entre os jogadores oponentes.
+     */
+    private void getFastBlock() {
+	for (String player : players.keySet()) {
+	    if (!player.equals(playerName)) {
+		new Thread(() -> {
+		    try {
+			ObjectInputStream input = new ObjectInputStream(players.get(player).getInputStream());
+			Actions action = (Actions) input.readObject();
+			if (actions.isBlock() == false && action.isBlock() == true)
+			    actions = action;
+		    } catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		    }
+		}).start();
+	    }
+	}
+    }
+
+    /**
      * @throws PException
      * @throws IOException
      */
-    private void income(Actions actions) throws PException, IOException {
-	String msg;
+    private void income() throws PException, IOException {
+	/* Executa a ação no servidor. */
 	super.play(Actions.INCOME, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
 
 	/* Atualiza o jogo de todos os players. */
@@ -309,7 +352,7 @@ public class Board extends Coup {
 	gameLog.add(msg);
 
 	/* Envia ação para todos os jogadores. */
-	spreadAction(actions);
+	spreadAction();
     }
 
     /**
@@ -318,9 +361,7 @@ public class Board extends Coup {
      * @param actions
      * @throws IOException
      */
-    private void spreadAction(Actions actions) throws IOException {
-	ObjectOutputStream output;
-
+    private void spreadAction() throws IOException {
 	for (Socket p : players.values()) {
 	    output = new ObjectOutputStream(p.getOutputStream());
 	    output.writeObject(actions);
@@ -329,31 +370,55 @@ public class Board extends Coup {
     }
 
     /**
+     * Envia ação para todos os players menos ele mesmo.
+     * 
+     * @throws IOException
+     */
+    private void spreadOpponents() throws IOException {
+	for (String player : players.keySet()) {
+	    new Thread(() -> {
+		if (!player.equals(playerName)) {
+		    try {
+			ObjectOutputStream output = new ObjectOutputStream(players.get(player).getOutputStream());
+			output.writeObject(actions);
+			output.flush();
+		    } catch (IOException e) {
+			e.printStackTrace();
+		    }
+		}
+	    }).start();
+	}
+
+	/* Agurda até que todos tenham recebido as ações. */
+	waitThreads();
+    }
+
+    /**
      * Notifica todos os players para iniciar o jogo.
      * 
      * @param coup
      */
     private void startGame() {
-	for (String player : players.keySet()) {
+	for (Iterator<String> playersList = players.keySet().iterator(); playersList.hasNext();) {
+	    this.playerName = (String) playersList.next();
 	    new Thread(() -> {
 		try {
-		    ObjectOutputStream output = new ObjectOutputStream(players.get(player).getOutputStream());
-		    Actions action = new Actions();
+		    ObjectOutputStream output = new ObjectOutputStream(players.get(this.playerName).getOutputStream());
+		    Actions actions = new Actions();
 
-		    action.setPlayers(super.getPlayers());
-		    action.setDead(super.getDead());
-		    action.setLog("Início do Jogo.");
-		    gameLog.add(action.getLog());
-		    action.setId(Actions.LOAD_INTERFACE);
+		    actions.setPlayers(super.getPlayers());
+		    actions.setDead(super.getDead());
+		    actions.setLog("Início do Jogo.");
+		    gameLog.add(actions.getLog());
+		    actions.setId(Actions.LOAD_INTERFACE);
 
-		    output.writeObject(action);
+		    output.writeObject(actions);
 		    output.flush();
 		} catch (IOException e) {
 		    players.remove(player);
 		    e.printStackTrace();
 		}
 	    }).start();
-
 	}
 
 	/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
@@ -370,13 +435,13 @@ public class Board extends Coup {
 	for (int i = 0; i < this.numPlayers; ++i) {
 
 	    /* Aceita uma conexão com um player. */
-	    Socket player = board.accept();
+	    this.player = board.accept();
 	    System.out.println("Player: " + player.getInetAddress().getHostAddress() + " conectado.");
 
 	    /* Obtém o nome do player. */
 	    new Thread(() -> {
 		try {
-		    getPlayerName(player);
+		    getPlayerName(this.player);
 		} catch (IOException | ClassNotFoundException e) {
 		    e.printStackTrace();
 		}
@@ -404,7 +469,7 @@ public class Board extends Coup {
 	/* Objeto que serve como meio de comunicação. */
 	Actions actions = new Actions();
 
-	/* Mensagem que será enviada. */
+	/* Mensagem que será enviada ao jogador. */
 	String msg;
 
 	try {
@@ -432,6 +497,7 @@ public class Board extends Coup {
 
 		} else {
 		    msg = "Aguardando demais jogadores.";
+
 		    /* Insere na lista de conexões de players. */
 		    players.put(actions.getFrom(), player);
 		    System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
@@ -470,22 +536,18 @@ public class Board extends Coup {
     }
 
     @Override
-    public String[] getInput(Deck hand, Socket player) {
-	ObjectOutputStream output;
-	ObjectInputStream input;
-	Actions action;
-
+    public String[] getInput(Deck hand) {
 	try {
 	    /* Envia requisição de carta ao jogador. */
 	    output = new ObjectOutputStream(player.getOutputStream());
-	    action = new Actions();
-	    action.setId(Actions.GET_INPUT);
+	    actions = new Actions();
+	    actions.setId(Actions.GET_INPUT);
 	    output.flush();
 
 	    /* Obtém cartas selecionadas pelo jogador. */
 	    input = new ObjectInputStream(player.getInputStream());
-	    action = (Actions) input.readObject();
-	    return action.getCards();
+	    actions = (Actions) input.readObject();
+	    return actions.getCards();
 	} catch (IOException | ClassNotFoundException e) {
 	    e.printStackTrace();
 	}
