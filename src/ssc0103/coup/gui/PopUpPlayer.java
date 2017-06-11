@@ -144,16 +144,16 @@ public class PopUpPlayer {
 		String a[] = new String[]{"Victor", "Bruno", "Matheus", "Rodrigo"};
 		String b[] = new String[]{"Renda", "Taxas", "Assassinar", "Extorquir", "Ajuda", "Trocar", "Golpe"};
 		PopUpPlayer t = new PopUpPlayer();
-		System.out.println(t.popUpAssassino("Victor"));
-		System.out.println(t.popUpTaxas("Victor"));
-		System.out.println(t.popUpCondessa("Victor"));
-		System.out.println(t.popUpTroca("Victor"));
-		System.out.println(t.popUpExtorcao("Victor"));
-		System.out.println(t.popUpAjudaExterna("Victor"));
-		System.out.println(t.popUpBloqueioExtorcao("victor", "Capitao"));
-		System.out.println(t.popUpBloqueioExtorcao("victor", "Embaixador"));
-		t.popUpGolpe("Victor");
+		//System.out.println(t.popUpAssassino("Victor"));
+		//System.out.println(t.popUpTaxas("Victor"));
+		//System.out.println(t.popUpCondessa("Victor"));
+		//System.out.println(t.popUpTroca("Victor"));
+		//System.out.println(t.popUpExtorcao("Victor"));
+		//System.out.println(t.popUpAjudaExterna("Victor"));
+		//System.out.println(t.popUpBloqueioExtorcao("victor", "Capitao"));
+		//System.out.println(t.popUpBloqueioExtorcao("victor", "Embaixador"));
+		//t.popUpGolpe("Victor");
 		System.out.println(t.popUpAcoes(b, "Victor"));
-		System.out.println(t.popUpJogadores(a));
+		//System.out.println(t.popUpJogadores(a));
 	}
 }
