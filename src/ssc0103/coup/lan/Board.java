@@ -243,17 +243,55 @@ public class Board extends Coup {
     }
 
     /**
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws PException
      * 
      */
-    private void assassinate() {
-	System.out.println("Assassinate");
+    private void assassinate() throws IOException, ClassNotFoundException, PException {
+	/*
+	 * Pergunta ao jogador alvo se ele deseja contestar permitir ou bloquear
+	 * a ação.
+	 */
+	output = new ObjectOutputStream(players.get(actions.getTo()).getOutputStream());
+	output.writeObject(actions);
+	output.flush();
+
+	/* Obtém a resposta do jogador. */
+	input = new ObjectInputStream(players.get(actions.getTo()).getInputStream());
+	actions = (Actions) input.readObject();
+
+	/*
+	 * Se tentou bloquear, pergunta ao jogador atacante se deseja contesar.
+	 */
+	if (actions.isBlock()) {
+	    output = new ObjectOutputStream(player.getOutputStream());
+	    output.writeObject(actions);
+	    output.flush();
+
+	    input = new ObjectInputStream(player.getInputStream());
+	    actions = (Actions) input.readObject();
+	}
+
+	super.play(Actions.ASSASSINATE, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
     }
 
     /**
+     * @throws IOException
+     * @throws PException
      * 
      */
-    private void taxes() {
-	System.out.println("Taxes");
+    private void taxes() throws IOException, PException {
+	/* Pergunta a todos os jogadores se alguém deseja contestar a ação. */
+	actions = new Actions();
+	actions.setId(Actions.TAXES);
+	actions.setFrom(playerName);
+	spreadOpponents();
+
+	/* Obtém a contestação mais rápida, se houver. */
+	getFastBlock(); // ALTERAR ISSO
+
+	super.play(Actions.TAXES, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
     }
 
     /**
@@ -284,10 +322,6 @@ public class Board extends Coup {
      * 
      */
     private void foreign() throws IOException, PException, ClassNotFoundException {
-	String opponent = null;
-	boolean block = false;
-	boolean contest = false;
-
 	/* Pergunta a todos os jogadores se alguém deseja bloquear a ação. */
 	actions = new Actions();
 	actions.setId(Actions.FOREIGN);
@@ -297,42 +331,18 @@ public class Board extends Coup {
 	/* Verifica se algum jogador tentou bloquear. */
 	getFastBlock();
 	if (actions.isBlock()) {
-	    opponent = actions.getTo();
-	    block = true;
 
-	    /* Verifica se o jogador da rodada deseja contestar bloqueio. */
+	    /* Verifica se o jogador da rodada deseja contestar o bloqueio. */
 	    output = new ObjectOutputStream(player.getOutputStream());
 	    output.writeObject(actions);
 	    output.flush();
+
 	    input = new ObjectInputStream(player.getInputStream());
 	    actions = (Actions) input.readObject();
-
-	    if (actions.isContest())
-		contest = true;
 	}
 
 	/* Executa a ação no servidor. */
-	super.play(Actions.FOREIGN, playerName, opponent, contest, block);
-    }
-
-    /**
-     * Obtém o bloqueio mais rápido entre os jogadores oponentes.
-     */
-    private void getFastBlock() {
-	for (String player : players.keySet()) {
-	    if (!player.equals(playerName)) {
-		new Thread(() -> {
-		    try {
-			ObjectInputStream input = new ObjectInputStream(players.get(player).getInputStream());
-			Actions action = (Actions) input.readObject();
-			if (actions.isBlock() == false && action.isBlock() == true)
-			    actions = action;
-		    } catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		    }
-		}).start();
-	    }
-	}
+	super.play(Actions.FOREIGN, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
     }
 
     /**
@@ -391,6 +401,26 @@ public class Board extends Coup {
 
 	/* Agurda até que todos tenham recebido as ações. */
 	waitThreads();
+    }
+
+    /**
+     * Obtém o bloqueio mais rápido entre os jogadores oponentes.
+     */
+    private void getFastBlock() {
+	for (String player : players.keySet()) {
+	    if (!player.equals(playerName)) {
+		new Thread(() -> {
+		    try {
+			ObjectInputStream input = new ObjectInputStream(players.get(player).getInputStream());
+			Actions action = (Actions) input.readObject();
+			if (actions.isBlock() == false && action.isBlock() == true)
+			    actions = action;
+		    } catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		    }
+		}).start();
+	    }
+	}
     }
 
     /**
