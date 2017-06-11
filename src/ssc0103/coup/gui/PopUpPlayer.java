@@ -1,19 +1,19 @@
-package ssc0103.coup.lan;
+package ssc0103.coup.gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-public class Teste {
+public class PopUpPlayer {
 	
-	int ret = -1;
-	ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon;
-	String opcoes1[] = new String[] {"Aceitar", "Bloquear", "Contestar"};
-	String opcoes2[] = new String[] {"Permitir", "Negar"};
-	String opcoes3[] = new String[] {"Aceitar", "Contestar"};
-	String opcoes4[] = new String[] {"Aceitar", "Bloquear (Embaixador)", "Bloquear (Capitão)", "Contestar"};
-	String jogador = null;
+	private int ret = -1;
+	private ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon;
+	private String opcoes1[] = new String[] {"Aceitar", "Bloquear", "Contestar"};
+	private String opcoes2[] = new String[] {"Permitir", "Negar"};
+	private String opcoes3[] = new String[] {"Aceitar", "Contestar"};
+	private String opcoes4[] = new String[] {"Aceitar", "Bloquear (Embaixador)", "Bloquear (Capitão)", "Contestar"};
+	private String jogador = null;
 	
-	public Teste(){
+	public PopUpPlayer(){
 		
 		coins = new ImageIcon("images/coins.png");
 		duque = new ImageIcon("images/Duque.jpeg");
@@ -36,7 +36,7 @@ public class Teste {
 		icon.setImage(icon.getImage().getScaledInstance(128, 128, 100));
 		
 	}
-	public void popUpAcao(){
+	public void popUpErro(){
 		JOptionPane.showMessageDialog(null,"Você deve escolher uma ação!","Erro", JOptionPane.ERROR_MESSAGE);
 	}
 	
@@ -44,7 +44,7 @@ public class Teste {
 		
 		ret = JOptionPane.showOptionDialog(null, nome + " está tentando te assassinar!", "Assassinato", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, assassino, opcoes1, opcoes1[0]);
 		while(ret < 0){
-			popUpAcao();
+			popUpErro();
 			ret = JOptionPane.showOptionDialog(null, nome + " está tentando te assassinar!", "Assassinato", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, assassino, opcoes1, opcoes1[0]);
 		}
 		
@@ -63,7 +63,7 @@ public class Teste {
 		
 		ret = JOptionPane.showOptionDialog(null, nome + " bloqueou o seu assassinato!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, condessa, opcoes3, opcoes3[0]);
 		while(ret < 0){
-			popUpAcao();
+			popUpErro();
 			ret = JOptionPane.showOptionDialog(null, nome + " bloqueou o seu assassinato!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, condessa, opcoes3, opcoes3[0]);
 		}
 		
@@ -82,14 +82,13 @@ public class Teste {
 		ret = JOptionPane.showOptionDialog(null, "                              "+ nome + " está tentando te extorquir!", "Extorsão", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, capitao, opcoes4, opcoes4[0]);
 		
 		while(ret < 0){
-			popUpAcao();
+			popUpErro();
 			ret = JOptionPane.showOptionDialog(null, "                              " + nome + " está tentando te extorquir!", "Extorsão", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, capitao, opcoes4, opcoes4[0]);
 		}
 	return ret;
 	}
 	
 	public int popUpAjudaExterna(String nome){
-		String opcoes2[] = new String[] {"Perimitir", "Negar"};
 		return JOptionPane.showOptionDialog(null, nome + " está pedindo ajuda externa!", "Ajuda Externa", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coins, opcoes2, opcoes2[0]);
 	}
 	
@@ -98,7 +97,7 @@ public class Teste {
 		if(carta.equals("Capitao")){
 			ret = JOptionPane.showOptionDialog(null, nome + " bloqueou a sua extorsão!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, capitao, opcoes3, opcoes3[0]);
 			while(ret < 0){
-				popUpAcao();
+				popUpErro();
 				ret = JOptionPane.showOptionDialog(null, nome + " bloqueou a sua extorsão!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, capitao, opcoes3, opcoes3[0]);
 			}
 		}
@@ -106,7 +105,7 @@ public class Teste {
 		else if(carta.equals("Embaixador")){
 			ret = JOptionPane.showOptionDialog(null, nome + " bloqueou a sua extorsão!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, embaixador, opcoes3, opcoes3[0]);
 			while(ret < 0){
-				popUpAcao();
+				popUpErro();
 				ret = JOptionPane.showOptionDialog(null, nome + " bloqueou a sua extorsão!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, embaixador, opcoes3, opcoes3[0]);
 			}
 		}
@@ -117,10 +116,10 @@ public class Teste {
 		JOptionPane.showOptionDialog(null, nome + " aplicou um golpe de estado em você!", "Golpe de Estado", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, golpe, null, null);
 	}
 	
-	public int popUpOpcoes(String[] acoes, String nome){
+	public int popUpAcoes(String[] acoes, String nome){
 		ret = JOptionPane.showOptionDialog(null, nome + " escolha a sua ação", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
 		while(ret < 0){
-			popUpAcao();
+			popUpErro();
 			ret = JOptionPane.showOptionDialog(null, nome + " escolha a sua ação", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
 		}
 		return ret;
@@ -131,7 +130,7 @@ public class Teste {
 		jogador = (String) JOptionPane.showInputDialog(null, "Escolha um Jogador\n \n", "Jogador", JOptionPane.INFORMATION_MESSAGE, icon, jogadores, jogadores[0]);
 		
 		while(jogador == null){
-			popUpAcao();
+			popUpErro();
 			jogador = (String) JOptionPane.showInputDialog(null, "Escolha um Jogador\n \n", "Jogador", JOptionPane.INFORMATION_MESSAGE, icon, jogadores, jogadores[0]);
 		}
 		
@@ -144,7 +143,7 @@ public class Teste {
 		
 		String a[] = new String[]{"Victor", "Bruno", "Matheus", "Rodrigo"};
 		String b[] = new String[]{"Renda", "Taxas", "Assassinar", "Extorquir", "Ajuda", "Trocar", "Golpe"};
-		Teste t = new Teste();
+		PopUpPlayer t = new PopUpPlayer();
 		System.out.println(t.popUpAssassino("Victor"));
 		System.out.println(t.popUpTaxas("Victor"));
 		System.out.println(t.popUpCondessa("Victor"));
@@ -154,7 +153,7 @@ public class Teste {
 		System.out.println(t.popUpBloqueioExtorcao("victor", "Capitao"));
 		System.out.println(t.popUpBloqueioExtorcao("victor", "Embaixador"));
 		t.popUpGolpe("Victor");
-		System.out.println(t.popUpOpcoes(b, "Victor"));
+		System.out.println(t.popUpAcoes(b, "Victor"));
 		System.out.println(t.popUpJogadores(a));
 	}
 }
