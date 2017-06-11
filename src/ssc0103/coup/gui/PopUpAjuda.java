@@ -5,37 +5,30 @@ import javax.swing.JOptionPane;
 
 public class PopUpAjuda {
 
-	private ImageIcon contrarias, gerais, personagem, acao, assassino, capitao, condessa, contestacoes, duque, duque2;
-	private ImageIcon embaixador_capitao, embaixador, influencia, jogo, objetivo, logo, exemplo;
+	private ImageIcon contrarias, gerais, acao, contestacoes;
+	private ImageIcon influencia, jogo, objetivo, logo, exemplo, exemplo2, personagens, personagens2;
 	private String opcoes[] = new String[] { "Ações Gerais", "Ações Contrárias", "Ações de Personagem" };
-	private String opcoes2[] = new String[] {"Duque", "Condessa", "Embaixador ou Capitão"};
-	private String opcoes3[] = new String[] {"Duque", "Capitão", "Assassino", "Embaixador"};
 	private String opcoes4[] = new String[] {"O Jogo", "Objetivo", "Influência", "Contestações", "Ações", "Exemplo"};
-	private int ret = 0, option = 0, option2 = 0;
+	private String opcoes2[] = new String[]{"Próxima Página", "OK"};
+	private String opcoes3[] = new String[]{"Página Anterior", "OK"};
+	private int ret = 0, option2 = 0;
 
 	public PopUpAjuda() {
 
 		contrarias = new ImageIcon("CoupAjuda/Acoes_contrarias.png");
 		gerais = new ImageIcon("CoupAjuda/Acoes_gerais.png");
-		personagem = new ImageIcon("CoupAjuda/Acoes_Personagem.png");
 		acao = new ImageIcon("CoupAjuda/Acoes.png");
-		assassino = new ImageIcon("CoupAjuda/Assassino.png");
-		capitao = new ImageIcon("CoupAjuda/Capitao.png");
-		condessa = new ImageIcon("CoupAjuda/Condessa.png");
 		contestacoes = new ImageIcon("CoupAjuda/Contest.png");
-		duque = new ImageIcon("CoupAjuda/Duque.png");
-		duque2 = new ImageIcon("CoupAjuda/Duque2.png");
-		embaixador_capitao = new ImageIcon("CoupAjuda/Embaixador_capitao.png");
-		embaixador = new ImageIcon("CoupAjuda/Embaixador.png");
 		influencia = new ImageIcon("CoupAjuda/Influencia.png");
 		jogo = new ImageIcon("CoupAjuda/Jogo.png");
 		objetivo = new ImageIcon("CoupAjuda/Objetivo.png");
 		logo = new ImageIcon("CoupAjuda/coup_logo.png");
-		exemplo = new ImageIcon("CoupAjuda/Exemplo.png");
+		exemplo = new ImageIcon("CoupAjuda/example.png");
+		exemplo2 = new ImageIcon("CoupAjuda/example2.png");
+		personagens = new ImageIcon("CoupAjuda/Personagens.png");
+		personagens2 = new ImageIcon("CoupAjuda/Personagens2.png");
 		
 		logo.setImage(logo.getImage().getScaledInstance(650, 200, 100));
-		
-		
 	}
 	
 	public void popUpGeral(){
@@ -52,7 +45,10 @@ public class PopUpAjuda {
 	}
 	
 	public void popUpExemplo(){
-		JOptionPane.showMessageDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, exemplo);
+		while(option2 != -1 && option2 != 1){
+			option2 = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo, opcoes2, opcoes2[0]);
+			if (option2 != 1 && option2 != -1) option2 = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo2, opcoes3, opcoes3[0]);
+		}
 	}
 	
 	public void popUpJogo() {
@@ -80,25 +76,12 @@ public class PopUpAjuda {
 				JOptionPane.showMessageDialog(null,null,"Ações Gerais", JOptionPane.DEFAULT_OPTION, gerais);
 		
 			else if(ret == 1){
-				option = 0;
-				while(option != -1){
-					option = JOptionPane.showOptionDialog(null, null, "Ações Contrárias", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, contrarias, opcoes2, opcoes2[0]);
-					if(option == 0) JOptionPane.showMessageDialog(null,null,"Duque", JOptionPane.DEFAULT_OPTION, duque2);
-					else if(option == 1) JOptionPane.showMessageDialog(null,null,"Condessa", JOptionPane.DEFAULT_OPTION, condessa);
-					else if(option == 2) JOptionPane.showMessageDialog(null,null,"Embaixador e Capitão", JOptionPane.DEFAULT_OPTION, embaixador_capitao);
-				}
+				JOptionPane.showMessageDialog(null,null,"Ações Contrarias", JOptionPane.DEFAULT_OPTION, contrarias);
+				JOptionPane.showMessageDialog(null,null,"Ações Contrarias", JOptionPane.DEFAULT_OPTION, personagens2);
 			}
 			
-			else if(ret == 2){
-				option = 0;
-				while(option != -1){
-					option = JOptionPane.showOptionDialog(null, null, "Ações de Personagem", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, personagem, opcoes3, opcoes3[0]);
-					if(option == 0) JOptionPane.showMessageDialog(null,null,"Duque", JOptionPane.DEFAULT_OPTION, duque);
-					else if(option == 1) JOptionPane.showMessageDialog(null,null,"Capitão", JOptionPane.DEFAULT_OPTION, capitao);
-					else if(option == 2) JOptionPane.showMessageDialog(null,null,"Assassino", JOptionPane.DEFAULT_OPTION, assassino);
-					else if(option == 3) JOptionPane.showMessageDialog(null,null,"Embaixador", JOptionPane.DEFAULT_OPTION, embaixador);
-					}
-			}
+			else if(ret == 2)
+				JOptionPane.showMessageDialog(null,null,"Ações de Personagem", JOptionPane.DEFAULT_OPTION, personagens);
 		}
 	}
 
