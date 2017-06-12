@@ -282,8 +282,8 @@ public class Board extends Coup {
 	 */
 	private void waitThreads() {
 		System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
-		if (Thread.activeCount() > ACTIVE_THREADS)
-			waitThreads();
+		while (Thread.activeCount() > ACTIVE_THREADS)
+			continue;
 	}
 
 	/**
@@ -331,7 +331,7 @@ public class Board extends Coup {
 		playerName = iterator.next();
 
 		/* Verifica se o jogador foi retirado do jogo. */
-		if (!super.getPlayers().containsKey(iterator)) {
+		if (!super.getPlayers().containsKey(playerName)) {
 			players.get(iterator).close();
 			iterator.remove();
 			return;
