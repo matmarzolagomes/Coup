@@ -22,24 +22,19 @@ public class Actions implements Serializable, Cloneable {
     public static final int UPDATE_ALL_INTERFACE = 9;
     public static final int LOAD_PLAYER_ACTIONS = 10;
     public static final int GET_NAME = 11;
-    public static final int ASSASSINATE_CONTEST = 12;
     public static final int SERVER_MESSAGE = 13;
     public static final int PLAYER_RESPONSE = 14;
-    public static final int ASSASSINATE_BLOCK = 15;
-    public static final int STEAL_BLOCK = 16;
-    public static final int STEAL_CONTEST = 17;
-    public static final int ALLOW = 18;
     public static final int GET_INPUT = 19;
 
     // ATRIBUTOS
     private int id;
     private String from;
     private String to;
-    private boolean allow;
     private boolean contest;
     private boolean block;
-    private String log;
+    private String log;    
     private HashMap<String, Player> players;
+    private Player player;
     private Deck dead;
     private boolean playerResponse;
     private String message;
@@ -47,105 +42,105 @@ public class Actions implements Serializable, Cloneable {
 
     public Actions() {
 	// TODO Auto-generated constructor stub
-    }
+    }       
 
     public int getId() {
-	return id;
-    }
+		return id;
+	}
 
-    public String getFrom() {
-	return from;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getTo() {
-	return to;
-    }
+	public String getFrom() {
+		return from;
+	}
 
-    public boolean isAllow() {
-	return allow;
-    }
+	public void setFrom(String from) {
+		this.from = from;
+	}
 
-    public Boolean isContest() {
-	return contest;
-    }
+	public String getTo() {
+		return to;
+	}
 
-    public Boolean isBlock() {
-	return block;
-    }
+	public void setTo(String to) {
+		this.to = to;
+	}
 
-    public String getLog() {
-	return log;
-    }
+	public boolean isContest() {
+		return contest;
+	}
 
-    public HashMap<String, Player> getPlayers() {
-	return players;
-    }
+	public void setContest(boolean contest) {
+		this.contest = contest;
+	}
 
-    public Deck getDead() {
-	return dead;
-    }
+	public boolean isBlock() {
+		return block;
+	}
 
-    public boolean isPlayerResponse() {
-	return playerResponse;
-    }
+	public void setBlock(boolean block) {
+		this.block = block;
+	}
 
-    public String getMessage() {
-	return message;
-    }
+	public String getLog() {
+		return log;
+	}
 
-    public String[] getCards() {
-	return cards;
-    }
+	public void setLog(String log) {
+		this.log = log;
+	}
 
-    public void setId(int id) {
-	this.id = id;
-    }
+	public HashMap<String, Player> getPlayers() {
+		return players;
+	}
 
-    public void setFrom(String from) {
-	this.from = from;
-    }
+	public void setPlayers(HashMap<String, Player> players) {
+		this.players = players;
+	}
 
-    public void setTo(String to) {
-	this.to = to;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public void setAllow(boolean allow) {
-	this.allow = allow;
-    }
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
-    public void setContest(boolean contest) {
-	this.contest = contest;
-    }
+	public Deck getDead() {
+		return dead;
+	}
 
-    public void setBlock(boolean block) {
-	this.block = block;
-    }
+	public void setDead(Deck dead) {
+		this.dead = dead;
+	}
 
-    public void setLog(String log) {
-	this.log = log;
-    }
+	public boolean isPlayerResponse() {
+		return playerResponse;
+	}
 
-    public void setPlayers(HashMap<String, Player> players) {
-	this.players = players;
-    }
+	public void setPlayerResponse(boolean playerResponse) {
+		this.playerResponse = playerResponse;
+	}
 
-    public void setDead(Deck dead) {
-	this.dead = dead;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setPlayerResponse(boolean playerResponse) {
-	this.playerResponse = playerResponse;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public void setMessage(String message) {
-	this.message = message;
-    }
+	public String[] getCards() {
+		return cards;
+	}
 
-    public void setCards(String[] cards) {
-	this.cards = cards;
-    }
+	public void setCards(String[] cards) {
+		this.cards = cards;
+	}
 
-    @Override
+	@Override
     protected Object clone() {
 	try {
 	    return super.clone();
