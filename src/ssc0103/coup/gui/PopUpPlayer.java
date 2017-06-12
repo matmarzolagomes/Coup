@@ -1,20 +1,26 @@
 package ssc0103.coup.gui;
 
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import ssc0103.coup.lan.Actions;
 
 public class PopUpPlayer {
 	
 	private int ret = -1;
-	private ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon, derrota, vitoria;
+	private ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon, derrota, vitoria, historia;
 	private String opcoes1[] = new String[] {"Aceitar", "Bloquear", "Contestar"};
 	private String opcoes2[] = new String[] {"Permitir", "Negar"};
 	private String opcoes3[] = new String[] {"Aceitar", "Contestar"};
 	private String opcoes4[] = new String[] {"Aceitar", "Bloquear (Embaixador)", "Bloquear (Capitão)", "Contestar"};
+	private ArrayList <String> acoes;
 	private String jogador = null;
+	
 	
 	public PopUpPlayer(){
 		
+		vitoria = new ImageIcon("images/historia.png");
 		coins = new ImageIcon("images/coins.png");
 		duque = new ImageIcon("images/Duque.jpeg");
 		assassino = new ImageIcon("images/Assassino.jpeg");
@@ -26,6 +32,7 @@ public class PopUpPlayer {
 		icon = new ImageIcon("images/icon.png");
 		derrota = new ImageIcon("images/derrota.jpg");
 		vitoria = new ImageIcon("images/vitoria.jpg");
+		historia = new ImageIcon("images/historia.png");
 		
 		golpe.setImage(golpe.getImage().getScaledInstance(150, 180, 100));
 		coins.setImage(coins.getImage().getScaledInstance(128, 128, 100));
@@ -40,6 +47,11 @@ public class PopUpPlayer {
 		vitoria.setImage(vitoria.getImage().getScaledInstance(640, 360, 100));
 		
 	}
+	
+	public void PopUpHistoria(){
+		JOptionPane.showMessageDialog(null,null,"História do Jogo", JOptionPane.DEFAULT_OPTION, historia);
+	}
+	
 	public void popUpErro(){
 		JOptionPane.showMessageDialog(null,"Você deve escolher uma ação!","Erro", JOptionPane.ERROR_MESSAGE);
 	}
@@ -128,13 +140,36 @@ public class PopUpPlayer {
 		JOptionPane.showOptionDialog(null, nome + " aplicou um golpe de estado em você!", "Golpe de Estado", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, golpe, null, null);
 	}
 	
-	public int popUpAcoes(String[] acoes, String nome){
-		ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
+	public int popUpAcoes(ArrayList<String> acoes2, String nome){
+		
+		acoes = new ArrayList<String>();
+		acoes.add("Renda");
+		acoes.add("Ajuda");
+		acoes.add("Taxas");
+		acoes.add("Troca");
+		
+		//roubar assassinar golpe
+		for(String acao: acoes2)
+			acoes.add(acao);
+		
+		ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes.toArray(), acoes.get(0));
 		while(ret < 0){
 			popUpErro();
-			ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes, acoes[0]);
+			ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!", "Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes.toArray(), acoes.get(0));
 		}
-		return ret;
+		
+		if(ret == 0) return Actions.INCOME;
+		else if(ret == 1) return Actions.FOREIGN;
+		else if(ret == 2) return Actions.TAXES;
+		else if(ret == 3) return Actions.SWAP;
+		
+		else{
+			if(acoes.get(ret).equals("Extorquir")) return Actions.STEAL;
+			else if(acoes.get(ret).equals("Assassinar")) return Actions.ASSASSINATE;
+			else if(acoes.get(ret).equals("Golpe")) return Actions.COUP;
+		}
+		
+	return -1;
 	}
 	
 	public String popUpJogadores(String[] jogadores){
@@ -155,7 +190,12 @@ public class PopUpPlayer {
 	public static void main(String[] args){
 		
 		String a[] = new String[]{"Victor", "Bruno", "Matheus", "Rodrigo"};
-		String b[] = new String[]{"Renda", "Taxas", "Assassinar", "Extorquir", "Ajuda", "Trocar", "Golpe"};
+		ArrayList <String> b = new ArrayList();
+		
+		//b.add("Extorquir");
+		//b.add("Assassinar");
+		//b.add("Golpe");
+		
 		PopUpPlayer t = new PopUpPlayer();
 		//System.out.println(t.popUpAssassino("Victor"));
 		//System.out.println(t.popUpTaxas("Victor"));
@@ -168,7 +208,8 @@ public class PopUpPlayer {
 		//t.popUpGolpe("Victor");
 		//System.out.println(t.popUpAcoes(b, "Victor"));
 		//System.out.println(t.popUpJogadores(a));
-		t.popUpDerrota();
-		t.popUpVitoria();
+		//t.popUpDerrota();
+		//t.popUpVitoria();
+		t.PopUpHistoria();
 	}
 }
