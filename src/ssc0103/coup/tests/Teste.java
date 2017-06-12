@@ -35,19 +35,30 @@ public class Teste implements Cloneable {
     }
     
     public static void main(String[] args) {
-	Teste t = new Teste();
-	t.setX(10);
-	t.setY(10);
-	
-	Teste backup = (Teste) t.clone();
-	
-	t.setX(15);
-	t.setY(15);
-	
-	t = backup;
-	
-	System.out.println(t.getX());
-	System.out.println(t.getY());
+//	Teste t = new Teste();
+//	t.setX(10);
+//	t.setY(10);
+//	
+//	Teste backup = (Teste) t.clone();
+//	
+//	t.setX(15);
+//	t.setY(15);
+//	
+//	t = backup;
+//	
+//	System.out.println(t.getX());
+//	System.out.println(t.getY());
+    	int x = 5;
+    	
+    	switch(x) {
+    	case 5:
+    		System.out.println(5);    		
+    	case 10:
+    		System.out.println(10);
+    		break;
+    	}
+    	
+    	
     }
 
 }
