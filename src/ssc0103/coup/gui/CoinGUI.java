@@ -77,6 +77,10 @@ public class CoinGUI extends JPanel{
 				minutes = counter / 60;
 				
 				text.setText(String.format("%02d:%02d", minutes, seconds));
+				
+				if (counter == 0) {
+					counter = 121;
+				}
 			}
 		};
 		

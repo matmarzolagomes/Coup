@@ -5,7 +5,9 @@ import java.awt.GridBagLayout;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ssc0103.coup.exception.GUIException;
@@ -16,6 +18,7 @@ import ssc0103.coup.lan.Actions;
 @SuppressWarnings("serial")
 public class CoupGUI extends JPanel {
     private DeadGUI deadg;
+    private ImageIcon logo;
     private final CoinGUI coing;
     private final HandGUI handg;
     private final LogGUI logg;
@@ -28,6 +31,9 @@ public class CoupGUI extends JPanel {
         
         GridBagConstraints cons = new GridBagConstraints();
         
+        logo = new ImageIcon("images/coup_logo.png");
+        logo.setImage(logo.getImage().getScaledInstance(350, 90, 50));
+        
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.FIRST_LINE_START;
         cons.gridheight = 1;
@@ -35,7 +41,7 @@ public class CoupGUI extends JPanel {
 
         cons.gridx = 0;
         cons.gridy = 0;
-        cons.weightx = 0.2;
+        cons.weightx = 0.3;
         cons.weighty = 1;
         
         JPanel pleft = new JPanel(new GridBagLayout());
@@ -62,7 +68,7 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 1;
         cons.gridy = 0;
-        cons.weightx = 0.7;
+        cons.weightx = 0.6;
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
@@ -86,8 +92,21 @@ public class CoupGUI extends JPanel {
         cons.weightx = 0.1;
         cons.weighty = 1;
         
+        JPanel pright = new JPanel(new GridBagLayout());
+        add(pright, cons);
+        
+        cons.gridx = 0;
+        cons.gridy = 0;
+        cons.weightx = 1;
+        cons.weighty = 0.3;
+        
         playerg = new PlayerGUI(players);
-        add(playerg, cons);
+        pright.add(playerg, cons);
+        
+        cons.gridy = 1;
+        cons.weighty = 0.7;
+        
+        pright.add(new JLabel(logo), cons);
     }
     
     public void updateAll(Actions data) {
@@ -143,6 +162,7 @@ public class CoupGUI extends JPanel {
         Deck hand = new Deck();
         hand.add("Condessa");
         hand.add("Duque");
+      
         
         try {
             TimeUnit.SECONDS.sleep(3);
