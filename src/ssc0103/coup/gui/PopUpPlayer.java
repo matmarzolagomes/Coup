@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 public class PopUpPlayer {
 	
 	private int ret = -1;
-	private ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon;
+	private ImageIcon duque, assassino, embaixador, capitao, condessa, coins, golpe, coup, icon, derrota, vitoria;
 	private String opcoes1[] = new String[] {"Aceitar", "Bloquear", "Contestar"};
 	private String opcoes2[] = new String[] {"Permitir", "Negar"};
 	private String opcoes3[] = new String[] {"Aceitar", "Contestar"};
@@ -24,6 +24,8 @@ public class PopUpPlayer {
 		golpe = new ImageIcon("images/golpe.png");
 		coup = new ImageIcon("images/action.png");
 		icon = new ImageIcon("images/icon.png");
+		derrota = new ImageIcon("images/derrota.jpg");
+		vitoria = new ImageIcon("images/vitoria.jpg");
 		
 		golpe.setImage(golpe.getImage().getScaledInstance(150, 180, 100));
 		coins.setImage(coins.getImage().getScaledInstance(128, 128, 100));
@@ -34,10 +36,20 @@ public class PopUpPlayer {
 		condessa.setImage(condessa.getImage().getScaledInstance(150, 250, 100));
 		coup.setImage(coup.getImage().getScaledInstance(182, 207, 100));
 		icon.setImage(icon.getImage().getScaledInstance(128, 128, 100));
+		derrota.setImage(derrota.getImage().getScaledInstance(640, 360, 100));
+		vitoria.setImage(vitoria.getImage().getScaledInstance(640, 360, 100));
 		
 	}
 	public void popUpErro(){
 		JOptionPane.showMessageDialog(null,"Você deve escolher uma ação!","Erro", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void popUpDerrota(){
+		JOptionPane.showMessageDialog(null,null,"Derrota", JOptionPane.DEFAULT_OPTION, derrota);
+	}
+	
+	public void popUpVitoria(){
+		JOptionPane.showMessageDialog(null,null,"Vitória", JOptionPane.DEFAULT_OPTION, vitoria);
 	}
 	
 	public int popUpAssassino(String nome){
@@ -153,7 +165,9 @@ public class PopUpPlayer {
 		//System.out.println(t.popUpBloqueioExtorcao("victor", "Capitao"));
 		//System.out.println(t.popUpBloqueioExtorcao("victor", "Embaixador"));
 		//t.popUpGolpe("Victor");
-		System.out.println(t.popUpAcoes(b, "Victor"));
+		//System.out.println(t.popUpAcoes(b, "Victor"));
 		//System.out.println(t.popUpJogadores(a));
+		t.popUpDerrota();
+		t.popUpVitoria();
 	}
 }
