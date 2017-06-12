@@ -17,25 +17,31 @@ import ssc0103.coup.game.Player;
 @SuppressWarnings("serial")
 public class CoinGUI extends JPanel{
 	ImageIcon image;
+	ImageIcon time;
 	JLabel numCoins;
 	JLabel text;
 	Timer tm;
 	TimerTask task;
-	private int counter, seconds, minutes, hours;
+	private int counter, seconds, minutes;
 	
 	public CoinGUI(Player player) {
 		super();
-		counter = 0;
+		counter = 121;
 		
 		setLayout(new GridBagLayout());
-		image = new ImageIcon("images/coin.png");
+		
+		image = new ImageIcon("images/coins.png");
+		image.setImage(image.getImage().getScaledInstance(50, 50, 100));
 		
 		numCoins = new JLabel(image);
-		numCoins.setFont(new Font("Serif", Font.BOLD, 40));
-		numCoins.setText(String.format("x %02d", player.getMoney()));
+		numCoins.setFont(new Font("Serif", Font.BOLD, 25));
+		numCoins.setText(String.format(" x %02d", player.getMoney()));
 		
-		text = new JLabel("Time: 00:00:00");
-		text.setFont(new Font("Serif", Font.BOLD, 30));
+		time = new ImageIcon("images/ampulheta.png");
+		time.setImage(time.getImage().getScaledInstance(50, 50, 100));
+		
+		text = new JLabel(time);
+		text.setFont(new Font("Serif", Font.BOLD, 25));
 		
 		addComponents();		
 		runCounter();
@@ -57,7 +63,7 @@ public class CoinGUI extends JPanel{
 	}
 	
 	public void attCoins(Player player) {
-		numCoins.setText(String.format("x %02d", player.getMoney()));
+		numCoins.setText(String.format(" x %02d", player.getMoney()));
 	}
 	
 	private void runCounter() {
@@ -66,14 +72,11 @@ public class CoinGUI extends JPanel{
 		task = new TimerTask() {
 			@Override
 			public void run() {
-				counter += 1;
+				counter -= 1;
 				seconds = counter % 60;
 				minutes = counter / 60;
-				hours = minutes / 60;
 				
-				minutes = minutes % 60;
-				
-				text.setText(String.format("Time: %02d:%02d:%02d", hours, minutes, seconds));
+				text.setText(String.format("%02d:%02d", minutes, seconds));
 			}
 		};
 		
@@ -93,7 +96,7 @@ public class CoinGUI extends JPanel{
 		
 		game.add(coin);
 		
-		System.out.println("APERTA ENTER PRA INCREMENTAR A MOEDA (só interface top rogerinho)");
+		System.out.println("APERTA ENTER PRA INCREMENTAR A MOEDA (sï¿½ interface top rogerinho)");
 		
 		while (true)
 			if (s.hasNextLine()) {

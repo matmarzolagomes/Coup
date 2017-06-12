@@ -26,7 +26,7 @@ public abstract class Coup  {
         board.startGame(nplayers);
     }
     
-    abstract public String[] getInput(Deck hand);
+    abstract public String[] getInput(Player player);
     
     public Deck getBoard() {
         return board;
@@ -60,18 +60,18 @@ public abstract class Coup  {
                     // to == blocker
                     if(players.get(to).checkCard("Duke")) {
                         while(!ret)
-                            ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                            ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         ret = false;
                         
                         while(!ret)
-                            ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         players.get(to).draw(board, 1);
                         winner = to;
                         
                         
                     } else {
                         while(!ret)
-                            ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         ret = players.get(from).foreign();
                     }
                 } else if(!block) {
@@ -83,7 +83,7 @@ public abstract class Coup  {
                 // Coup
                 if(players.get(from).coup())
                     while(!ret)
-                        ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                        ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                 break;
             case(Actions.TAXES):
                 // Taxes
@@ -91,17 +91,17 @@ public abstract class Coup  {
                     // to == blocker
                     if(players.get(from).checkCard("Duke")) {
                         while(!ret)
-                            ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         ret = false;
                         
                         while(!ret)
-                            ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                            ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         players.get(from).draw(board, 1);
                         
                         ret = players.get(from).taxes();
                     } else {
                         while(!ret)
-                            ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                            ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         winner = to;
                     }
                 } else ret = players.get(from).taxes();
@@ -113,16 +113,16 @@ public abstract class Coup  {
                     if (contest && !block) {
                         // Se contestar
                         if (players.get(from).checkCard("Assassino")) {
-                            while(!ret)ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            while(!ret)ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                             ret = false;
-                            while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                             ret = false;
                             
-                            while(!ret)ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                            while(!ret)ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                             players.get(from).draw(board, 1);
                             
                         } else {
-                            while (!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                            while (!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                             winner = to;
                         }
                     } else if (block) {
@@ -130,26 +130,26 @@ public abstract class Coup  {
                         if (contest) {
                             // se contestar que o cara tem a condessa
                             if (players.get(to).checkCard("Condessa")) {
-                                while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                                while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                                 ret = false;
                                 
-                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                                 ret = false;
                                 players.get(to).draw(board, 1);
                                 
                                 winner = to;
                             
                             } else {
-                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                                 ret = false;
-                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                                while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                             }
                         } else {
                         	ret = true;
                         	winner = to;
                         }
                     } else
-                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                 }
                 
                 break;
@@ -158,15 +158,15 @@ public abstract class Coup  {
                 if (contest && !block) {
                     // se o cara que for roubado contestar o que tentou roubar
                     if (players.get(from).checkCard("Capitao")) {
-                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         ret = false;
                         
-                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         players.get(from).draw(board, 1);
                         
                         ret = players.get(from).steal(players.get(to));
                     } else {
-                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         winner = to;
                     }
                     
@@ -175,16 +175,16 @@ public abstract class Coup  {
                     if (contest) {
                         // se o primeiro contestar o bloqueio do segundo
                         if (players.get(to).checkCard("Embaixador") || players.get(to).checkCard("Capitao")) {
-                        	while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        	while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         	ret = false;
                         	
-                        	while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                        	while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         	players.get(to).draw(board, 1);
                         	winner = to;
                         
                         }
                         else {
-                            while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                            while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                             ret = players.get(from).steal(players.get(to));
                         }
                     } else {
@@ -199,23 +199,23 @@ public abstract class Coup  {
                 // Swap
                 if (contest) {
                     if (players.get(from).checkCard("Embaixador")) {
-                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to).getHand()), dead);
+                        while(!ret) ret = players.get(to).removeCard(getInput(players.get(to)), dead);
                         ret = false;
                         
                         players.get(from).draw(board, 2);
-                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         ret = false;
-                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         
                     } else {
-                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                        while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                         winner = to;
                     }
                 } else {
                     players.get(from).draw(board, 2);
-                    while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                    while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                     ret = false;
-                    while(!ret) ret = players.get(from).removeCard(getInput(players.get(from).getHand()), dead);
+                    while(!ret) ret = players.get(from).removeCard(getInput(players.get(from)), dead);
                     
                 }
                 
