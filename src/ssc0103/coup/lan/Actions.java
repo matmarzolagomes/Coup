@@ -7,7 +7,7 @@ import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
 @SuppressWarnings("serial")
-public class Actions implements Serializable {
+public class Actions implements Serializable, Cloneable {
     // CONSTANTES
     public static final int LEFT = 99;
     public static final int INCOME = 0;
@@ -65,11 +65,11 @@ public class Actions implements Serializable {
 	return allow;
     }
 
-    public boolean isContest() {
+    public Boolean isContest() {
 	return contest;
     }
 
-    public boolean isBlock() {
+    public Boolean isBlock() {
 	return block;
     }
 
@@ -143,5 +143,15 @@ public class Actions implements Serializable {
 
     public void setCards(String[] cards) {
 	this.cards = cards;
+    }
+
+    @Override
+    protected Object clone() {
+	try {
+	    return super.clone();
+	} catch (CloneNotSupportedException e) {
+	    e.printStackTrace();
+	    return null;
+	}
     }
 }
