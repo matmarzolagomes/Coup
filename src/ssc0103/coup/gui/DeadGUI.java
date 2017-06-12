@@ -34,23 +34,28 @@ public class DeadGUI extends JPanel {
         JLabel aux;
         Pattern r = Pattern.compile("x([0-9]+)/.*");
         
-        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Assassino", 60, 100), SwingConstants.LEFT);
+        aux = new JLabel(" x0" + "/" + maxcards, new CardGUI("Assassino", 60, 100), SwingConstants.LEFT);
+        aux.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         add(aux);
         count.put("Assassino", aux);
         
-        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Capitao", 60, 100), SwingConstants.LEFT);
+        aux = new JLabel(" x0" + "/" + maxcards, new CardGUI("Capitao", 60, 100), SwingConstants.LEFT);
+        aux.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         add(aux);
         count.put("Capitao", aux);
         
-        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Condessa", 60, 100), SwingConstants.LEFT);
+        aux = new JLabel(" x0" + "/" + maxcards, new CardGUI("Condessa", 60, 100), SwingConstants.LEFT);
+        aux.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         add(aux);
         count.put("Condessa", aux);
         
-        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Duque", 60, 100), SwingConstants.LEFT);
+        aux = new JLabel(" x0" + "/" + maxcards, new CardGUI("Duque", 60, 100), SwingConstants.LEFT);
+        aux.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         add(aux);
         count.put("Duque", aux);
         
-        aux = new JLabel("x0" + "/" + maxcards, new CardGUI("Embaixador", 60, 100), SwingConstants.LEFT);
+        aux = new JLabel(" x0" + "/" + maxcards, new CardGUI("Embaixador", 60, 100), SwingConstants.LEFT);
+        aux.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         add(aux);
         count.put("Embaixador", aux);
         
@@ -58,10 +63,10 @@ public class DeadGUI extends JPanel {
             aux = count.get(card);
                 
             Matcher m = r.matcher(aux.getText());
-            if(!m.find()) throw new GUIException("Inválid dead.");
+            if(!m.find()) throw new GUIException("Invï¿½lid dead.");
                 
             int c = Integer.parseInt(m.group(1))+1;
-            aux.setText("x" + c + "/" + maxcards);
+            aux.setText(" x" + c + "/" + maxcards);
         }
         
         count.values().forEach((JLabel label) -> {

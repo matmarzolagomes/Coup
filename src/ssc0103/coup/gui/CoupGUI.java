@@ -148,6 +148,7 @@ public class CoupGUI extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
+        //frame.add(new JLabel(new ImageIcon("images/fundo.jpg")));
         
         HashMap<String, Player> players = new HashMap<>();
         players.put("Rodrigo", new Player("Rodrigo"));
