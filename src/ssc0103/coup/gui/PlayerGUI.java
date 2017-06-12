@@ -82,7 +82,7 @@ public class PlayerGUI extends JPanel{
 		
 		p1 = new Player("um");
 		p1.income();
-		p1.draw(deck);
+		p1.draw(deck, 2);
 		p.put(p1.getName(), p1);
 		
 		p1 = new Player("dois");
@@ -95,7 +95,7 @@ public class PlayerGUI extends JPanel{
 		
 		p1 = new Player("indiozinhos");
 		p1.income();
-		p1.draw(deck);
+		p1.draw(deck, 2);
 		p.put(p1.getName(), p1);
 		
 		p1 = new Player("quatro");
@@ -108,7 +108,7 @@ public class PlayerGUI extends JPanel{
 		
 		p1 = new Player("seis");
 		p1.income();
-		p1.draw(deck);
+		p1.draw(deck, 2);
 		p.put(p1.getName(), p1);
 		
 		p1 = new Player("indiozinhos");
@@ -121,7 +121,7 @@ public class PlayerGUI extends JPanel{
 		
 		p1 = new Player("Matheus");
 		p1.income();
-		p1.draw(deck);
+		p1.draw(deck, 2);
 		p.put(p1.getName(), p1);
 		
 		p1 = new Player("Rodrigo");
