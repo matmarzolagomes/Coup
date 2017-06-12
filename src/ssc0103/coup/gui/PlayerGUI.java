@@ -3,9 +3,12 @@ package ssc0103.coup.gui;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.HashMap;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import ssc0103.coup.game.Player;
 
@@ -37,6 +40,11 @@ public class PlayerGUI extends JPanel{
 		table = new JTable(data, column);
 		table.setEnabled(false);
 		table.setSelectionBackground(Color.LIGHT_GRAY);
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 		
 		scrollPane = new JScrollPane(table);
 		table.setPreferredScrollableViewportSize(table.getPreferredSize());
