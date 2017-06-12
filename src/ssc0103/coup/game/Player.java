@@ -81,10 +81,10 @@ public class Player implements Serializable, Cloneable {
 		return false;
 	}
 
-	public boolean draw(Deck board) {
+	public boolean draw(Deck board, int size) {
 		Random randomizer = new Random();
-		hand.add(board.remove(randomizer.nextInt(board.size())));
-		hand.add(board.remove(randomizer.nextInt(board.size())));
+		for (int i = 0; i < size; i++)
+			hand.add(board.remove(randomizer.nextInt(board.size())));
 		return true;
 	}
 
