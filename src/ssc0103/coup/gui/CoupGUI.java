@@ -31,7 +31,7 @@ public class CoupGUI extends JPanel {
         GridBagConstraints cons = new GridBagConstraints();
         
         logo = new ImageIcon("images/coup_logo.png");
-        logo.setImage(logo.getImage().getScaledInstance(175, 45, 50));
+        logo.setImage(logo.getImage().getScaledInstance(300, 70, 100));
         
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -58,12 +58,6 @@ public class CoupGUI extends JPanel {
             System.out.println(ex.getMessage());
             System.exit(-1);
         }
-        
-        cons.gridy = 1;
-        cons.weighty = 0.2;
-        
-        coing = new CoinGUI(players.get(me));
-        pleft.add(coing, cons);
         
         cons.gridx = 1;
         cons.gridy = 0;
@@ -97,13 +91,21 @@ public class CoupGUI extends JPanel {
         cons.gridx = 0;
         cons.gridy = 0;
         cons.weightx = 1;
-        cons.weighty = 0.9;
+        cons.weighty = 0.5;
         
         playerg = new PlayerGUI(players);
         pright.add(playerg, cons);
         
         cons.gridy = 1;
         cons.weighty = 0.1;
+        
+        coing = new CoinGUI(players.get(me));
+        pright.add(coing, cons);
+        
+        cons.gridy = 2;
+        cons.weighty = 0.4;
+        
+        cons.ipady = 0;
         
         pright.add(new JLabel(logo), cons);
     }
@@ -185,6 +187,15 @@ public class CoupGUI extends JPanel {
         players.put("bVictor8", new Player("bVictor8"));
         players.put("bVictor9", new Player("bVictor9"));
         players.put("bVictor0", new Player("bVictor0"));
+        players.put("bVictor11", new Player("bVictor11"));
+        players.put("bVictor12", new Player("bVictor12"));
+        players.put("bVictor31", new Player("bVictor31"));
+        players.put("bVictor25", new Player("bVictor25"));
+        players.put("bVictor11", new Player("bVictor11"));
+        players.put("bVictor12", new Player("bVictor12"));
+        players.put("bVictor31", new Player("bVictor31"));
+        players.put("bVictor25", new Player("bVictor25"));
+        players.put("bVictor25", new Player("bVictor25"));
         players.put("bVictor11", new Player("bVictor11"));
         players.put("bVictor12", new Player("bVictor12"));
         players.put("bVictor31", new Player("bVictor31"));
