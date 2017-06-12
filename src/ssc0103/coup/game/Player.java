@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 @SuppressWarnings("serial")
-public class Player implements Serializable{
+public class Player implements Serializable, Cloneable {
 	private String name;
 	private Deck hand;
 	private int money;
@@ -105,5 +105,15 @@ public class Player implements Serializable{
 	
 	public static void main(String[] args) {
 		
+	}
+
+	@Override
+	protected Object clone() {	    
+	    try {
+		return super.clone();
+	    } catch (CloneNotSupportedException e) {
+		e.printStackTrace();
+	    }
+	    return null;
 	}
 }
