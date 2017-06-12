@@ -48,6 +48,9 @@ public class PopUpPlayer {
 		
 	}
 	
+	public int popUpBloqueioAjuda(String nome){
+		return ret = JOptionPane.showOptionDialog(null, nome + " bloqueou o pedido de ajuda externa!", "Bloqueio", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, duque, opcoes3, opcoes3[0]);
+	}
 	public void PopUpHistoria(){
 		JOptionPane.showMessageDialog(null,null,"História do Jogo", JOptionPane.DEFAULT_OPTION, historia);
 	}
@@ -211,5 +214,6 @@ public class PopUpPlayer {
 		//t.popUpDerrota();
 		//t.popUpVitoria();
 		t.PopUpHistoria();
+		t.popUpBloqueioAjuda("Victor");
 	}
 }
