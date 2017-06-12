@@ -3,7 +3,6 @@ package ssc0103.coup.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,7 +31,7 @@ public class CoupGUI extends JPanel {
         GridBagConstraints cons = new GridBagConstraints();
         
         logo = new ImageIcon("images/coup_logo.png");
-        logo.setImage(logo.getImage().getScaledInstance(350, 90, 50));
+        logo.setImage(logo.getImage().getScaledInstance(175, 45, 50));
         
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -41,7 +40,7 @@ public class CoupGUI extends JPanel {
 
         cons.gridx = 0;
         cons.gridy = 0;
-        cons.weightx = 0.3;
+        cons.weightx = 0.1;
         cons.weighty = 1;
         
         JPanel pleft = new JPanel(new GridBagLayout());
@@ -68,7 +67,7 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 1;
         cons.gridy = 0;
-        cons.weightx = 0.6;
+        cons.weightx = 0.8;
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
@@ -98,13 +97,13 @@ public class CoupGUI extends JPanel {
         cons.gridx = 0;
         cons.gridy = 0;
         cons.weightx = 1;
-        cons.weighty = 0.3;
+        cons.weighty = 0.9;
         
         playerg = new PlayerGUI(players);
         pright.add(playerg, cons);
         
         cons.gridy = 1;
-        cons.weighty = 0.7;
+        cons.weighty = 0.1;
         
         pright.add(new JLabel(logo), cons);
     }
@@ -115,7 +114,7 @@ public class CoupGUI extends JPanel {
             updateDead(data.getDead());
             updateHand(data.getPlayers().get(me).getHand());
             updateLog(data.getLog());
-            updatePlayer();
+            updatePlayer(data.getPlayers());
         } catch (GUIException ex) {
             System.out.println(ex.getMessage());
             System.exit(-1);
@@ -138,8 +137,8 @@ public class CoupGUI extends JPanel {
         logg.insertLog(log);
     }
     
-    public void updatePlayer() {
-        playerg.attTable();
+    public void updatePlayer(HashMap<String,Player> players) {
+        playerg.attTable(players);
     }
     
     public static void main(String[] args) {
@@ -152,35 +151,65 @@ public class CoupGUI extends JPanel {
         players.put("Rodrigo", new Player("Rodrigo"));
         players.put("Tico Liro", new Player("Tico Liro"));
         players.put("Victor", new Player("Victor"));
+        players.put("Victor1", new Player("Victor1"));
+        players.put("Victor2", new Player("Victor2"));
+        players.put("Victor3", new Player("Victor3"));
+        players.put("Victor4", new Player("Victor4"));
+        players.put("Victor5", new Player("Victor5"));
+        players.put("Victor6", new Player("Victor6"));
+        players.put("Victor7", new Player("Victor7"));
+        players.put("Victor8", new Player("Victor8"));
+        players.put("Victor9", new Player("Victor9"));
+        players.put("Victor0", new Player("Victor0"));
+        players.put("Victor11", new Player("Victor11"));
+        players.put("Victor12", new Player("Victor12"));
+        players.put("Victor31", new Player("Victor31"));
+        players.put("Victor25", new Player("Victor25"));
+        players.put("aVictor3", new Player("aVictor3"));
+        players.put("aVictor4", new Player("aVictor4"));
+        players.put("aVictor5", new Player("aVictor5"));
+        players.put("aVictor6", new Player("aVictor6"));
+        players.put("aVictor7", new Player("aVictor7"));
+        players.put("aVictor8", new Player("aVictor8"));
+        players.put("aVictor9", new Player("aVictor9"));
+        players.put("aVictor0", new Player("aVictor0"));
+        players.put("aVictor11", new Player("aVictor11"));
+        players.put("aVictor12", new Player("aVictor12"));
+        players.put("aVictor31", new Player("aVictor31"));
+        players.put("aVictor25", new Player("aVictor25"));
+        players.put("bVictor3", new Player("bVictor3"));
+        players.put("bVictor4", new Player("bVictor4"));
+        players.put("bVictor5", new Player("bVictor5"));
+        players.put("bVictor6", new Player("bVictor6"));
+        players.put("bVictor7", new Player("bVictor7"));
+        players.put("bVictor8", new Player("bVictor8"));
+        players.put("bVictor9", new Player("bVictor9"));
+        players.put("bVictor0", new Player("bVictor0"));
+        players.put("bVictor11", new Player("bVictor11"));
+        players.put("bVictor12", new Player("bVictor12"));
+        players.put("bVictor31", new Player("bVictor31"));
+        players.put("bVictor25", new Player("bVictor25"));
         
         CoupGUI game = new CoupGUI("Rodrigo", players);
         frame.add(game);
         
         Deck dead = new Deck();
-        dead.add("Capitao");
-        
-        Deck hand = new Deck();
-        hand.add("Condessa");
-        hand.add("Duque");
-      
-        
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException ex) {
-            System.out.println("Deu bosta.");
-            System.exit(-1);
-        }
-        
-        hand.remove("Condessa");
         dead.add("Condessa");
+        dead.add("Capitao");
+
+        Deck board = new Deck();
+        board.add("Assassino");
+        board.add("Capitao");
         
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException ex) {
-            System.out.println("Deu bosta.");
-            System.exit(-1);
-        }
-        
+        players.get("Rodrigo").draw(board, 2);
         players.get("Rodrigo").income();
+        
+        Actions act = new Actions();
+        act.setPlayers(players);
+        act.setDead(dead);
+        act.setLog("Update all.");
+        
+        game.updateAll(act);
+        frame.pack();
     }
 }

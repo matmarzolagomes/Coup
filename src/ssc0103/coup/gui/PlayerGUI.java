@@ -1,19 +1,16 @@
 package ssc0103.coup.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.util.HashMap;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 
 @SuppressWarnings("serial")
 public class PlayerGUI extends JPanel{
-	HashMap<String,Player> players;
 	JTable table;
 	String[] column;
 	Object[][] data;
@@ -21,15 +18,13 @@ public class PlayerGUI extends JPanel{
 	
 	public PlayerGUI(HashMap<String, Player> players) {
 		super();
-		this.players = players;
-		this.setLayout(new BorderLayout());
-		table = new JTable();
+		setLayout(new GridLayout(1, 1));
 		column = new String[] {"Jogadores", "Moedas", "Cartas"};
 		data = new Object[players.size()][3];
-		createTable();
+		createTable(players);
 	}
 	
-	private void createTable() {
+	private void createTable(HashMap<String,Player> players) {
 		int i = 0;
 		
 		for (Player player : players.values()) {
@@ -44,13 +39,13 @@ public class PlayerGUI extends JPanel{
 		table.setSelectionBackground(Color.LIGHT_GRAY);
 		
 		scrollPane = new JScrollPane(table);
-		table.setFillsViewportHeight(true);
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setFillsViewportHeight(false);
 		
 		add(scrollPane);
-		
 	}
 	
-	public void attTable() {
+	public void attTable(HashMap<String,Player> players) {
 		int i = 0;
 		
 		for (Player player : players.values()) {
@@ -66,78 +61,8 @@ public class PlayerGUI extends JPanel{
 			
 			i++;
 		}
-		
 	}
 	
 	public static void main(String[] args) {
-		JFrame game = new JFrame();
-		game.setSize(300, 400);
-		game.setVisible(true);
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		HashMap<String,Player> p = new HashMap<String,Player>();
-		Player p1;
-		
-		Deck deck = new Deck();
-		deck.createDeck(4);
-		
-		p1 = new Player("um");
-		p1.income();
-		p1.draw(deck, 2);
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("dois");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("tres");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("indiozinhos");
-		p1.income();
-		p1.draw(deck, 2);
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("quatro");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("cinco");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("seis");
-		p1.income();
-		p1.draw(deck, 2);
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("indiozinhos");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("aeeee");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("Matheus");
-		p1.income();
-		p1.draw(deck, 2);
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("Rodrigo");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		p1 = new Player("Ola");
-		p1.foreign();
-		p.put(p1.getName(), p1);
-		
-		PlayerGUI list = new PlayerGUI(p);
-		list.createTable();
-		list.attTable();
-		game.add(list);
-		
-		
 	}
-
 }
