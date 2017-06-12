@@ -3,6 +3,8 @@ package ssc0103.coup.lan;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -41,8 +43,6 @@ public class Board extends Coup {
     private Socket player;
     private String msg;
     private Actions actions;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
 
     /**
      * Construtor da Classe Board, responsável por iniciliazar o servidor do
@@ -129,14 +129,13 @@ public class Board extends Coup {
     public String[] getInput(Deck hand) {
 	try {
 	    /* Envia requisição de carta ao jogador. */
-	    output = new ObjectOutputStream(player.getOutputStream());
 	    actions = new Actions();
 	    actions.setId(Actions.GET_INPUT);
-	    output.flush();
+	    flushObject(actions, player);
 
 	    /* Obtém cartas selecionadas pelo jogador. */
-	    input = new ObjectInputStream(player.getInputStream());
-	    actions = (Actions) input.readObject();
+	    actions = getObject(player);
+
 	    return actions.getCards();
 	} catch (IOException | ClassNotFoundException e) {
 	    e.printStackTrace();
@@ -164,14 +163,24 @@ public class Board extends Coup {
 		    .size() > 1; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator)
 		coupHandler(iterator);
 
-	    /* Finaliza o servidor e fecha as conexões restantes. */
-	    board.close();
 	} catch (IOException e) {
 	    e.printStackTrace();
 	} catch (ClassNotFoundException e) {
 	    e.printStackTrace();
 	} catch (PException e) {
 	    e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	} catch (SecurityException e) {
+	    e.printStackTrace();
+	} finally {
+	    try {
+		/* Finaliza o servidor e fecha as conexões restantes. */
+		player.close();
+		board.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 	}
     }
 
@@ -210,12 +219,6 @@ public class Board extends Coup {
      * @throws ClassNotFoundException
      */
     private void getPlayerName(Socket player) throws IOException, ClassNotFoundException {
-	/* Canal de comunicação do cliente para o servidor. */
-	ObjectInputStream input = new ObjectInputStream(player.getInputStream());
-
-	/* Canal de comunicação do servidor para o cliente. */
-	ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
-
 	/* Objeto que serve como meio de comunicação. */
 	Actions actions = new Actions();
 
@@ -225,11 +228,10 @@ public class Board extends Coup {
 	try {
 	    /* Solicita ao jogador um nickname. */
 	    actions.setId(Actions.GET_NAME);
-	    output.writeObject(actions);
-	    output.flush();
+	    flushObject(actions, player);
 
 	    /* Recebe a resposta do jogador. */
-	    actions = (Actions) input.readObject();
+	    actions = getObject(player);
 
 	    if (actions.getId() == Actions.GET_NAME) {
 		/* Verifica se o nome é válido. */
@@ -256,8 +258,7 @@ public class Board extends Coup {
 		    actions = new Actions();
 		    actions.setId(Actions.SERVER_MESSAGE);
 		    actions.setMessage(msg);
-		    output.writeObject(actions);
-		    output.flush();
+		    flushObject(actions, player);
 		    return;
 		}
 
@@ -268,8 +269,7 @@ public class Board extends Coup {
 	    actions = new Actions();
 	    actions.setId(Actions.SERVER_MESSAGE);
 	    actions.setMessage(f.getMessage());
-	    output.writeObject(actions);
-	    output.flush();
+	    flushObject(actions, player);
 
 	    /* Solicita novamente ao player um nickanme. */
 	    getPlayerName(player);
@@ -295,17 +295,13 @@ public class Board extends Coup {
 	    this.playerName = (String) playersList.next();
 	    new Thread(() -> {
 		try {
-		    ObjectOutputStream output = new ObjectOutputStream(players.get(this.playerName).getOutputStream());
 		    Actions actions = new Actions();
-
+		    actions.setId(Actions.LOAD_INTERFACE);
 		    actions.setPlayers(super.getPlayers());
 		    actions.setDead(super.getDead());
 		    actions.setLog("Início do Jogo.");
 		    gameLog.add(actions.getLog());
-		    actions.setId(Actions.LOAD_INTERFACE);
-
-		    output.writeObject(actions);
-		    output.flush();
+		    flushObject(actions, players.get(this.playerName));
 		} catch (IOException e) {
 		    players.remove(player);
 		    e.printStackTrace();
@@ -318,19 +314,24 @@ public class Board extends Coup {
     }
 
     /**
+     * Gerencia as ações feitas pelos jogadores.
      * 
      * @param coup
      * @param iterator
      * @throws IOException
      * @throws ClassNotFoundException
      * @throws PException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
      */
-    private void coupHandler(Iterator<String> iterator) throws IOException, ClassNotFoundException, PException {
+    private void coupHandler(Iterator<String> iterator)
+	    throws IOException, ClassNotFoundException, PException, NoSuchMethodException, SecurityException {
 	/* Nome do jogador do turno. */
 	playerName = iterator.next();
 
 	/* Verifica se o jogador foi retirado do jogo. */
 	if (!super.getPlayers().containsKey(iterator)) {
+	    players.get(iterator).close();
 	    iterator.remove();
 	    return;
 	}
@@ -340,23 +341,21 @@ public class Board extends Coup {
 	System.out.println("Turno do Jogador " + playerName + ".");
 
 	/* Envia ao jogador as suas ações. */
-	output = new ObjectOutputStream(player.getOutputStream());
 	actions = new Actions();
 	actions.setId(Actions.LOAD_PLAYER_ACTIONS);
 	actions.setPlayers(super.getPlayers());
 	actions.setDead(super.getDead());
 	actions.setFrom(playerName);
-	output.writeObject(actions);
-	output.flush();
+	flushObject(actions, player);
 
 	/* Recebe a resposta do jogador. */
-	input = new ObjectInputStream(player.getInputStream());
-	actions = (Actions) input.readObject();
+	actions = getObject(player);
 
 	/* Executa a ação do jogador. */
 	switch (actions.getId()) {
 
 	case Actions.LEFT:
+	    players.get(iterator).close();
 	    iterator.remove();
 	    break;
 
@@ -390,230 +389,225 @@ public class Board extends Coup {
 	}
     }
 
-    /**
-     * @throws IOException
-     * @throws PException
-     * 
-     */
-    private void swap() throws IOException, PException {
-	/* Notifica todos os oponentes. */
-	spreadOpponents();
+    // ############# AÇÕES DO JOGADOR #############//
 
-	/* Obtém a contestação mais rápida, se houver. */
-	getFastBlock(); // ALTERAR ISSO
-
-	/* Executa a ação. */
-	super.play(Actions.SWAP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-    }
-
-    /**
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws PException
-     * 
-     */
-    private void steal() throws IOException, ClassNotFoundException, PException {
-	/* Notifica o oponente que está sendo roubado. */
-	output = new ObjectOutputStream(players.get(actions.getTo()).getOutputStream());
-	output.writeObject(actions);
-	output.flush();
-
-	/* Obtém resposta do oponente. */
-	input = new ObjectInputStream(players.get(actions.getTo()).getInputStream());
-	actions = (Actions) input.readObject();
-
-	if (actions.isBlock()) {
-	    /* Verifica se o jogador quer contestar o bloqueio do oponente. */
-	    output = new ObjectOutputStream(player.getOutputStream());
-	    output.writeObject(actions);
-	    output.flush();
-
-	    input = new ObjectInputStream(player.getInputStream());
-	    actions = (Actions) input.readObject();
-	}
-
-	super.play(Actions.STEAL, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-    }
-
-    /**
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws PException
-     * 
-     */
-    private void assassinate() throws IOException, ClassNotFoundException, PException {
-	/*
-	 * Pergunta ao jogador alvo se ele deseja contestar permitir ou bloquear
-	 * a ação.
-	 */
-	output = new ObjectOutputStream(players.get(actions.getTo()).getOutputStream());
-	output.writeObject(actions);
-	output.flush();
-
-	/* Obtém a resposta do jogador. */
-	input = new ObjectInputStream(players.get(actions.getTo()).getInputStream());
-	actions = (Actions) input.readObject();
-
-	/*
-	 * Se tentou bloquear, pergunta ao jogador atacante se deseja contesar.
-	 */
-	if (actions.isBlock()) {
-	    output = new ObjectOutputStream(player.getOutputStream());
-	    output.writeObject(actions);
-	    output.flush();
-
-	    input = new ObjectInputStream(player.getInputStream());
-	    actions = (Actions) input.readObject();
-	}
-
-	super.play(Actions.ASSASSINATE, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-    }
-
-    /**
-     * @throws IOException
-     * @throws PException
-     * 
-     */
-    private void taxes() throws IOException, PException {
-	/* Pergunta a todos os jogadores se alguém deseja contestar a ação. */
-	actions = new Actions();
-	actions.setId(Actions.TAXES);
-	actions.setFrom(playerName);
-	spreadOpponents();
-
-	/* Obtém a contestação mais rápida, se houver. */
-	getFastBlock(); // ALTERAR ISSO
-
-	super.play(Actions.TAXES, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-    }
-
-    /**
-     * @throws PException
-     * @throws IOException
-     */
-    private void coup() throws PException, IOException {
-	String msg;
-	super.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-	/* REMOVER DO ITERATOR O PLAYER QUE LEVOU O GOLPE E FICOU SEM CARTAS. */
-
-	/* Atualiza o jogo de todos os players. */
-	msg = "O jogador " + actions.getFrom() + " deu um golpe de estado no jogador " + actions.getTo() + ".";
-	actions.setId(Actions.UPDATE_ALL_INTERFACE);
-	actions.setPlayers(super.getPlayers());
-	actions.setDead(super.getDead());
-	actions.setLog(msg);
-	gameLog.add(msg);
-
-	/* Envia ação para todos os jogadores. */
-	spreadAction();
-    }
-
-    /**
-     * @throws IOException
-     * @throws PException
-     * @throws ClassNotFoundException
-     * 
-     */
-    private void foreign() throws IOException, PException, ClassNotFoundException {
-	/* Pergunta a todos os jogadores se alguém deseja bloquear a ação. */
-	actions = new Actions();
-	actions.setId(Actions.FOREIGN);
-	actions.setFrom(playerName);
-	spreadOpponents();
-
-	/* Verifica se algum jogador tentou bloquear. */
-	getFastBlock();
-	if (actions.isBlock()) {
-
-	    /* Verifica se o jogador da rodada deseja contestar o bloqueio. */
-	    output = new ObjectOutputStream(player.getOutputStream());
-	    output.writeObject(actions);
-	    output.flush();
-
-	    input = new ObjectInputStream(player.getInputStream());
-	    actions = (Actions) input.readObject();
-	}
-
-	/* Executa a ação no servidor. */
-	super.play(Actions.FOREIGN, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
-    }
-
-    /**
-     * @throws PException
-     * @throws IOException
-     */
     private void income() throws PException, IOException {
 	/* Executa a ação no servidor. */
 	super.play(Actions.INCOME, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
 
 	/* Atualiza o jogo de todos os players. */
-	msg = "O jogador " + actions.getFrom() + " recebeu 1 moeda.";
-	actions.setId(Actions.UPDATE_ALL_INTERFACE);
-	actions.setPlayers(super.getPlayers());
-	actions.setDead(super.getDead());
-	actions.setLog(msg);
-	gameLog.add(msg);
-
-	/* Envia ação para todos os jogadores. */
-	spreadAction();
+	updateAllPlayers("O jogador " + actions.getFrom() + " recebeu 1 moeda.");
     }
 
-    /**
-     * Envia a ação para todos os players.
-     * 
-     * @param actions
-     * @throws IOException
-     */
-    private void spreadAction() throws IOException {
-	for (Socket p : players.values()) {
-	    output = new ObjectOutputStream(p.getOutputStream());
-	    output.writeObject(actions);
-	    output.flush();
+    private void foreign()
+	    throws IOException, PException, ClassNotFoundException, NoSuchMethodException, SecurityException {
+	updateAllPlayers("O jogador " + actions.getFrom() + " solicitou ajuda externa.");
+
+	/* Pergunta a todos os jogadores se alguém deseja bloquear a ação. */
+	spreadActions(actions.getFrom());
+
+	/* Obtém o bloqueio mais rápido, se houver. */
+	getFastAction(Actions.class.getDeclaredMethod("isBlock", (Class<?>[]) null));
+	if (actions.isBlock()) {
+	    updateAllPlayers(
+		    "O jogador " + actions.getTo() + " diz ser o " + actions.getCards()[0] + " e tenta bloquear.");
+
+	    /* Pergunta ao jogador se ele deseja contestar bloqueio. */
+	    flushObject(actions, player);
+	    actions = getObject(player);
+
+	    if (actions.isContest())
+		updateAllPlayers("O jogador " + actions.getFrom() + " contestou o bloqueio.");
 	}
+
+	/* Executa a ação no servidor. */
+	super.play(Actions.FOREIGN, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	// updateAllPlayers("Ação bem sucedida do jogador X.");
     }
 
+    private void coup() throws PException, IOException {
+	super.play(Actions.COUP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	/* Atualiza o jogo de todos os players. */
+	updateAllPlayers(
+		"O jogador " + actions.getFrom() + " deu um golpe de estado no jogador " + actions.getTo() + ".");
+    }
+
+    private void taxes() throws IOException, PException, NoSuchMethodException, SecurityException {
+	updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Duque e solicitou taxas.");
+
+	/* Pergunta a todos os jogadores se alguém deseja contestar a ação. */
+	spreadActions(actions.getFrom());
+
+	/* Obtém a contestação mais rápida, se houver. */
+	getFastAction(Actions.class.getDeclaredMethod("isContest", (Class<?>[]) null));
+
+	if (actions.isContest())
+	    updateAllPlayers("O jogador " + actions.getTo() + " contestou.");
+
+	super.play(Actions.TAXES, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	// updateAllPlayers("Ação bem sucedida do jogador X.");
+    }
+
+    private void assassinate() throws IOException, ClassNotFoundException, PException {
+	updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Assassino e pretende assassinar o jogador "
+		+ actions.getTo());
+
+	/* Pergunta ao jogador se ele deseja contestar, permitir ou bloquear. */
+	flushObject(actions, players.get(actions.getTo()));
+
+	/* Obtém a resposta do jogador. */
+	actions = getObject(players.get(actions.getTo()));
+
+	/* Se tentou bloquear, pergunta ao atacante se deseja contestar. */
+	if (actions.isBlock()) {
+	    updateAllPlayers("O jogador " + actions.getTo() + " diz ser a Condessa e deseja bloquear.");
+	    flushObject(actions, player);
+	    actions = getObject(player);
+
+	    if (actions.isContest())
+		updateAllPlayers("O jogador " + actions.getFrom() + " contesta.");
+	}
+
+	super.play(Actions.ASSASSINATE, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	// updateAllPlayers("Ação bem sucedida do jogador X.");
+    }
+
+    private void steal() throws IOException, ClassNotFoundException, PException {
+	updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Capitão e deseja roubar o jogador "
+		+ actions.getTo() + ".");
+
+	/* Notifica o oponente que está sendo roubado. */
+	flushObject(actions, players.get(actions.getTo()));
+
+	/* Obtém resposta do oponente. */
+	actions = getObject(players.get(actions.getTo()));
+
+	if (actions.isBlock()) {
+	    updateAllPlayers("O jogador " + actions.getTo() + " diz ser o " + actions.getCards()[0] + " e bloqueia.");
+
+	    flushObject(actions, player);
+	    actions = getObject(player);
+	} else if (actions.isContest()) {
+	    updateAllPlayers("O jogador " + actions.getTo() + " contesta.");
+	}
+
+	super.play(Actions.STEAL, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	// updateAllPlayers("Ação bem sucedida do jogador X.");
+    }
+
+    private void swap() throws IOException, PException, NoSuchMethodException, SecurityException {
+	updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o embaixador e deseja trocar cartas.");
+
+	/* Notifica todos os oponentes. */
+	spreadActions(actions.getFrom());
+
+	/* Obtém a contestação mais rápida, se houver. */
+	getFastAction(Actions.class.getDeclaredMethod("isContest", (Class<?>[]) null));
+
+	if (actions.isContest())
+	    updateAllPlayers("O jogador " + actions.getTo() + "contesta.");
+
+	/* Executa a ação. */
+	super.play(Actions.SWAP, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+
+	// updateAllPlayers("Ação bem sucedida do jogador X.");
+    }
+
+    // ############# MÈTODOS AUXILIARES DO SERVIDOR #############//
+
     /**
-     * Envia ação para todos os players menos ele mesmo.
+     * Envia ação para todos os players menos o do parâmetro.
      * 
      * @throws IOException
      */
-    private void spreadOpponents() throws IOException {
+    private void spreadActions(String playerName) {
 	for (String player : players.keySet()) {
-	    new Thread(() -> {
-		if (!player.equals(playerName)) {
-		    try {
-			ObjectOutputStream output = new ObjectOutputStream(players.get(player).getOutputStream());
-			output.writeObject(actions);
-			output.flush();
-		    } catch (IOException e) {
-			e.printStackTrace();
-		    }
+	    if (!player.equals(playerName)) {
+		try {
+		    flushObject(actions, players.get(player));
+		} catch (IOException e) {
+		    e.printStackTrace();
 		}
-	    }).start();
+	    }
 	}
-
-	/* Agurda até que todos tenham recebido as ações. */
-	waitThreads();
     }
 
     /**
-     * Obtém o bloqueio mais rápido entre os jogadores oponentes.
+     * Obtém a ação de resposta mais rápida entre os jogadores oponentes. A ação
+     * pode ser um bloqueio ou um contestamento.
      */
-    private void getFastBlock() {
+    private void getFastAction(Method method) {
 	for (String player : players.keySet()) {
 	    if (!player.equals(playerName)) {
 		new Thread(() -> {
 		    try {
 			ObjectInputStream input = new ObjectInputStream(players.get(player).getInputStream());
 			Actions action = (Actions) input.readObject();
-			if (actions.isBlock() == false && action.isBlock() == true)
+			if (method.invoke(actions).equals(false) && method.invoke(action).equals(true))
 			    actions = action;
-		    } catch (IOException | ClassNotFoundException e) {
+		    } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+			    | InvocationTargetException e) {
 			e.printStackTrace();
 		    }
 		}).start();
 	    }
 	}
+
+	/* Aguarda até que todas as threads tenham terminado. */
+	waitThreads();
     }
 
+    /**
+     * Envia o objeto Actions para um jogador.
+     * 
+     * @throws IOException
+     */
+    private void flushObject(Actions actions, Socket player) throws IOException {
+	/* Canal de comunicação do servidor para o cliente. */
+	ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
+	/* Escreve o objeto no canal. */
+	output.writeObject(actions);
+	/* Envia o objeto para o cliente. */
+	output.flush();
+    }
+
+    /**
+     * Retorna o objeto Actions de um jogador.
+     * 
+     * @param player
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private Actions getObject(Socket player) throws IOException, ClassNotFoundException {
+	/* Canal de comunicação do cliente para o servidor. */
+	ObjectInputStream input = new ObjectInputStream(player.getInputStream());
+	/* Retorna o objeto enviado pelo cliente. */
+	return (Actions) input.readObject();
+    }
+
+    /**
+     * Atualiza o jogo de todos os players.
+     */
+    private void updateAllPlayers(String msg) {
+	/* Realiza um backup do objeto Actions. */
+	Actions actionsBackup = (Actions) actions.clone();
+
+	gameLog.add(msg);
+	actions.setId(Actions.UPDATE_ALL_INTERFACE);
+	actions.setPlayers(super.getPlayers());
+	actions.setDead(super.getDead());
+	actions.setLog(msg);
+
+	/* Envia ação para todos os jogadores. */
+	spreadActions(null);
+
+	/* Restaura o objeto Actions. */
+	actions = actionsBackup;
+    }
 }
