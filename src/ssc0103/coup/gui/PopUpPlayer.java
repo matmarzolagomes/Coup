@@ -151,6 +151,7 @@ public class PopUpPlayer {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args){
 		
 		String a[] = new String[]{"Victor", "Bruno", "Matheus", "Rodrigo"};
