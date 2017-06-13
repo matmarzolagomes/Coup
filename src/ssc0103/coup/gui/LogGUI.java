@@ -3,6 +3,7 @@ package ssc0103.coup.gui;
 import java.awt.Font;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,6 +18,7 @@ public class LogGUI extends JPanel{
     public LogGUI() {
         super();
         setLayout(new GridLayout(1, 1));
+        setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
         
         area = new JTextArea();
         area.setRows(10);

@@ -13,7 +13,7 @@ import ssc0103.coup.exception.GUIException;
 @SuppressWarnings("serial")
 public class CardGUI extends ImageIcon {
     public CardGUI(String card, int w, int h) throws GUIException {
-        super("images/" + card + ".jpeg");
+        super("images/" + card + ".png");
         
         if(getImageLoadStatus() != MediaTracker.COMPLETE) throw new GUIException("Failed to load image.");
         this.setImage(scaleImage(getImage(), w, h));

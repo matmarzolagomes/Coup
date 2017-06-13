@@ -1,14 +1,11 @@
 package ssc0103.coup.gui;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.Scanner;
+import java.awt.GridLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -28,7 +25,7 @@ public class CoinGUI extends JPanel{
 		super();
 		counter = 121;
 		
-		setLayout(new GridBagLayout());
+		setLayout(new GridLayout(1, 2));
 		
 		image = new ImageIcon("images/coins.png");
 		image.setImage(image.getImage().getScaledInstance(50, 50, 100));
@@ -43,25 +40,12 @@ public class CoinGUI extends JPanel{
 		text = new JLabel(time);
 		text.setFont(new Font("Serif", Font.BOLD, 25));
 		
-		addComponents();		
+		add(numCoins);
+		add(text);
+
 		runCounter();
 	}
-	
-	private void addComponents() {
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weighty = 0.7;
-		add(numCoins, c);
 
-		c.gridy = 1;
-		c.weighty = 0.3;
-		add(text, c);
-		
-	}
-	
 	public void attCoins(Player player) {
 		numCoins.setText(String.format(" x %02d", player.getMoney()));
 	}
@@ -88,31 +72,5 @@ public class CoinGUI extends JPanel{
 	}
 
 	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
-		JFrame game = new JFrame();
-		game.setSize(290, 200);
-		game.setVisible(true);
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		Player p = new Player();
-		
-		CoinGUI coin = new CoinGUI(p);
-		
-		game.add(coin);
-		
-		System.out.println("APERTA ENTER PRA INCREMENTAR A MOEDA (s� interface top rogerinho)");
-		
-		while (true)
-			if (s.hasNextLine()) {
-				String ae = s.nextLine();
-				if (ae == "stop") break;
-				p.income();
-				coin.attCoins(p);
-				s.reset();
-			}
-			
-		s.close();
-		
 	}
-
 }

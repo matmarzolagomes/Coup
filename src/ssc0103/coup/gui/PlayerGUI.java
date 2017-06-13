@@ -1,9 +1,11 @@
 package ssc0103.coup.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +24,8 @@ public class PlayerGUI extends JPanel{
 	public PlayerGUI(HashMap<String, Player> players) {
 		super();
 		setLayout(new GridLayout(1, 1));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+		
 		column = new String[] {"Jogadores", "Moedas", "Cartas"};
 		data = new Object[players.size()][3];
 		createTable(players);
@@ -49,6 +53,7 @@ public class PlayerGUI extends JPanel{
 		scrollPane = new JScrollPane(table);
 		table.setPreferredScrollableViewportSize(table.getPreferredSize());
 		table.setFillsViewportHeight(false);
+		table.setFont(new Font("Serif", Font.BOLD, table.getFont().getSize()));
 		
 		add(scrollPane);
 	}

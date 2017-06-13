@@ -40,7 +40,7 @@ public class CoupGUI extends JPanel {
 
         cons.gridx = 0;
         cons.gridy = 0;
-        cons.weightx = 0.1;
+        cons.weightx = 0.2;
         cons.weighty = 1;
         
         JPanel pleft = new JPanel(new GridBagLayout());
@@ -61,7 +61,7 @@ public class CoupGUI extends JPanel {
         
         cons.gridx = 1;
         cons.gridy = 0;
-        cons.weightx = 0.8;
+        cons.weightx = 0.7;
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
@@ -91,7 +91,7 @@ public class CoupGUI extends JPanel {
         cons.gridx = 0;
         cons.gridy = 0;
         cons.weightx = 1;
-        cons.weighty = 0.5;
+        cons.weighty = 0.8;
         
         playerg = new PlayerGUI(players);
         pright.add(playerg, cons);
@@ -103,7 +103,7 @@ public class CoupGUI extends JPanel {
         pright.add(coing, cons);
         
         cons.gridy = 2;
-        cons.weighty = 0.4;
+        cons.weighty = 0.1;
         
         cons.ipady = 0;
         
