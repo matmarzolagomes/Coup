@@ -123,7 +123,7 @@ public class Player {
 
 			case Actions.UPDATE_ALL_INTERFACE:
 			case Actions.UPDATE_INTERFACE:
-				// ATUALIZA A INTERFACE GRÀFICA
+				JOptionPane.showMessageDialog(null, "Interface Carregada.");
 				break;
 
 			case Actions.GET_INPUT:
@@ -228,12 +228,17 @@ public class Player {
 	private void loadPlayerActions() throws IOException {
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
+		
+		if(actions == null) JOptionPane.showMessageDialog(null, "Objeto Actions Nulo");
+		if(actions.getPlayers() == null) JOptionPane.showMessageDialog(null, "Players nulos.");
+		if(this.playerName == null) JOptionPane.showMessageDialog(null, "Nome de nulo.");
+		JOptionPane.showMessageDialog(null, actions.getPlayers().get(this.playerName).getMoney());
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
 
 		/* Verifica quais ações serão apresentadas ao jogador. */
-		for (ssc0103.coup.game.Player player : actions.getPlayers().values()) {
-			if (!player.getName().equals(this.playerName)) {
+		for (ssc0103.coup.game.Player player : actions.getPlayers().values()) {			
+			if (player != null && player.getName() != null && !player.getName().equals(this.playerName)) {
 				/* Verifica se algum jogador pode ser extorquido. */
 				if (player.getMoney() > 0) {
 					/* Obtém o nome desse jogador. */
@@ -308,7 +313,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void loadInterface() throws IOException {
-		JOptionPane.showMessageDialog(null, "Interface Carregada.");
+		JOptionPane.showInputDialog(null, "Interface Carregada.");		
 		// actions = new Actions();
 		// actions.setId(Actions.PLAYER_RESPONSE);
 		// actions.setPlayerResponse(true);
@@ -338,9 +343,10 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getName() throws IOException {
-		String name = "Informe o seu nickname no jogo:";
-		name = JOptionPane.showInputDialog(name);
-		actions.setFrom(name);
+		this.playerName = "Informe o seu nickname no jogo:";
+		this.playerName = JOptionPane.showInputDialog(this.playerName);
+		actions.setFrom(this.playerName);
+		System.out.println(this.playerName);
 		flushObject();
 	}
 
@@ -375,7 +381,7 @@ public class Player {
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o servidor. */
-		output.flush();
+		output.flush();			
 	}
 
 	/**
@@ -390,6 +396,9 @@ public class Player {
 		/* Canal de comunicação do servidor para o cliente. */
 		ObjectInputStream input = new ObjectInputStream(this.player.getInputStream());
 		/* Retorna o objeto enviado pelo servidor. */
-		return (Actions) input.readObject();
+		Actions act = null;
+		while((act = (Actions) input.readObject()) == null)
+			continue;
+		return act;
 	}
 }

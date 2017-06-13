@@ -37,7 +37,9 @@ public abstract class Coup  {
     }
     
     private void isDead(String index) {
-        if(players.get(index).getHand().size() == 0) players.remove(index);
+    	if(index != null) {
+    		if(players.get(index).getHand().size() == 0) players.remove(index);
+    	}
     }
     
     public HashMap<String, Player> getPlayers() {

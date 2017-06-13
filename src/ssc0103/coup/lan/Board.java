@@ -103,7 +103,7 @@ public class Board extends Coup {
 
 			this.numPlayers = Integer.parseInt(msg);
 
-			if (this.numPlayers < 2 || this.numPlayers > CONNECTIONS_LIMIT)
+			if (this.numPlayers < 1 || this.numPlayers > CONNECTIONS_LIMIT)
 				throw new IllegalArgumentException();
 
 		} catch (IllegalArgumentException e) {
@@ -161,7 +161,7 @@ public class Board extends Coup {
 
 			/* Roda o Jogo até que reste apenas 1 player. */
 			for (Iterator<String> iterator = players.keySet().iterator(); players
-					.size() > 1; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator)
+					.size() > 0; iterator = !iterator.hasNext() ? players.keySet().iterator() : iterator)
 				coupHandler(iterator);
 
 		} catch (IOException e) {
@@ -329,13 +329,15 @@ public class Board extends Coup {
 			throws IOException, ClassNotFoundException, PException, NoSuchMethodException, SecurityException {
 		/* Nome do jogador do turno. */
 		playerName = iterator.next();
+		
+		if(playerName == null) return;
 
 		/* Verifica se o jogador foi retirado do jogo. */
-		if (!super.getPlayers().containsKey(playerName)) {
-			players.get(iterator).close();
-			iterator.remove();
-			return;
-		}
+		//if (!super.getPlayers().containsKey(playerName)) {
+			//players.get(iterator).close();
+			//iterator.remove();
+			//return;
+		//}
 
 		/* Obtém a conexão do jogador do turno. */
 		player = players.get(playerName);
@@ -577,7 +579,7 @@ public class Board extends Coup {
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o cliente. */
-		output.flush();
+		output.flush();				
 	}
 
 	/**
@@ -592,7 +594,8 @@ public class Board extends Coup {
 		/* Canal de comunicação do cliente para o servidor. */
 		ObjectInputStream input = new ObjectInputStream(player.getInputStream());
 		/* Retorna o objeto enviado pelo cliente. */
-		return (Actions) input.readObject();
+		Actions act = (Actions) input.readObject();			
+		return act; 
 	}
 
 	/**

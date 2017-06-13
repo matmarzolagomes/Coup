@@ -5,5 +5,6 @@ public class RunBoard {
     public static void main(String[] args) throws CloneNotSupportedException {
 	/* Inicia o Servidor. */
 	new Board().execute();		
+	System.out.println(System.currentTimeMillis());
     }
 }
