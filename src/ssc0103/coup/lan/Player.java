@@ -1,6 +1,5 @@
 package ssc0103.coup.lan;
 
-import java.awt.List;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.gui.PopUp;
@@ -25,6 +25,8 @@ public class Player {
 	private int port;
 	private String playerName;
 	private Socket player;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
 	private Actions actions;
 	private PopUpPlayer popup;
 
@@ -34,7 +36,7 @@ public class Player {
 	public Player() {
 		/* Conecta ao servidor do jogo. */
 		connectHost();
-		
+
 		/* Inicializa o objeto de PopUps. */
 		popup = new PopUpPlayer();
 
@@ -63,7 +65,11 @@ public class Player {
 
 			this.port = Integer.parseInt(msg);
 			player = new Socket(this.host, this.port);
-
+			System.out.println("3");
+			this.output = new ObjectOutputStream(player.getOutputStream());
+			System.out.println("4");
+			this.input = new ObjectInputStream(player.getInputStream());
+			System.out.println("5");
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
@@ -74,11 +80,13 @@ public class Player {
 	/**
 	 * Executa o jogo.
 	 */
-	public void execute() {	
+	public void execute() {
 		try {
+			System.out.println("1");
 			/* Recebe um objeto do servidor. */
 			actions = getObject();
-
+			System.out.println("2");
+			
 			switch (actions.getId()) {
 			case Actions.GET_NAME:
 				getName();
@@ -91,7 +99,7 @@ public class Player {
 			case Actions.ASSASSINATE:
 				assassinate();
 				break;
-				
+
 			case Actions.COUP:
 				coup();
 				return;
@@ -135,36 +143,36 @@ public class Player {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void getInput() throws IOException {
 		/* Solicitar ao jogador para remover 2 cartas. */
-		if(actions.getPlayer().getHand().size() > 2) {
+		if (actions.getPlayer().getHand().size() > 2) {
 			popUp(actions.getPlayer().getHand());
-		/* Solicitar ao jogador para remover 1 carta. */
+			/* Solicitar ao jogador para remover 1 carta. */
 		} else {
-			popUp(actions.getPlayer().getHand());			
+			popUp(actions.getPlayer().getHand());
 		}
-		
+
 		/* Envia as cartas a serem removidas para o servidor. */
 		flushObject();
 	}
-	
+
 	private void swap() throws IOException {
-		if(popup.popUpTroca(actions.getFrom()) == 1) {
+		if (popup.popUpTroca(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
-		
+
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}
-	
+
 	private void taxes() throws IOException {
-		if(popup.popUpTaxas(actions.getFrom()) == 1) {
+		if (popup.popUpTaxas(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
-		
+
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}
@@ -371,7 +379,7 @@ public class Player {
 	 */
 	private void flushObject() throws IOException {
 		/* Canal de comunicação do cliente para o servidor. */
-		ObjectOutputStream output = new ObjectOutputStream(this.player.getOutputStream());
+		output.reset();
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o servidor. */
@@ -388,7 +396,6 @@ public class Player {
 	 */
 	private Actions getObject() throws IOException, ClassNotFoundException {
 		/* Canal de comunicação do servidor para o cliente. */
-		ObjectInputStream input = new ObjectInputStream(this.player.getInputStream());
 		/* Retorna o objeto enviado pelo servidor. */
 		return (Actions) input.readObject();
 	}
