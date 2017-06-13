@@ -21,7 +21,7 @@ public class LogGUI extends JPanel{
         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
         
         area = new JTextArea();
-        area.setRows(10);
+        area.setRows(6);
         area.setEditable(false);
         area.setAutoscrolls(true);
         area.setFont(new Font("Serif", Font.PLAIN, 16));

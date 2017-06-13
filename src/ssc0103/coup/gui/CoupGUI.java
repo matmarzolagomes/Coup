@@ -1,9 +1,16 @@
 package ssc0103.coup.gui;
 
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +30,7 @@ public class CoupGUI extends JPanel {
     private final LogGUI logg;
     private final PlayerGUI playerg;
     private final String me;
+    private Image backgroundImage = null;
     
     public CoupGUI(String me, HashMap<String, Player> players) {
         super(new GridBagLayout());
@@ -32,6 +40,13 @@ public class CoupGUI extends JPanel {
         
         logo = new ImageIcon("images/coup_logo.png");
         logo.setImage(logo.getImage().getScaledInstance(300, 70, 100));
+        
+        try {
+			backgroundImage = ImageIO.read(new File("images/fundo.jpg")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
+		} catch (HeadlessException | IOException e) {
+			System.out.println("Failed to load background.");
+			System.exit(-1);
+		}
         
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -44,6 +59,7 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         JPanel pleft = new JPanel(new GridBagLayout());
+        pleft.setOpaque(false);
         add(pleft, cons);
         
         cons.gridx = 0;
@@ -53,6 +69,7 @@ public class CoupGUI extends JPanel {
         
         try {
             deadg = new DeadGUI(players.size());
+            deadg.setOpaque(false);
             pleft.add(deadg, cons);
         } catch (GUIException ex) {
             System.out.println(ex.getMessage());
@@ -65,6 +82,7 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         JPanel pcenter = new JPanel(new GridBagLayout());
+        pcenter.setOpaque(false);
         add(pcenter, cons);
         
         cons.gridx = 0;
@@ -72,12 +90,14 @@ public class CoupGUI extends JPanel {
         cons.weighty = 0.2;
         
         logg = new LogGUI();
+        logg.setOpaque(false);
         pcenter.add(logg, cons);
         
         cons.gridy = 1;
         cons.weighty = 0.8;
         
         handg = new HandGUI();
+        handg.setOpaque(false);
         pcenter.add(handg, cons);
         
         cons.gridx = 2;
@@ -86,6 +106,7 @@ public class CoupGUI extends JPanel {
         cons.weighty = 1;
         
         JPanel pright = new JPanel(new GridBagLayout());
+        pright.setOpaque(false);
         add(pright, cons);
         
         cons.gridx = 0;
@@ -94,12 +115,14 @@ public class CoupGUI extends JPanel {
         cons.weighty = 0.8;
         
         playerg = new PlayerGUI(players);
+        playerg.setOpaque(false);
         pright.add(playerg, cons);
         
         cons.gridy = 1;
         cons.weighty = 0.1;
         
         coing = new CoinGUI(players.get(me));
+        coing.setOpaque(false);
         pright.add(coing, cons);
         
         cons.gridy = 2;
@@ -109,6 +132,11 @@ public class CoupGUI extends JPanel {
         
         pright.add(new JLabel(logo), cons);
     }
+    
+    public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(backgroundImage, 0, 0, this);
+	}
     
     public void updateAll(Actions data) {
         try {
