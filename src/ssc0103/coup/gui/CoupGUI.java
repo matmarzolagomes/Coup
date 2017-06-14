@@ -42,7 +42,7 @@ public class CoupGUI extends JPanel {
         logo.setImage(logo.getImage().getScaledInstance(300, 70, 100));
         
         try {
-			backgroundImage = ImageIO.read(new File("images/fundo.jpg")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
+			backgroundImage = ImageIO.read(new File("images/background.jpg")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
 		} catch (HeadlessException | IOException e) {
 			System.out.println("Failed to load background.");
 			System.exit(-1);
