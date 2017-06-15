@@ -3,6 +3,8 @@ package ssc0103.coup.game;
 import java.io.Serializable;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 @SuppressWarnings("serial")
 public class Player implements Serializable, Cloneable {
 	private String name;
@@ -10,16 +12,12 @@ public class Player implements Serializable, Cloneable {
 	private int money;
 	
 	public Player(String name) {
+		JOptionPane.showMessageDialog(null, "O nome desse player é:" + name);
 		this.name = name;
 		hand = new Deck();
 		money = 2;
 	}
 	
-	public Player() {		
-		hand = new Deck();
-		money = 2;
-	}
-
 	public String getName() {
 		return name;
 	}

@@ -79,10 +79,8 @@ public class Player {
 	 */
 	public void execute() {
 		try {
-			System.out.println("1");
 			/* Recebe um objeto do servidor. */
 			actions = getObject();
-			System.out.println("2");
 			
 			switch (actions.getId()) {
 			case Actions.GET_NAME:
@@ -343,9 +341,9 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getName() throws IOException {
-		String name = "Informe o seu nickname no jogo:";
-		name = JOptionPane.showInputDialog(name);
-		actions.setFrom(name);
+		this.playerName = "Informe o seu nickname no jogo:";
+		this.playerName = JOptionPane.showInputDialog(this.playerName);
+		actions.setFrom(this.playerName);
 		flushObject();
 	}
 
@@ -375,12 +373,13 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void flushObject() throws IOException {
-		/* Canal de comunicação do cliente para o servidor. */
-		output.reset();
+		/* Canal de comunicação do cliente para o servidor. */		
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o servidor. */
 		output.flush();
+		/* Reset no Player após. */		
+		output.reset();
 	}
 
 	/**
@@ -394,6 +393,7 @@ public class Player {
 	private Actions getObject() throws IOException, ClassNotFoundException {
 		/* Canal de comunicação do servidor para o cliente. */
 		/* Retorna o objeto enviado pelo servidor. */
-		return (Actions) input.readObject();
+		 Actions act = (Actions) input.readObject();
+		 return act;
 	}
 }

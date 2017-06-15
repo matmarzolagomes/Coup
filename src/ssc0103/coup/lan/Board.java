@@ -181,8 +181,10 @@ public class Board extends Coup {
 		} finally {
 			try {
 				/* Finaliza o servidor e fecha as conexões restantes. */
-				if(player != null) player.close();
-				if(board != null) board.close();
+				if (player != null)
+					player.close();
+				if (board != null)
+					board.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -204,7 +206,7 @@ public class Board extends Coup {
 
 			/* Obtém o nome do player. */
 			new Thread(() -> {
-				try {					
+				try {
 					ObjectOutputStream output = new ObjectOutputStream(this.player.getOutputStream());
 					ObjectInputStream input = new ObjectInputStream(this.player.getInputStream());
 					getPlayerName(this.player, input, output);
@@ -237,11 +239,11 @@ public class Board extends Coup {
 
 		try {
 			/* Solicita ao jogador um nickname. */
-			actions.setId(Actions.GET_NAME);			
-			output.writeObject(actions);			
+			actions.setId(Actions.GET_NAME);
+			output.writeObject(actions);
 			output.flush();
 			output.reset();
-			
+
 			/* Garante que o objeto utilizado será o do input. */
 			actions = null;
 
@@ -265,14 +267,13 @@ public class Board extends Coup {
 				} else {
 					msg = "Aguardando demais jogadores.";
 
-					/* Insere na lista de conexões de players. */					
+					/* Insere na lista de conexões de players. */
 					players.put(actions.getFrom(), player);
 					inputs.put(actions.getFrom(), input);
 					outputs.put(actions.getFrom(), output);
 					System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
 
 					/* Envia mensagem de aguardando demais jogadores. */
-					actions = new Actions();
 					actions.setId(Actions.SERVER_MESSAGE);
 					actions.setMessage(msg);
 					flushObject(actions, actions.getFrom());
@@ -280,14 +281,14 @@ public class Board extends Coup {
 				}
 
 				throw new PException(msg);
+			} else {
+				throw new NullPointerException("Objeto Actions vazio.");
 			}
-			
-			throw new NullPointerException("Objeto Actions não veio com ID GET_NAME");
 		} catch (PException f) {
 			/* Envia uma notificação ao jogador. */
 			actions = new Actions();
 			actions.setId(Actions.SERVER_MESSAGE);
-			actions.setMessage(f.getMessage());			
+			actions.setMessage(f.getMessage());
 			output.writeObject(actions);
 			output.flush();
 			output.reset();
@@ -295,10 +296,7 @@ public class Board extends Coup {
 			/* Solicita novamente ao player um nickanme. */
 			getPlayerName(player, input, output);
 		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			
-			/* Solicita novamente ao player um nickanme. */
-			getPlayerName(player, input, output);
+			JOptionPane.showMessageDialog(null, "Objeto actions vazio:" + e.getMessage());
 		}
 	}
 
@@ -321,15 +319,16 @@ public class Board extends Coup {
 			this.playerName = (String) playersList.next();
 			new Thread(() -> {
 				try {
-					Actions actions = new Actions();
+					Actions actions = new Actions();					
 					actions.setId(Actions.LOAD_INTERFACE);
+					actions.setFrom(this.playerName);
 					actions.setPlayers(super.getPlayers());
 					actions.setDead(super.getDead());
 					actions.setLog("Início do Jogo.");
 					gameLog.add(actions.getLog());
 					flushObject(actions, this.playerName);
 				} catch (IOException e) {
-					players.remove(player);
+					//players.remove(player);
 					e.printStackTrace();
 				}
 			}).start();
@@ -353,36 +352,36 @@ public class Board extends Coup {
 	private void coupHandler(Iterator<String> iterator)
 			throws IOException, ClassNotFoundException, PException, NoSuchMethodException, SecurityException {
 		/* Nome do jogador do turno. */
-		playerName = iterator.next();
+		this.playerName = iterator.next();
 
 		/* Verifica se o jogador foi retirado do jogo. */
-		if (!super.getPlayers().containsKey(playerName)) {
-			players.get(iterator).close();
-			iterator.remove();
-			return;
-		}
+		// if (!super.getPlayers().containsKey(playerName)) {
+		// players.get(iterator).close();
+		// iterator.remove();
+		// return;
+		// }
 
 		/* Obtém a conexão do jogador do turno. */
-		player = players.get(playerName);
-		System.out.println("Turno do Jogador " + playerName + ".");
+		//player = players.get(playerName);
+		System.out.println("Turno do Jogador " + this.playerName + ".");
 
 		/* Envia ao jogador as suas ações. */
 		actions = new Actions();
 		actions.setId(Actions.LOAD_PLAYER_ACTIONS);
+		actions.setFrom(this.playerName);
 		actions.setPlayers(super.getPlayers());
-		actions.setDead(super.getDead());
-		actions.setFrom(playerName);
-		flushObject(actions, playerName);
+		actions.setDead(super.getDead());		
+		flushObject(actions, this.playerName);
 
 		/* Recebe a resposta do jogador. */
-		actions = getObject(playerName);
+		actions = getObject(this.playerName);
 
 		/* Executa a ação do jogador. */
 		switch (actions.getId()) {
 
 		case Actions.LEFT:
-			players.get(iterator).close();
-			iterator.remove();
+			//players.get(iterator).close();
+			//iterator.remove();
 			break;
 
 		case Actions.INCOME:
@@ -430,7 +429,7 @@ public class Board extends Coup {
 		updateAllPlayers("O jogador " + actions.getFrom() + " solicitou ajuda externa.");
 
 		/* Pergunta a todos os jogadores se alguém deseja bloquear a ação. */
-		spreadActions(actions.getFrom());
+		spreadActions(actions, actions.getFrom());
 
 		/* Obtém o bloqueio mais rápido, se houver. */
 		getFastAction(Actions.class.getDeclaredMethod("isBlock", (Class<?>[]) null));
@@ -467,7 +466,7 @@ public class Board extends Coup {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Duque e solicitou taxas.");
 
 		/* Pergunta a todos os jogadores se alguém deseja contestar a ação. */
-		spreadActions(actions.getFrom());
+		spreadActions(actions, actions.getFrom());
 
 		/* Obtém a contestação mais rápida, se houver. */
 		getFastAction(Actions.class.getDeclaredMethod("isContest", (Class<?>[]) null));
@@ -533,7 +532,7 @@ public class Board extends Coup {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o embaixador e deseja trocar cartas.");
 
 		/* Notifica todos os oponentes. */
-		spreadActions(actions.getFrom());
+		spreadActions(actions, actions.getFrom());
 
 		/* Obtém a contestação mais rápida, se houver. */
 		getFastAction(Actions.class.getDeclaredMethod("isContest", (Class<?>[]) null));
@@ -554,7 +553,7 @@ public class Board extends Coup {
 	 * 
 	 * @throws IOException
 	 */
-	private void spreadActions(String playerName) {
+	private void spreadActions(Actions actions, String playerName) {
 		for (String player : players.keySet()) {
 			if (!player.equals(playerName)) {
 				try {
@@ -598,7 +597,7 @@ public class Board extends Coup {
 	 */
 	private void flushObject(Actions actions, String player) throws IOException {
 		/* Canal de comunicação do servidor para o cliente. */
-		ObjectOutputStream output = outputs.get(player);		
+		ObjectOutputStream output = outputs.get(player);
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o cliente. */
@@ -619,7 +618,8 @@ public class Board extends Coup {
 		/* Canal de comunicação do cliente para o servidor. */
 		ObjectInputStream input = inputs.get(player);
 		/* Retorna o objeto enviado pelo cliente. */
-		return (Actions) input.readObject();
+		Actions act = (Actions) input.readObject();
+		return act;
 	}
 
 	/**
@@ -630,15 +630,15 @@ public class Board extends Coup {
 		Actions actionsBackup = (Actions) actions.clone();
 
 		gameLog.add(msg);
-		actions.setId(Actions.UPDATE_ALL_INTERFACE);
-		actions.setPlayers(super.getPlayers());
-		actions.setDead(super.getDead());
-		actions.setLog(msg);
+		actionsBackup.setId(Actions.UPDATE_ALL_INTERFACE);
+		actionsBackup.setPlayers(super.getPlayers());
+		actionsBackup.setDead(super.getDead());
+		actionsBackup.setLog(msg);
 
 		/* Envia ação para todos os jogadores. */
-		spreadActions(null);
+		spreadActions(actionsBackup, null);
 
 		/* Restaura o objeto Actions. */
-		actions = actionsBackup;
+		// actions = actionsBackup;
 	}
 }
