@@ -169,8 +169,10 @@ public class Board extends Coup {
 			startGame();
 
 			/* Roda o Jogo até que reste apenas 1 player. */
-			for (Iterator<String> it = it(); players.size() > LOOP_BREAK; it = !it.hasNext() ? it() : it)
+			for (Iterator<String> it = it(); this.players.size() > LOOP_BREAK; it = !it.hasNext() ? it() : it)
 				coupHandler(it);
+
+			System.out.println("Vitória do jogador: " + players.keySet().iterator().next());
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -185,7 +187,7 @@ public class Board extends Coup {
 	 * @return Retorna uma lista de chaves para o iterator.
 	 */
 	private Iterator<String> it() {
-		return players.keySet().iterator();
+		return this.players.keySet().iterator();
 	}
 
 	/**
@@ -384,6 +386,14 @@ public class Board extends Coup {
 				swap();
 				break;
 			}
+
+			/* Verifica se o jogador foi retirado do jogo. */
+			if (!super.getPlayers().containsKey(this.playerName)) {
+				closeConnections(this.playerName);
+				iterator.remove();
+				return;
+			}
+
 		} catch (NoSuchMethodException | SecurityException | IOException | PException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -627,9 +637,9 @@ public class Board extends Coup {
 		/* Fecha todas conexões com o jogador. */
 		try {
 			if (inputs.get(playerName) != null)
-				inputs.get(playerName).close();
+				inputs.remove(playerName).close();
 			if (outputs.get(playerName) != null)
-				outputs.get(playerName).close();
+				outputs.remove(playerName).close();
 			if (players.get(playerName) != null)
 				players.get(playerName).close();
 		} catch (IOException e) {

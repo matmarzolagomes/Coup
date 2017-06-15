@@ -144,11 +144,10 @@ public class Player {
 				}
 
 			}
-
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-
 		} finally {
 			try {
 				if (this.output != null)
@@ -217,7 +216,7 @@ public class Player {
 		/* Solicitar ao jogador para remover 1 ou 2 cartas. */
 		cards = popUp(actions.getPlayer().getHand(), actions.getPlayer().getHand().size() > 2 ? 2 : 1);
 		actions.setCards(cards);
-		
+
 		/* Envia as cartas a serem removidas para o servidor. */
 		flushObject();
 	}
