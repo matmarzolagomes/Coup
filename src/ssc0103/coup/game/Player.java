@@ -3,21 +3,18 @@ package ssc0103.coup.game;
 import java.io.Serializable;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
-
 @SuppressWarnings("serial")
 public class Player implements Serializable, Cloneable {
 	private String name;
 	private Deck hand;
 	private int money;
-	
+
 	public Player(String name) {
-		JOptionPane.showMessageDialog(null, "O nome desse player é:" + name);
 		this.name = name;
 		hand = new Deck();
 		money = 2;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -87,10 +84,11 @@ public class Player implements Serializable, Cloneable {
 	}
 
 	public boolean removeCard(String[] cards, Deck dead) {
-		for(String card : cards) 
-			if(!hand.contains(card)) return false;
-		
-		for(String card : cards) {
+		for (String card : cards)
+			if (!hand.contains(card))
+				return false;
+
+		for (String card : cards) {
 			hand.remove(card);
 			dead.add(card);
 		}
@@ -100,18 +98,14 @@ public class Player implements Serializable, Cloneable {
 	public boolean checkCard(String card) {
 		return hand.contains(card);
 	}
-	
-	public static void main(String[] args) {
-		
-	}
 
 	@Override
-	protected Object clone() {	    
-	    try {
-		return super.clone();
-	    } catch (CloneNotSupportedException e) {
-		e.printStackTrace();
-	    }
-	    return null;
+	protected Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
