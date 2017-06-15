@@ -1,7 +1,12 @@
 package ssc0103.coup.gui;
-
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+/**
+ * Classe criada para representar os pop-ups de ajuda
+ * @author Victor Henrique de Souza Rodrigues - 9791027
+ *
+ */
 
 public class PopUpAjuda {
 
@@ -13,6 +18,9 @@ public class PopUpAjuda {
 	private String opcoes3[] = new String[]{"Página Anterior", "OK"};
 	private int ret = 0, option2 = 0;
 
+	/**
+	 * Construtor que abre e redimensiona as imagens que são necessarias
+	 */
 	public PopUpAjuda() {
 
 		contrarias = new ImageIcon("CoupAjuda/Acoes_contrarias.png");
@@ -31,6 +39,9 @@ public class PopUpAjuda {
 		logo.setImage(logo.getImage().getScaledInstance(650, 200, 100));
 	}
 	
+	/**
+	 * Método que mostra os pop-ups de ajuda caso solicitado
+	 */
 	public void popUpGeral(){
 		
 		while(option2 != -1){
@@ -44,6 +55,9 @@ public class PopUpAjuda {
 		}
 	}
 	
+	/**
+	 * Método que exibe o pop-up de exemplo de partida
+	 */
 	public void popUpExemplo(){
 		while(option2 != -1 && option2 != 1){
 			option2 = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo, opcoes2, opcoes2[0]);
@@ -51,22 +65,37 @@ public class PopUpAjuda {
 		}
 	}
 	
+	/**
+	 * Método que mostra o pop-up de jogo
+	 */
 	public void popUpJogo() {
 		JOptionPane.showMessageDialog(null, null, "Jogo", JOptionPane.DEFAULT_OPTION, jogo);
 	}
-
+	
+	/**
+	 * Método que mostra o pop-up do objetivo do jogo
+	 */
 	public void popUpObjetivo() {
 		JOptionPane.showMessageDialog(null, null, "Objetivo", JOptionPane.DEFAULT_OPTION, objetivo);
 	}
-
+	
+	/**
+	 * Método que mostra o pop-up de influência
+	 */
 	public void popUpInfluencia() {
 		JOptionPane.showMessageDialog(null, null, "Influência", JOptionPane.DEFAULT_OPTION, influencia);
 	}
 	
+	/**
+	 * Método que mostra o pop-up de contestações
+	 */
 	public void popUpContestacoes(){
 		JOptionPane.showMessageDialog(null, null, "Contestações", JOptionPane.DEFAULT_OPTION, contestacoes);
 	}
-
+	
+	/**
+	 * Método que mostra o pop-up das ações do jogo
+	 */
 	public void popUpAcoes(){
 		
 		while(ret != -1){
@@ -84,13 +113,13 @@ public class PopUpAjuda {
 				JOptionPane.showMessageDialog(null,null,"Ações de Personagem", JOptionPane.DEFAULT_OPTION, personagens);
 		}
 	}
-
+	/**
+	 * Método para testar a classe
+	 * @param args null
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	
 		PopUpAjuda p = new PopUpAjuda();
-		// p.popUpJogo();
-		// p.popUpObjetivo();
 		p.popUpGeral();
 	}
 

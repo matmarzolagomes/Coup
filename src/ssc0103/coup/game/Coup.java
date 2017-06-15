@@ -20,7 +20,7 @@ public abstract class Coup  {
     public void instanceGame(int nplayers, String[] order) {
 	players = new HashMap<String,Player>();
         for(int i = 0; i < nplayers; i++)
-            players.put(order[i], new Player());
+            players.put(order[i], new Player(order[i]));
         dead = new Deck();
         board = new Deck();
         board.startGame(nplayers);
@@ -37,7 +37,8 @@ public abstract class Coup  {
     }
     
     private void isDead(String index) {
-        if(players.get(index).getHand().size() == 0) players.remove(index);
+    	if(index != null)
+    		if(players.get(index).getHand().size() == 0) players.remove(index);
     }
     
     public HashMap<String, Player> getPlayers() {
@@ -225,8 +226,8 @@ public abstract class Coup  {
                 
         }
         
-        isDead(from);
-        isDead(to);
+        //isDead(from);
+        //isDead(to);
         
         return winner;
     }
