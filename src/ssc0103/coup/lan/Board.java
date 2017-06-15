@@ -31,8 +31,8 @@ public class Board extends Coup {
 	// CONSTANTES
 	private static final int CONNECTIONS_LIMIT = 50;
 	private static final int MAX_PLAYER_NAME = 16;
-	private static final int MIN_PLAYER_NAME = 1;
-	private static final int LOOP_BREAK = 0;
+	private static final int MIN_PLAYER_NAME = 2;
+	private static final int LOOP_BREAK = 1;
 	private static final int ACTIVE_THREADS = 1;
 
 	// ATRIBUTOS
@@ -299,29 +299,14 @@ public class Board extends Coup {
 	 * Notifica todos os players para iniciar o jogo.
 	 * 
 	 * @param coup
+	 * @throws IOException
 	 */
-	private void startGame() {
-		for (Iterator<String> playersList = it(); playersList.hasNext();) {
-			this.playerName = (String) playersList.next();
-			new Thread(() -> {
-				try {
-					Actions actions = new Actions();
-					actions.setId(Actions.LOAD_INTERFACE);
-					actions.setFrom(this.playerName);
-					actions.setPlayers(super.getPlayers());
-					actions.setDead(super.getDead());
-					actions.setLog("Início do Jogo.");
-					gameLog.add(actions.getLog());
-					flushObject(actions, this.playerName);
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-					e.printStackTrace();
-				}
-			}).start();
-		}
-
-		/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
-		waitThreads();
+	private void startGame() throws IOException {
+		Actions actions = new Actions();
+		actions.setId(Actions.LOAD_INTERFACE);
+		actions.setPlayers(super.getPlayers());
+		actions.setDead(super.getDead());
+		spreadActions(actions, null);
 	}
 
 	/**
@@ -532,6 +517,7 @@ public class Board extends Coup {
 		System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
 		while (Thread.activeCount() > ACTIVE_THREADS)
 			continue;
+		System.out.println("Threads ativas no momento: " + Thread.activeCount() + ".");
 	}
 
 	/**
@@ -561,16 +547,15 @@ public class Board extends Coup {
 	 */
 	private void getFastAction(Method method) {
 		for (String player : players.keySet()) {
-			if (!player.equals(playerName)) {
+			if (!player.equals(this.playerName)) {
 				new Thread(() -> {
 					try {
-						ObjectInputStream input = new ObjectInputStream(players.get(player).getInputStream());
-						Actions action = (Actions) input.readObject();
+						Actions action;
+						action = getObject(player);
 						if (method.invoke(actions).equals(false) && method.invoke(action).equals(true))
 							actions = action;
-					} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+					} catch (ClassNotFoundException | IOException | IllegalAccessException | IllegalArgumentException
 							| InvocationTargetException e) {
-						System.out.println(e.getMessage());
 						e.printStackTrace();
 					}
 				}).start();

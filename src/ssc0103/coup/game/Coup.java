@@ -36,9 +36,14 @@ public abstract class Coup  {
         return dead;
     }
     
-    private void isDead(String index) {
-    	if(index != null)
-    		if(players.get(index).getHand().size() == 0) players.remove(index);
+    @SuppressWarnings("unused")
+	private void isDead(String from, String to) {
+    	if(from != null)
+    		if(players.get(from).getHand().size() == 0) 
+    			players.remove(from);
+    	if(to != null)
+    		if(players.get(to).getHand().size() == 0) 
+    			players.remove(to);
     }
     
     public HashMap<String, Player> getPlayers() {
@@ -226,8 +231,7 @@ public abstract class Coup  {
                 
         }
         
-        //isDead(from);
-        //isDead(to);
+        //isDead(from, to);
         
         return winner;
     }
