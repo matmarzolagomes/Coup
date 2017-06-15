@@ -12,7 +12,8 @@ public class PopUpPlayer {
 			historia, quit;
 	private String opcoes1[] = new String[] { "Permitir", "Bloquear", "Contestar" };
 	private String opcoes2[] = new String[] { "Permitir", "Contestar" };
-	private String opcoes4[] = new String[] { "Perimitir", "Bloquear (Embaixador)", "Bloquear (Capitão)", "Contestar" };
+	private String opcoes3[] = new String[] { "Permitir", "Bloquear" };
+	private String opcoes4[] = new String[] { "Permitir", "Bloquear (Embaixador)", "Bloquear (Capitão)", "Contestar" };
 	private String opcoes5[] = new String[] { "Continuar no jogo", "Sair do jogo" };
 	private ArrayList<String> acoes;
 
@@ -138,7 +139,7 @@ public class PopUpPlayer {
 		ret = -1;
 		while (ret == -1)
 			ret = JOptionPane.showOptionDialog(null, nome + " está pedindo ajuda externa!", "Ajuda Externa",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coins, opcoes2, opcoes2[0]);
+					JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coins, opcoes3, opcoes3[0]);
 
 		return ret;
 	}
