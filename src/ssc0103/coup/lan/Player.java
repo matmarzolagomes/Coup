@@ -65,11 +65,8 @@ public class Player {
 
 			this.port = Integer.parseInt(msg);
 			player = new Socket(this.host, this.port);
-			System.out.println("3");
-			this.output = new ObjectOutputStream(player.getOutputStream());
-			System.out.println("4");
-			this.input = new ObjectInputStream(player.getInputStream());
-			System.out.println("5");
+			this.input = new ObjectInputStream(player.getInputStream());			
+			this.output = new ObjectOutputStream(player.getOutputStream());		
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);

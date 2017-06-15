@@ -61,7 +61,9 @@ public class Board extends Coup {
 
 		/* Inicializa o HashMap de jogadores conectados. */
 		this.players = new HashMap<String, Socket>(this.numPlayers);
+		/* Inicializa o HashMap de conexões de entrada. */
 		this.inputs = new HashMap<String, ObjectInputStream>(this.numPlayers);
+		/* Inicializa o HashMap de conexões de saída. */
 		this.outputs = new HashMap<String, ObjectOutputStream>(this.numPlayers);
 
 		/* Inicializa o log da partida. */
@@ -179,8 +181,8 @@ public class Board extends Coup {
 		} finally {
 			try {
 				/* Finaliza o servidor e fecha as conexões restantes. */
-				player.close();
-				board.close();
+				if(player != null) player.close();
+				if(board != null) board.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -202,9 +204,9 @@ public class Board extends Coup {
 
 			/* Obtém o nome do player. */
 			new Thread(() -> {
-				try {
-					ObjectInputStream input = new ObjectInputStream(this.player.getInputStream());
+				try {					
 					ObjectOutputStream output = new ObjectOutputStream(this.player.getOutputStream());
+					ObjectInputStream input = new ObjectInputStream(this.player.getInputStream());
 					getPlayerName(this.player, input, output);
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
@@ -235,10 +237,13 @@ public class Board extends Coup {
 
 		try {
 			/* Solicita ao jogador um nickname. */
-			actions.setId(Actions.GET_NAME);
-			output.reset();
-			output.writeObject(actions);
+			actions.setId(Actions.GET_NAME);			
+			output.writeObject(actions);			
 			output.flush();
+			output.reset();
+			
+			/* Garante que o objeto utilizado será o do input. */
+			actions = null;
 
 			/* Recebe a resposta do jogador. */
 			actions = (Actions) input.readObject();
@@ -260,32 +265,38 @@ public class Board extends Coup {
 				} else {
 					msg = "Aguardando demais jogadores.";
 
-					/* Insere na lista de conexões de players. */
-					this.playerName = actions.getFrom();
+					/* Insere na lista de conexões de players. */					
 					players.put(actions.getFrom(), player);
-					inputs.put(playerName, input);
-					outputs.put(playerName, output);
+					inputs.put(actions.getFrom(), input);
+					outputs.put(actions.getFrom(), output);
 					System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
 
 					/* Envia mensagem de aguardando demais jogadores. */
 					actions = new Actions();
 					actions.setId(Actions.SERVER_MESSAGE);
 					actions.setMessage(msg);
-					flushObject(actions, playerName);
+					flushObject(actions, actions.getFrom());
 					return;
 				}
 
 				throw new PException(msg);
 			}
+			
+			throw new NullPointerException("Objeto Actions não veio com ID GET_NAME");
 		} catch (PException f) {
 			/* Envia uma notificação ao jogador. */
 			actions = new Actions();
 			actions.setId(Actions.SERVER_MESSAGE);
-			actions.setMessage(f.getMessage());
-			output.reset();
+			actions.setMessage(f.getMessage());			
 			output.writeObject(actions);
 			output.flush();
+			output.reset();
 
+			/* Solicita novamente ao player um nickanme. */
+			getPlayerName(player, input, output);
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			
 			/* Solicita novamente ao player um nickanme. */
 			getPlayerName(player, input, output);
 		}
@@ -587,13 +598,13 @@ public class Board extends Coup {
 	 */
 	private void flushObject(Actions actions, String player) throws IOException {
 		/* Canal de comunicação do servidor para o cliente. */
-		ObjectOutputStream output = outputs.get(player);
-		/* Reset no output. */
-		output.reset();
+		ObjectOutputStream output = outputs.get(player);		
 		/* Escreve o objeto no canal. */
 		output.writeObject(actions);
 		/* Envia o objeto para o cliente. */
 		output.flush();
+		/* Reset no output. */
+		output.reset();
 	}
 
 	/**
