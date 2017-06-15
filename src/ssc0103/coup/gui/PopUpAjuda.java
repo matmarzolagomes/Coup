@@ -2,25 +2,16 @@ package ssc0103.coup.gui;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-/**
- * Classe criada para representar os pop-ups de ajuda
- * @author Victor Henrique de Souza Rodrigues - 9791027
- *
- */
-
 public class PopUpAjuda {
 
 	private ImageIcon contrarias, gerais, acao, contestacoes;
-	private ImageIcon influencia, jogo, objetivo, logo, exemplo, exemplo2, personagens, personagens2;
+	private ImageIcon influencia, jogo, objetivo, logo, exemplo, exemplo2, personagens;
 	private String opcoes[] = new String[] { "Ações Gerais", "Ações Contrárias", "Ações de Personagem" };
 	private String opcoes4[] = new String[] {"O Jogo", "Objetivo", "Influência", "Contestações", "Ações", "Exemplo"};
 	private String opcoes2[] = new String[]{"Próxima Página", "OK"};
 	private String opcoes3[] = new String[]{"Página Anterior", "OK"};
-	private int ret = 0, option2 = 0;
+	private int ret = 0, option2 = 0, option = 0;
 
-	/**
-	 * Construtor que abre e redimensiona as imagens que são necessarias
-	 */
 	public PopUpAjuda() {
 
 		contrarias = new ImageIcon("CoupAjuda/Acoes_contrarias.png");
@@ -34,14 +25,11 @@ public class PopUpAjuda {
 		exemplo = new ImageIcon("CoupAjuda/example.png");
 		exemplo2 = new ImageIcon("CoupAjuda/example2.png");
 		personagens = new ImageIcon("CoupAjuda/Personagens.png");
-		personagens2 = new ImageIcon("CoupAjuda/Personagens2.png");
 		
 		logo.setImage(logo.getImage().getScaledInstance(650, 200, 100));
 	}
 	
-	/**
-	 * Método que mostra os pop-ups de ajuda caso solicitado
-	 */
+	
 	public void popUpGeral(){
 		
 		while(option2 != -1){
@@ -55,72 +43,56 @@ public class PopUpAjuda {
 		}
 	}
 	
-	/**
-	 * Método que exibe o pop-up de exemplo de partida
-	 */
+	
 	public void popUpExemplo(){
-		while(option2 != -1 && option2 != 1){
-			option2 = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo, opcoes2, opcoes2[0]);
-			if (option2 != 1 && option2 != -1) option2 = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo2, opcoes3, opcoes3[0]);
+		option = 0;
+		
+		while(option != -1 && option != 1){
+			option = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo, opcoes2, opcoes2[0]);
+			if (option != 1 && option != -1) option = JOptionPane.showOptionDialog(null, null, "Exemplo de Jogo", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, exemplo2, opcoes3, opcoes3[0]);
 		}
 	}
-	
-	/**
-	 * Método que mostra o pop-up de jogo
-	 */
+
 	public void popUpJogo() {
 		JOptionPane.showMessageDialog(null, null, "Jogo", JOptionPane.DEFAULT_OPTION, jogo);
 	}
 	
-	/**
-	 * Método que mostra o pop-up do objetivo do jogo
-	 */
+	
 	public void popUpObjetivo() {
 		JOptionPane.showMessageDialog(null, null, "Objetivo", JOptionPane.DEFAULT_OPTION, objetivo);
 	}
 	
-	/**
-	 * Método que mostra o pop-up de influência
-	 */
 	public void popUpInfluencia() {
 		JOptionPane.showMessageDialog(null, null, "Influência", JOptionPane.DEFAULT_OPTION, influencia);
 	}
 	
-	/**
-	 * Método que mostra o pop-up de contestações
-	 */
+	
 	public void popUpContestacoes(){
 		JOptionPane.showMessageDialog(null, null, "Contestações", JOptionPane.DEFAULT_OPTION, contestacoes);
 	}
 	
-	/**
-	 * Método que mostra o pop-up das ações do jogo
-	 */
 	public void popUpAcoes(){
 		
+		ret = 0;
 		while(ret != -1){
 			ret = JOptionPane.showOptionDialog(null, null, "Ações", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, acao, opcoes, opcoes[0]);
 		
 			if(ret == 0)
 				JOptionPane.showMessageDialog(null,null,"Ações Gerais", JOptionPane.DEFAULT_OPTION, gerais);
 		
-			else if(ret == 1){
+			else if(ret == 1)
 				JOptionPane.showMessageDialog(null,null,"Ações Contrarias", JOptionPane.DEFAULT_OPTION, contrarias);
-				JOptionPane.showMessageDialog(null,null,"Ações Contrarias", JOptionPane.DEFAULT_OPTION, personagens2);
-			}
 			
 			else if(ret == 2)
 				JOptionPane.showMessageDialog(null,null,"Ações de Personagem", JOptionPane.DEFAULT_OPTION, personagens);
 		}
 	}
-	/**
-	 * Método para testar a classe
-	 * @param args null
-	 */
-	public static void main(String[] args) {
 	
+	public static void main(String[] args) {
+
 		PopUpAjuda p = new PopUpAjuda();
 		p.popUpGeral();
 	}
 
 }
+
