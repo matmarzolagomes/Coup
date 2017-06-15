@@ -271,6 +271,8 @@ public class Player {
 		flushObject();
 	}
 
+	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
+	
 	private void foreign() throws IOException {
 		/* Verifica se jogador bloqueou ação. */
 		if (actions.isBlock()) {
