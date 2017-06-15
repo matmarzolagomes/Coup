@@ -64,9 +64,16 @@ public class Player {
 				System.exit(0);
 
 			this.port = Integer.parseInt(msg);
-			player = new Socket(this.host, this.port);
-			this.input = new ObjectInputStream(player.getInputStream());			
-			this.output = new ObjectOutputStream(player.getOutputStream());		
+
+			/* Obtém o Socket de comunicação entre o servidor e o jogador. */
+			this.player = new Socket(this.host, this.port);
+
+			/* Fluxo de dados do jogador para o servidor. */
+			this.input = new ObjectInputStream(player.getInputStream());
+
+			/* Fluxo de dados do servidor para o jogador. */
+			this.output = new ObjectOutputStream(player.getOutputStream());
+
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
@@ -81,7 +88,7 @@ public class Player {
 		try {
 			/* Recebe um objeto do servidor. */
 			actions = getObject();
-			
+
 			switch (actions.getId()) {
 			case Actions.GET_NAME:
 				getName();
@@ -91,143 +98,134 @@ public class Player {
 				getMessage();
 				break;
 
-			case Actions.ASSASSINATE:
-				assassinate();
-				break;
-
-			case Actions.COUP:
-				coup();
-				return;
-
-			case Actions.FOREIGN:
-				foreign();
-				break;
-
-			case Actions.STEAL:
-				steal();
-				break;
-
 			case Actions.LOAD_INTERFACE:
 				// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 				loadInterface();
+				break;
+
+			case Actions.UPDATE_ALL_INTERFACE:
+			case Actions.UPDATE_INTERFACE:
+				// ATUALIZA A INTERFACE GRÀFICA
+				updateInterface();
+				break;
+
+			case Actions.GET_INPUT:
+				getInput();
 				break;
 
 			case Actions.LOAD_PLAYER_ACTIONS:
 				loadPlayerActions();
 				break;
 
+			case Actions.FOREIGN:
+				foreign();
+				break;
+
+			case Actions.COUP:
+				coup();
+				return;
+
 			case Actions.TAXES:
 				taxes();
+				break;
+
+			case Actions.ASSASSINATE:
+				assassinate();
+				break;
+
+			case Actions.STEAL:
+				steal();
 				break;
 
 			case Actions.SWAP:
 				swap();
 				break;
-
-			case Actions.UPDATE_ALL_INTERFACE:
-			case Actions.UPDATE_INTERFACE:
-				// ATUALIZA A INTERFACE GRÀFICA
-				break;
-
-			case Actions.GET_INPUT:
-				getInput();
-				break;
 			}
+
 			execute();
+
 		} catch (IOException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
+
+		} finally {
+			try {
+				if (this.output != null)
+					this.output.close();
+				if (this.input != null)
+					this.input.close();
+				if (this.player != null)
+					this.player.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
 		}
 	}
 
+	/**
+	 * Envia o nome do jogador ao servidor.
+	 * 
+	 * @param output
+	 * @param actions
+	 * @throws IOException
+	 */
+	private void getName() throws IOException {
+		this.playerName = "Informe o seu nickname no jogo:";
+		this.playerName = JOptionPane.showInputDialog(this.playerName);
+		actions.setFrom(this.playerName);
+		flushObject();
+	}
+
+	/**
+	 * Recebe uma mensagem do servidor e exibe na tela.
+	 * 
+	 * @param output
+	 * @param actions
+	 * @throws IOException
+	 */
+	private void getMessage() throws IOException {
+		JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
+		// actions.setPlayerResponse(true);
+		// output.writeObject(actions);
+		// output.flush();
+	}
+
+	/**
+	 * Carrega a interface gráfica do jogador.
+	 * 
+	 * @param output
+	 * @throws IOException
+	 */
+	private void loadInterface() {
+		JOptionPane.showMessageDialog(null, "Interface Carregada.");
+	}
+
+	/**
+	 * Atualiza a interface gráfica do jogador.
+	 */
+	private void updateInterface() {
+		JOptionPane.showMessageDialog(null, "Interface Atualizada.");
+	}
+
+	/**
+	 * Retira cartas da mão do jogador.
+	 * 
+	 * @throws IOException
+	 */
 	private void getInput() throws IOException {
-		/* Solicitar ao jogador para remover 2 cartas. */
-		if (actions.getPlayer().getHand().size() > 2) {
-			popUp(actions.getPlayer().getHand());
-			/* Solicitar ao jogador para remover 1 carta. */
-		} else {
-			popUp(actions.getPlayer().getHand());
-		}
+		/* Solicitar ao jogador para remover 1 ou 2 cartas. */
+		popUp(actions.getPlayer().getHand(), actions.getPlayer().getHand().size() > 2 ? 2 : 1);
 
 		/* Envia as cartas a serem removidas para o servidor. */
 		flushObject();
 	}
 
-	private void swap() throws IOException {
-		if (popup.popUpTroca(actions.getFrom()) == 1) {
-			actions.setTo(playerName);
-			actions.setContest(true);
-		}
-
-		/* Envia objeto de resposta ao servidor. */
-		flushObject();
-	}
-
-	private void taxes() throws IOException {
-		if (popup.popUpTaxas(actions.getFrom()) == 1) {
-			actions.setTo(playerName);
-			actions.setContest(true);
-		}
-
-		/* Envia objeto de resposta ao servidor. */
-		flushObject();
-	}
-
-	private void foreign() throws IOException {
-		/* Verifica se jogador bloqueou ação. */
-		if (actions.isBlock()) {
-			/* Verifica se jogador deseja contestar. */
-			if (popup.popUpBloqueioAjuda(actions.getTo()) == 1)
-				actions.setContest(true);
-		} else {
-			/* Verifica se o jogador deseja bloquear. */
-			if (popup.popUpAjudaExterna(actions.getFrom()) == 1) {
-				actions.setTo(playerName);
-				actions.setBlock(true);
-			}
-		}
-
-		/* Envia resposta ao servidor. */
-		flushObject();
-	}
-
-	private void coup() {
-		popup.popUpGolpe(actions.getFrom());
-	}
-
-	private void steal() throws IOException {
-		int action;
-
-		if (actions.isBlock()) {
-			action = popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]);
-
-			if (action == 1)
-				actions.setContest(true);
-
-		} else {
-			action = popup.popUpExtorcao(actions.getFrom());
-
-			switch (action) {
-			/* Bloqueou com Embaixador. */
-			case 1:
-				actions.setCards(new String[] { "Embaixador" });
-
-				/* Bloqueou com Capitão. */
-			case 2:
-				if (actions.getCards() == null)
-					actions.setCards(new String[] { "Capitao" });
-				actions.setBlock(true);
-				break;
-
-			/* Contestou. */
-			case 3:
-				actions.setContest(true);
-				break;
-			}
-		}
-
-		flushObject();
-	}
-
+	/**
+	 * Carrega todas as ações que o jogador pode realizar.
+	 * 
+	 * @throws IOException
+	 */
 	private void loadPlayerActions() throws IOException {
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
@@ -273,6 +271,38 @@ public class Player {
 		flushObject();
 	}
 
+	private void foreign() throws IOException {
+		/* Verifica se jogador bloqueou ação. */
+		if (actions.isBlock()) {
+			/* Verifica se jogador deseja contestar. */
+			if (popup.popUpBloqueioAjuda(actions.getTo()) == 1)
+				actions.setContest(true);
+		} else {
+			/* Verifica se o jogador deseja bloquear. */
+			if (popup.popUpAjudaExterna(actions.getFrom()) == 1) {
+				actions.setTo(playerName);
+				actions.setBlock(true);
+			}
+		}
+
+		/* Envia resposta ao servidor. */
+		flushObject();
+	}
+
+	private void coup() {
+		popup.popUpGolpe(actions.getFrom());
+	}
+
+	private void taxes() throws IOException {
+		if (popup.popUpTaxas(actions.getFrom()) == 1) {
+			actions.setTo(playerName);
+			actions.setContest(true);
+		}
+
+		/* Envia objeto de resposta ao servidor. */
+		flushObject();
+	}
+
 	/**
 	 * Envia ao servidor a resposta do jogador sobre estar sendo assassinado.
 	 * 
@@ -304,81 +334,63 @@ public class Player {
 		flushObject();
 	}
 
-	/**
-	 * Carrega a interface gráfica do jogador.
-	 * 
-	 * @param output
-	 * @throws IOException
-	 */
-	private void loadInterface() throws IOException {
-		JOptionPane.showMessageDialog(null, "Interface Carregada.");
-		// actions = new Actions();
-		// actions.setId(Actions.PLAYER_RESPONSE);
-		// actions.setPlayerResponse(true);
-		// output.writeObject(actions);
-		// output.flush();
-	}
+	private void steal() throws IOException {
+		int action;
 
-	/**
-	 * Recebe uma mensagem do servidor e exibe na tela.
-	 * 
-	 * @param output
-	 * @param actions
-	 * @throws IOException
-	 */
-	private void getMessage() throws IOException {
-		JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
-		// actions.setPlayerResponse(true);
-		// output.writeObject(actions);
-		// output.flush();
-	}
+		if (actions.isBlock()) {
+			action = popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]);
 
-	/**
-	 * Envia o nome do jogador ao servidor.
-	 * 
-	 * @param output
-	 * @param actions
-	 * @throws IOException
-	 */
-	private void getName() throws IOException {
-		this.playerName = "Informe o seu nickname no jogo:";
-		this.playerName = JOptionPane.showInputDialog(this.playerName);
-		actions.setFrom(this.playerName);
+			if (action == 1)
+				actions.setContest(true);
+
+		} else {
+			action = popup.popUpExtorcao(actions.getFrom());
+
+			switch (action) {
+			/* Bloqueou com Embaixador. */
+			case 1:
+				actions.setCards(new String[] { "Embaixador" });
+
+				/* Bloqueou com Capitão. */
+			case 2:
+				if (actions.getCards() == null)
+					actions.setCards(new String[] { "Capitao" });
+				actions.setBlock(true);
+				break;
+
+			/* Contestou. */
+			case 3:
+				actions.setContest(true);
+				break;
+			}
+		}
+
 		flushObject();
 	}
 
-	public String[] popUp(Deck hand) {
-		String[] ret = null;
-
-		try {
-			boolean cont = true;
-			while (cont) {
-				PopUp pop = new PopUp(hand, hand.size() / 2);
-				ret = (String[]) pop.showPopUp().toArray();
-				if (ret.length == hand.size() / 2)
-					cont = false;
-			}
-		} catch (GUIException ex) {
-			System.out.println(ex.getMessage());
-			System.exit(-1);
+	private void swap() throws IOException {
+		if (popup.popUpTroca(actions.getFrom()) == 1) {
+			actions.setTo(playerName);
+			actions.setContest(true);
 		}
 
-		return ret;
+		/* Envia objeto de resposta ao servidor. */
+		flushObject();
 	}
 
-	// ############# MÉTODOS AUXILIARES DO CLIENTE #############//
+	// ############# MÉTODOS AUXILIARES DO CLIENTE ############# //
+	
 	/**
 	 * Envia o objeto Actions para o servidor.
 	 * 
 	 * @throws IOException
 	 */
 	private void flushObject() throws IOException {
-		/* Canal de comunicação do cliente para o servidor. */		
-		/* Escreve o objeto no canal. */
+		/* Escreve o objeto no fluxo de dados. */
 		output.writeObject(actions);
 		/* Envia o objeto para o servidor. */
 		output.flush();
-		/* Reset no Player após. */		
+		/* Limpa o fluxo de dados. */
 		output.reset();
 	}
 
@@ -391,9 +403,37 @@ public class Player {
 	 * @throws ClassNotFoundException
 	 */
 	private Actions getObject() throws IOException, ClassNotFoundException {
-		/* Canal de comunicação do servidor para o cliente. */
 		/* Retorna o objeto enviado pelo servidor. */
-		 Actions act = (Actions) input.readObject();
-		 return act;
+		return (Actions) input.readObject();
 	}
+
+	// ############# MÈTODOS DA INTERFACE GRÀFICA ############# //
+
+	/**
+	 * Remove cartas da mão do jogador.
+	 * 
+	 * @param hand
+	 * @param numCards
+	 *            Número de cartas que será removido.
+	 * @return
+	 */
+	public String[] popUp(Deck hand, int numCards) {
+		String[] ret = null;
+
+		try {
+			boolean cont = true;
+			while (cont) {
+				PopUp pop = new PopUp(hand, numCards);
+				ret = (String[]) pop.showPopUp().toArray();
+				if (ret.length == numCards)
+					cont = false;
+			}
+		} catch (GUIException ex) {
+			System.out.println(ex.getMessage());
+			System.exit(-1);
+		}
+
+		return ret;
+	}
+
 }
