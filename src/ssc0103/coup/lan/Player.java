@@ -86,63 +86,64 @@ public class Player {
 	 */
 	public void execute() {
 		try {
-			/* Recebe um objeto do servidor. */
-			actions = getObject();
+			while (true) {
+				/* Recebe um objeto do servidor. */
+				actions = getObject();
 
-			switch (actions.getId()) {
-			case Actions.GET_NAME:
-				getName();
-				break;
+				switch (actions.getId()) {
+				case Actions.GET_NAME:
+					getName();
+					break;
 
-			case Actions.SERVER_MESSAGE:
-				getMessage();
-				break;
+				case Actions.SERVER_MESSAGE:
+					getMessage();
+					break;
 
-			case Actions.LOAD_INTERFACE:
-				// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
-				loadInterface();
-				break;
+				case Actions.LOAD_INTERFACE:
+					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
+					loadInterface();
+					break;
 
-			case Actions.UPDATE_ALL_INTERFACE:
-			case Actions.UPDATE_INTERFACE:
-				// ATUALIZA A INTERFACE GRÀFICA
-				updateInterface();
-				break;
+				case Actions.UPDATE_ALL_INTERFACE:
+				case Actions.UPDATE_INTERFACE:
+					// ATUALIZA A INTERFACE GRÀFICA
+					updateInterface();
+					break;
 
-			case Actions.GET_INPUT:
-				getInput();
-				break;
+				case Actions.GET_INPUT:
+					getInput();
+					break;
 
-			case Actions.LOAD_PLAYER_ACTIONS:
-				loadPlayerActions();
-				break;
+				case Actions.LOAD_PLAYER_ACTIONS:
+					loadPlayerActions();
+					break;
 
-			case Actions.FOREIGN:
-				foreign();
-				break;
+				case Actions.FOREIGN:
+					foreign();
+					break;
 
-			case Actions.COUP:
-				coup();
-				return;
+				case Actions.COUP:
+					coup();
+					return;
 
-			case Actions.TAXES:
-				taxes();
-				break;
+				case Actions.TAXES:
+					taxes();
+					break;
 
-			case Actions.ASSASSINATE:
-				assassinate();
-				break;
+				case Actions.ASSASSINATE:
+					assassinate();
+					break;
 
-			case Actions.STEAL:
-				steal();
-				break;
+				case Actions.STEAL:
+					steal();
+					break;
 
-			case Actions.SWAP:
-				swap();
-				break;
+				case Actions.SWAP:
+					swap();
+					break;
+				}
+
 			}
-
-			execute();
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -185,7 +186,8 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getMessage() throws IOException {
-		JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, this.playerName + ": " + actions.getMessage(), "Mensagem",
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
@@ -195,14 +197,14 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void loadInterface() {
-		JOptionPane.showMessageDialog(null, "Interface Carregada.");
+		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Carregada.");
 	}
 
 	/**
 	 * Atualiza a interface gráfica do jogador.
 	 */
 	private void updateInterface() {
-		JOptionPane.showMessageDialog(null, "Interface Atualizada.");
+		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Atualizada.");
 	}
 
 	/**
@@ -255,12 +257,8 @@ public class Player {
 		switch (actions.getId()) {
 		case Actions.COUP:
 		case Actions.ASSASSINATE:
-			actions.setTo(popup
-					.popUpJogadores(actions.getPlayers().keySet().toArray(new String[actions.getPlayers().size()])));
-			break;
-
 		case Actions.STEAL:
-			actions.setTo(popup.popUpJogadores(playersName.toArray(new String[playersName.size()])));
+			actions.setTo(popup.popUpJogadores(new ArrayList<String>(actions.getPlayers().keySet()), this.playerName));
 			break;
 		}
 
@@ -269,7 +267,7 @@ public class Player {
 	}
 
 	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
-	
+
 	private void foreign() throws IOException {
 		/* Verifica se jogador bloqueou ação. */
 		if (actions.isBlock()) {
@@ -378,7 +376,7 @@ public class Player {
 	}
 
 	// ############# MÉTODOS AUXILIARES DO CLIENTE ############# //
-	
+
 	/**
 	 * Envia o objeto Actions para o servidor.
 	 * 
