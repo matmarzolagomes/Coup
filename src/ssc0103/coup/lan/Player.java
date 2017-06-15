@@ -186,9 +186,6 @@ public class Player {
 	 */
 	private void getMessage() throws IOException {
 		JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
-		// actions.setPlayerResponse(true);
-		// output.writeObject(actions);
-		// output.flush();
 	}
 
 	/**
