@@ -6,7 +6,7 @@ public class PopUpAjuda {
 
 	private ImageIcon contrarias, gerais, acao, contestacoes;
 	private ImageIcon influencia, jogo, objetivo, logo, exemplo, exemplo2, personagens;
-	private String opcoes[] = new String[] { "Ações Gerais", "Ações Contrárias", "Ações de Personagem" };
+	private String opcoes[] = new String[] {"Ações Gerais", "Ações Contrárias", "Ações de Personagem"};
 	private String opcoes4[] = new String[] {"O Jogo", "Objetivo", "Influência", "Contestações", "Ações", "Exemplo"};
 	private String opcoes2[] = new String[]{"Próxima Página", "OK"};
 	private String opcoes3[] = new String[]{"Página Anterior", "OK"};
