@@ -139,6 +139,7 @@ public class Board extends Coup {
 			/* Envia requisição de carta ao jogador. */
 			actions = new Actions();
 			actions.setId(Actions.GET_INPUT);
+			actions.setFrom(player.getName());
 			actions.setPlayer(player);
 			flushObject(actions, player.getName());
 
