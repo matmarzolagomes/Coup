@@ -138,7 +138,7 @@ public class Board extends Coup {
 		try {
 			/* Envia requisição de carta ao jogador. */
 			actions = new Actions();
-			actions.setId(Actions.GET_INPUT);	
+			actions.setId(Actions.GET_INPUT);
 			actions.setPlayer(player);
 			flushObject(actions, player.getName());
 
@@ -652,5 +652,10 @@ public class Board extends Coup {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		/* Inicia o Servidor. */
+		new Board().execute();
 	}
 }

@@ -213,9 +213,11 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getInput() throws IOException {
+		String[] cards;
 		/* Solicitar ao jogador para remover 1 ou 2 cartas. */
-		popUp(actions.getPlayer().getHand(), actions.getPlayer().getHand().size() > 2 ? 2 : 1);
-
+		cards = popUp(actions.getPlayer().getHand(), actions.getPlayer().getHand().size() > 2 ? 2 : 1);
+		actions.setCards(cards);
+		
 		/* Envia as cartas a serem removidas para o servidor. */
 		flushObject();
 	}
@@ -278,6 +280,7 @@ public class Player {
 			/* Verifica se o jogador deseja bloquear. */
 			if (popup.popUpAjudaExterna(actions.getFrom()) == 1) {
 				actions.setTo(playerName);
+				actions.setCards(new String[] { "Duque" });
 				actions.setBlock(true);
 			}
 		}
@@ -317,6 +320,7 @@ public class Player {
 			switch (popup.popUpAssassino(actions.getFrom())) {
 			/* Bloquear. */
 			case 1:
+				actions.setCards(new String[] { "Condessa" });
 				actions.setBlock(true);
 				break;
 
@@ -332,18 +336,12 @@ public class Player {
 	}
 
 	private void steal() throws IOException {
-		int action;
-
 		if (actions.isBlock()) {
-			action = popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]);
-
-			if (action == 1)
+			if (popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]) == 1)
 				actions.setContest(true);
 
 		} else {
-			action = popup.popUpExtorcao(actions.getFrom());
-
-			switch (action) {
+			switch (popup.popUpExtorcao(actions.getFrom())) {
 			/* Bloqueou com Embaixador. */
 			case 1:
 				actions.setCards(new String[] { "Embaixador" });
@@ -421,7 +419,7 @@ public class Player {
 			boolean cont = true;
 			while (cont) {
 				PopUp pop = new PopUp(hand, numCards);
-				ret = (String[]) pop.showPopUp().toArray();
+				ret = pop.showPopUp().toArray(new String[numCards]);
 				if (ret.length == numCards)
 					cont = false;
 			}
@@ -433,4 +431,7 @@ public class Player {
 		return ret;
 	}
 
+	public static void main(String[] args) {
+		new Player().execute();
+	}
 }
