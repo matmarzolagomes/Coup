@@ -68,9 +68,9 @@ public class ConectGUI extends JPanel {
 
 		add(new JPanel(), cons);
 
-		ip = new JTextFieldWithLimit("IP", 15);
-		port = new JTextFieldWithLimit("Port", 6);
-		name = new JTextFieldWithLimit("Name", 15);
+		ip = new JTextFieldWithLimit("IP Address: ", 15);
+		port = new JTextFieldWithLimit("Host Port: ", 5);
+		name = new JTextFieldWithLimit("Nickname: ", 16);
 		
 
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
