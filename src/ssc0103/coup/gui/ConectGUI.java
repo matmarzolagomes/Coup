@@ -26,7 +26,6 @@ public class ConectGUI extends JPanel {
 	private JTextFieldWithLimit port;
 	private JTextFieldWithLimit name;
 
-
 	public ConectGUI() {
 		super(new GridBagLayout());
 								
@@ -76,7 +75,6 @@ public class ConectGUI extends JPanel {
 
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		bt = new JButton("Connect");
-		System.out.println("Pronto para acionar botão.");
 		
 		ip.disable();
 		port.disable();
@@ -85,7 +83,6 @@ public class ConectGUI extends JPanel {
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Botão acionado.");
 				if (!conected) {					
 					ip.disable();					
 					port.disable();
@@ -93,9 +90,7 @@ public class ConectGUI extends JPanel {
 					porta = port.getText();					
 					bt.setEnabled(false);
 					bt.setText("Connecting...");
-					System.out.println("Estado do Botão:" + Player.readConnectGUI());
 					Player.setReadConnectGUI(true);
-					System.out.println("Estado do Botão: " + Player.readConnectGUI());					
 				} else {
 					name.disable();
 					playerName = name.getText();					
@@ -113,8 +108,7 @@ public class ConectGUI extends JPanel {
 		center.add(btp);
 	}
 	
-	public void frameAdd(ConectGUI conectGUI) {
-		JFrame frame = new JFrame("Game");
+	public void frameAdd(JFrame frame, ConectGUI conectGUI) {		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.NORMAL);	
 		frame.add(conectGUI);

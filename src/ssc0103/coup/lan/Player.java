@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ssc0103.coup.exception.GUIException;
@@ -30,6 +31,7 @@ public class Player {
 	private ObjectOutputStream output;
 	private Actions actions;
 	private PopUpPlayer popup;
+	private JFrame jframe;
 	private ConectGUI conectGUI;
 	private static boolean readConnectGUI = false;
 
@@ -46,8 +48,9 @@ public class Player {
 	 */
 	public Player() {
 		/* Tela de login. */
+		jframe = new JFrame("Coup Login");
 		conectGUI = new ConectGUI();
-		conectGUI.frameAdd(conectGUI);
+		conectGUI.frameAdd(jframe, conectGUI);
 
 		/* Conecta ao servidor do jogo. */
 		connectHost();
@@ -126,6 +129,7 @@ public class Player {
 
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
+					jframe.setVisible(false);
 					loadInterface();
 					break;
 
@@ -139,8 +143,7 @@ public class Player {
 					getInput();
 					break;
 
-				case Actions.LOAD_PLAYER_ACTIONS:
-					conectGUI.setVisible(false);
+				case Actions.LOAD_PLAYER_ACTIONS:					
 					loadPlayerActions();
 					break;
 
