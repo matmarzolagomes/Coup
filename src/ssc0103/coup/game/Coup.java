@@ -115,10 +115,9 @@ public abstract class Coup {
 					// Se contestar
 					if (players.get(from).checkCard("Assassino")) {
 						while (!ret)
-							ret = players.get(to).removeCard(getInput(players.get(to)), dead);
-						ret = false;
-						while (!ret)
-							ret = players.get(to).removeCard(getInput(players.get(to)), dead);
+							ret = players.get(to).removeCard(
+									players.get(to).getHand().toArray(new String[players.get(to).getHand().size()]),
+									dead);
 						ret = false;
 
 						while (!ret)
@@ -148,10 +147,9 @@ public abstract class Coup {
 
 						} else {
 							while (!ret)
-								ret = players.get(to).removeCard(getInput(players.get(to)), dead);
-							ret = false;
-							while (!ret)
-								ret = players.get(to).removeCard(getInput(players.get(to)), dead);
+								ret = players.get(to).removeCard(
+										players.get(to).getHand().toArray(new String[players.get(to).getHand().size()]),
+										dead);
 						}
 					} else {
 						ret = true;
