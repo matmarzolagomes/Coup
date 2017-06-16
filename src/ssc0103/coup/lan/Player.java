@@ -237,7 +237,7 @@ public class Player {
         jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
         jframe.setVisible(true);
         
-        CoupGUI coupgui = new CoupGUI(playerName, actions.getPlayers());
+        coupgui = new CoupGUI(playerName, actions.getPlayers());
         
         jframe.add(coupgui);
         coupgui.updateAll(actions);
