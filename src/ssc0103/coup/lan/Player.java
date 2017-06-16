@@ -31,15 +31,24 @@ public class Player {
 	private Actions actions;
 	private PopUpPlayer popup;
 	private ConectGUI conectGUI;
+	private static boolean readConnectGUI = false;
+
+	public static boolean readConnectGUI() {
+		return readConnectGUI;
+	}
+
+	public static void setReadConnectGUI(boolean button) {
+		Player.readConnectGUI = button;
+	}
 
 	/**
 	 * Construtor do Player, responsável por conectar o jogador com o servidor.
 	 */
-	public Player() {		
+	public Player() {
 		/* Tela de login. */
 		conectGUI = new ConectGUI();
 		conectGUI.frameAdd(conectGUI);
-		
+
 		/* Conecta ao servidor do jogo. */
 		connectHost();
 
@@ -54,14 +63,20 @@ public class Player {
 	 * Realiza uma conexão com o servidor do jogo.
 	 */
 	private void connectHost() {
+		conectGUI.activeButton1();
 		String msg; // = "Informe o IP de conexão com o servidor do
 					// jogo:\nDefault: 127.0.0.1";
 		try {
+			System.out.println("Pegando dados.");			
 			// this.host = JOptionPane.showInputDialog(msg);
-			while (conectGUI.isBtEnable())
-				continue;
-			host = conectGUI.getIp();
-			msg = conectGUI.getPort();
+			while (true) {				
+				System.out.println("Player:" + Player.readConnectGUI());				
+				if(Player.readConnectGUI() == true)
+					break;
+			}
+			System.out.println("Dados pegos.");
+			host = conectGUI.getIpAdress();
+			msg = conectGUI.getPorta();
 
 			if (host == null)
 				System.exit(0);
@@ -75,21 +90,20 @@ public class Player {
 			// System.exit(0);
 
 			this.port = Integer.parseInt(msg);
-
+			System.out.println("Conectando...");
 			/* Obtém o Socket de comunicação entre o servidor e o jogador. */
 			this.player = new Socket(this.host, this.port);
-
+			System.out.println("Conexão realizada com sucesso.");
 			/* Fluxo de dados do jogador para o servidor. */
 			this.input = new ObjectInputStream(player.getInputStream());
 
 			/* Fluxo de dados do servidor para o jogador. */
 			this.output = new ObjectOutputStream(player.getOutputStream());
-			
+
 			conectGUI.setConected(true);
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
-			conectGUI.activeButton1();
 			connectHost();
 		}
 	}
@@ -187,9 +201,12 @@ public class Player {
 		// this.playerName = "Informe o seu nickname no jogo:";
 		// this.playerName = JOptionPane.showInputDialog(this.playerName);
 		conectGUI.activeButton2();
-		while (conectGUI.isBtEnable())
-			continue;
-		this.playerName = conectGUI.getName();
+		while (true) {				
+			System.out.println("Player:" + Player.readConnectGUI());				
+			if(Player.readConnectGUI() == true)
+				break;
+		}		
+		this.playerName = conectGUI.getPlayerName();
 		actions.setFrom(this.playerName);
 		flushObject();
 	}

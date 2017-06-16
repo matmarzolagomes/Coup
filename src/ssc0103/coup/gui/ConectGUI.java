@@ -13,14 +13,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ssc0103.coup.lan.Player;
+
 @SuppressWarnings("serial")
 public class ConectGUI extends JPanel {
 	private boolean conected = false;
+	private String ipAdress;	
+	private String porta;
+	private String playerName;
+	private JButton bt;
 	private JTextFieldWithLimit ip;
 	private JTextFieldWithLimit port;
 	private JTextFieldWithLimit name;
-	private JButton bt;
-	
+
 
 	public ConectGUI() {
 		super(new GridBagLayout());
@@ -67,24 +72,36 @@ public class ConectGUI extends JPanel {
 		ip = new JTextFieldWithLimit("IP", 15);
 		port = new JTextFieldWithLimit("Port", 6);
 		name = new JTextFieldWithLimit("Name", 15);
-
-		name.disable();
+		
 
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		bt = new JButton("Connect");
-
+		System.out.println("Pronto para acionar botão.");
+		
+		ip.disable();
+		port.disable();
+		name.disable();
+		bt.setEnabled(false);
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!conected) {															
-					ip.disable();
+				System.out.println("Botão acionado.");
+				if (!conected) {					
+					ip.disable();					
 					port.disable();
+					ipAdress = ip.getText();
+					porta = port.getText();					
 					bt.setEnabled(false);
 					bt.setText("Connecting...");
+					System.out.println("Estado do Botão:" + Player.readConnectGUI());
+					Player.setReadConnectGUI(true);
+					System.out.println("Estado do Botão: " + Player.readConnectGUI());					
 				} else {
 					name.disable();
+					playerName = name.getText();					
 					bt.setEnabled(false);
 					bt.setText("Waiting for game to start");
+					Player.setReadConnectGUI(true);
 				}
 			}
 		});
@@ -105,22 +122,18 @@ public class ConectGUI extends JPanel {
 		frame.add(conectGUI);
 		frame.pack();
 	}
-
-	public boolean isBtEnable() {
-		return bt.isEnabled();
+	
+	public String getIpAdress() {
+		return ipAdress;
 	}
 
-	public String getIp() {
-		return ip.getText();
+	public String getPorta() {
+		return porta;
 	}
 
-	public String getPort() {
-		return port.getText();
-	}
-
-	public String getName() {
-		return name.getText();
-	}
+	public String getPlayerName() {
+		return playerName;
+	}	
 
 	public void setConected(boolean conected) {
 		this.conected = conected;
@@ -131,11 +144,13 @@ public class ConectGUI extends JPanel {
 		port.enable();
 		bt.setText("Connect");
 		bt.setEnabled(true);
+		Player.setReadConnectGUI(false);
 	}
 	
 	public void activeButton2() {
 		bt.setText("Choose name");
 		bt.setEnabled(true);
 		name.enable();
+		Player.setReadConnectGUI(false);
 	}
 }
