@@ -6,8 +6,7 @@ import javax.swing.JOptionPane;
 import ssc0103.coup.lan.Actions;
 
 /**
- * Classe que exibe janelas  com as ações do jogo
- * na tela do jogador.
+ * Classe que exibe janelas com as ações do jogo na tela do jogador.
  * 
  * @author Victor Henrique de Souza Rodrigues (9791027)
  *
@@ -25,8 +24,8 @@ public class PopUpPlayer {
 	private ArrayList<String> acoes;
 
 	/**
-	 * Construtor que abre e redimensionada todas as imagens que serão 
-	 * usadas nas janelas.
+	 * Construtor que abre e redimensionada todas as imagens que serão usadas
+	 * nas janelas.
 	 */
 	public PopUpPlayer() {
 
@@ -58,12 +57,14 @@ public class PopUpPlayer {
 		vitoria.setImage(vitoria.getImage().getScaledInstance(640, 360, 100));
 
 	}
+
 	/**
-	 * Método que exibe uma janela para um jogador se alguém bloquear
-	 * a ajuda externa.
+	 * Método que exibe uma janela para um jogador se alguém bloquear a ajuda
+	 * externa.
 	 * 
-	 * @param nome do jogador que bloqueou.
-	 * @return 0 se o jogador aceitou ou  1 se contestou o bloqueio.
+	 * @param nome
+	 *            do jogador que bloqueou.
+	 * @return 0 se o jogador aceitou ou 1 se contestou o bloqueio.
 	 */
 	public int popUpBloqueioAjuda(String nome) {
 
@@ -74,16 +75,17 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Método que exibe uma janela com a história base do jogo.
 	 */
 	public void PopUpHistoria() {
 		JOptionPane.showMessageDialog(null, null, "História do Jogo", JOptionPane.DEFAULT_OPTION, historia);
 	}
-	
+
 	/**
-	 * Método que exibe uma janela de confirmação caso o jogador queira deixar o jogo.
+	 * Método que exibe uma janela de confirmação caso o jogador queira deixar o
+	 * jogo.
 	 * 
 	 * @return 0 se ele quer continuar no jogo, 1 se ele quer sair
 	 */
@@ -97,14 +99,15 @@ public class PopUpPlayer {
 		return ret;
 
 	}
-	
+
 	/**
-	 * Método que exibe uma janela mostrando que o jogador foi eliminado do jogo.
+	 * Método que exibe uma janela mostrando que o jogador foi eliminado do
+	 * jogo.
 	 */
 	public void popUpDerrota() {
 		JOptionPane.showMessageDialog(null, null, "Derrota", JOptionPane.DEFAULT_OPTION, derrota);
 	}
-	
+
 	/**
 	 * Método que exibe uma janela mostrando que o jogador venceu o jogo.
 	 */
@@ -112,11 +115,13 @@ public class PopUpPlayer {
 		JOptionPane.showMessageDialog(null, null, "Vitória", JOptionPane.DEFAULT_OPTION, vitoria);
 
 	}
-	
+
 	/**
-	 * Método que exibe para um jogador que outro jogador está tentando assassinar ele.
+	 * Método que exibe para um jogador que outro jogador está tentando
+	 * assassinar ele.
 	 * 
-	 * @param nome do jogador que está tentando assassinar.
+	 * @param nome
+	 *            do jogador que está tentando assassinar.
 	 * @return 0 se ele permite, 1 se bloqueia, 2 se contesta o assassinato.
 	 */
 	public int popUpAssassino(String nome) {
@@ -128,11 +133,13 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
-	 * Método que exibe uma janela para os jogadores, dizendo que um dos jogadores está reinvindicando taxas.
+	 * Método que exibe uma janela para os jogadores, dizendo que um dos
+	 * jogadores está reinvindicando taxas.
 	 * 
-	 * @param nome do jogador que está reinvindicando taxas.
+	 * @param nome
+	 *            do jogador que está reinvindicando taxas.
 	 * @return 0 se ele permite, 1 se ele contesta.
 	 */
 	public int popUpTaxas(String nome) {
@@ -145,11 +152,13 @@ public class PopUpPlayer {
 		return ret;
 
 	}
-	
+
 	/**
-	 * Método que exibe para um jogador uma janela na qual um jogador bloqueou o assassinato.
+	 * Método que exibe para um jogador uma janela na qual um jogador bloqueou o
+	 * assassinato.
 	 * 
-	 * @param nome do jogador que bloqueou o assassinato.
+	 * @param nome
+	 *            do jogador que bloqueou o assassinato.
 	 * @return 0 se ele aceita o bloqueio, 1 se ele contesta.
 	 */
 	public int popUpCondessa(String nome) {
@@ -161,11 +170,13 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
-	 * Método que exibe uma janela dizendo que um jogador está pedindo uma troca.
+	 * Método que exibe uma janela dizendo que um jogador está pedindo uma
+	 * troca.
 	 * 
-	 * @param nome do jogador que está reinvindicando a troca.
+	 * @param nome
+	 *            do jogador que está reinvindicando a troca.
 	 * @return 0 se ele permite, 1 se ele contesta.
 	 */
 	public int popUpTroca(String nome) {
@@ -177,13 +188,14 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Método que exibe uma janela dizendo que o jogador está sendo extorquido.
 	 * 
-	 * @param nome do jogador que está extorquindo.
-	 * @return 0 se ele perimite, 1 se ele bloqueia com embaixador,
-	 * 2 se ele bloqueia com capitão, 3 se ele contesta.
+	 * @param nome
+	 *            do jogador que está extorquindo.
+	 * @return 0 se ele perimite, 1 se ele bloqueia com embaixador, 2 se ele
+	 *         bloqueia com capitão, 3 se ele contesta.
 	 */
 	public int popUpExtorcao(String nome) {
 
@@ -195,11 +207,13 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
-	 * Método que exibe uma janela na qual um jogador está pedindo ajuda externa.
+	 * Método que exibe uma janela na qual um jogador está pedindo ajuda
+	 * externa.
 	 * 
-	 * @param nome do jogador que está pedindo ajuda externa.
+	 * @param nome
+	 *            do jogador que está pedindo ajuda externa.
 	 * @return 0 se ele perimite, 1 se ele bloqueia.
 	 */
 	public int popUpAjudaExterna(String nome) {
@@ -211,12 +225,14 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Método que exibe uma janela na qual um jogador bloqueou a extorção.
 	 * 
-	 * @param nome do jogador que bloqueou.
-	 * @param carta com a qual o jogador bloqueou.
+	 * @param nome
+	 *            do jogador que bloqueou.
+	 * @param carta
+	 *            com a qual o jogador bloqueou.
 	 * @return 0 se ele aceita, 1 se ele contesta o bloqueio.
 	 */
 	public int popUpBloqueioExtorcao(String nome, String carta) {
@@ -235,22 +251,25 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Método que exibe uma janela na qual um jogador levou um golpe de estado.
 	 * 
-	 * @param nome do jogador que aplicou o golpe.
+	 * @param nome
+	 *            do jogador que aplicou o golpe.
 	 */
 	public void popUpGolpe(String nome) {
 		JOptionPane.showOptionDialog(null, nome + " aplicou um golpe de estado em você!", "Golpe de Estado",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, golpe, null, null);
 	}
-	
+
 	/**
 	 * Método que pede para um jogador realizar uma ação.
 	 * 
-	 * @param acoes2 (ações que estão disponíveis nessa rodada para ele).
-	 * @param nome do jogador.
+	 * @param acoes2
+	 *            (ações que estão disponíveis nessa rodada para ele).
+	 * @param nome
+	 *            do jogador.
 	 * @return qual ação foi realizada.
 	 */
 	public int popUpAcoes(ArrayList<String> acoes2, String nome) {
@@ -290,13 +309,15 @@ public class PopUpPlayer {
 
 		return ret;
 	}
-	
+
 	/**
-	 * Método que exibe uma janela para um jogador escolher outro
-	 * jogador para sofrer a ação.
+	 * Método que exibe uma janela para um jogador escolher outro jogador para
+	 * sofrer a ação.
 	 * 
-	 * @param jogadores que estão na partida.
-	 * @param jogador que vai fazer a ação.
+	 * @param jogadores
+	 *            que estão na partida.
+	 * @param jogador
+	 *            que vai fazer a ação.
 	 * @return qual jogador ele escolheu.
 	 */
 	public String popUpJogadores(ArrayList<String> jogadores, String jogador) {
@@ -317,11 +338,12 @@ public class PopUpPlayer {
 
 		return jogador_alvo;
 	}
-	
+
 	/**
-	 * Método main apenas para testes na classe,
-	 * sem função no programa final
-	 * @param args null
+	 * Método main apenas para testes na classe, sem função no programa final
+	 * 
+	 * @param args
+	 *            null
 	 */
 	public static void main(String[] args) {
 
