@@ -6,10 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
+import ssc0103.coup.gui.ConectGUI;
 import ssc0103.coup.gui.PopUp;
 import ssc0103.coup.gui.PopUpPlayer;
 
@@ -29,11 +31,22 @@ public class Player {
 	private ObjectOutputStream output;
 	private Actions actions;
 	private PopUpPlayer popup;
+	private ConectGUI conectGUI;
 
 	/**
 	 * Construtor do Player, responsável por conectar o jogador com o servidor.
 	 */
 	public Player() {
+		JFrame frame = new JFrame("Game");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setExtendedState(JFrame.NORMAL);
+		frame.setVisible(true);
+
+		conectGUI = new ConectGUI();
+
+		frame.add(conectGUI);
+		frame.pack();
+
 		/* Conecta ao servidor do jogo. */
 		connectHost();
 
@@ -48,20 +61,25 @@ public class Player {
 	 * Realiza uma conexão com o servidor do jogo.
 	 */
 	private void connectHost() {
-		String msg = "Informe o IP de conexão com o servidor do jogo:\nDefault: 127.0.0.1";
+		String msg; // = "Informe o IP de conexão com o servidor do
+					// jogo:\nDefault: 127.0.0.1";
 		try {
-			this.host = JOptionPane.showInputDialog(msg);
+			// this.host = JOptionPane.showInputDialog(msg);
+			while (conectGUI.isBtEnable())
+				continue;
+			host = conectGUI.getIp();
+			msg = conectGUI.getPort();
 
 			if (host == null)
 				System.exit(0);
 			else if (host.isEmpty())
 				host = "127.0.0.1";
 
-			msg = "Informe a porta de conexão com o servidor do jogo:";
-			msg = JOptionPane.showInputDialog(msg);
+			// msg = "Informe a porta de conexão com o servidor do jogo:";
+			// msg = JOptionPane.showInputDialog(msg);
 
-			if (msg == null)
-				System.exit(0);
+			// if (msg == null)
+			// System.exit(0);
 
 			this.port = Integer.parseInt(msg);
 
@@ -73,10 +91,12 @@ public class Player {
 
 			/* Fluxo de dados do servidor para o jogador. */
 			this.output = new ObjectOutputStream(player.getOutputStream());
-
+			
+			conectGUI.setConected(true);
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+			conectGUI.activeButton1();
 			connectHost();
 		}
 	}
@@ -171,8 +191,12 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getName() throws IOException {
-		this.playerName = "Informe o seu nickname no jogo:";
-		this.playerName = JOptionPane.showInputDialog(this.playerName);
+		// this.playerName = "Informe o seu nickname no jogo:";
+		// this.playerName = JOptionPane.showInputDialog(this.playerName);
+		conectGUI.activeButton2();
+		while (conectGUI.isBtEnable())
+			continue;
+		this.playerName = conectGUI.getName();
 		actions.setFrom(this.playerName);
 		flushObject();
 	}

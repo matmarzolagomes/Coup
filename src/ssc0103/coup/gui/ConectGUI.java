@@ -7,26 +7,19 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import ssc0103.coup.lan.Actions;
 
 @SuppressWarnings("serial")
 public class ConectGUI extends JPanel {
-	private Socket player;
-	private ObjectInputStream input;
-	private ObjectOutputStream output;
-	private Actions actions;
 	private boolean conected = false;
+	private JTextFieldWithLimit ip;
+	private JTextFieldWithLimit port;
+	private JTextFieldWithLimit name;
+	private JButton bt;
+	
 
 	public ConectGUI() {
 		super(new GridBagLayout());
@@ -70,61 +63,27 @@ public class ConectGUI extends JPanel {
 
 		add(new JPanel(), cons);
 
-		JTextFieldWithLimit ip = new JTextFieldWithLimit("IP", 15);
-		JTextFieldWithLimit port = new JTextFieldWithLimit("Port", 6);
-		JTextFieldWithLimit name = new JTextFieldWithLimit("Name", 15);
+		ip = new JTextFieldWithLimit("IP", 15);
+		port = new JTextFieldWithLimit("Port", 6);
+		name = new JTextFieldWithLimit("Name", 15);
 
 		name.disable();
 
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton bt = new JButton("Connect");
+		bt = new JButton("Connect");
 
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!conected) {
-
-					connectHost(ip.getText(), port.getText());
-
-					System.out.println("Conected.");
-
+				if (!conected) {															
 					ip.disable();
 					port.disable();
-					name.enable();
-
-					bt.setText("Choose name");
-					conected = true;
+					bt.setEnabled(false);
+					bt.setText("Connecting...");
 				} else {
-
-					try {
-						while (true) {
-							actions = getObject();
-
-							switch (actions.getId()) {
-							case Actions.GET_NAME:
-								actions.setFrom(name.getText());
-								flushObject();
-								break;
-
-							case Actions.LOAD_INTERFACE:
-								JOptionPane.showMessageDialog(null, "Interface Gráfica Carregada.");
-								System.out.println("Chosen.");
-
-								name.disable();
-								bt.setEnabled(false);
-								bt.setText("Waiting for game to start");
-								return;
-
-							case Actions.SERVER_MESSAGE:
-								JOptionPane.showMessageDialog(null, name.getText() + ": " + actions.getMessage(),
-										"Mensagem", JOptionPane.WARNING_MESSAGE);
-								break;
-							}
-						}
-					} catch (ClassNotFoundException | IOException e1) {
-						e1.printStackTrace();
-					}
-
+					name.disable();
+					bt.setEnabled(false);
+					bt.setText("Waiting for game to start");
 				}
 			}
 		});
@@ -136,72 +95,36 @@ public class ConectGUI extends JPanel {
 		center.add(btp);
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Game");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.NORMAL);
-		frame.setVisible(true);
-
-		ConectGUI c = new ConectGUI();
-
-		frame.add(c);
-		frame.pack();
+	public boolean isBtEnable() {
+		return bt.isEnabled();
 	}
 
-	/**
-	 * Realiza uma conexão com o servidor do jogo.
-	 */
-	private boolean connectHost(String host, String porta) {
-		try {
-
-			if (host == null)
-				System.exit(0);
-			else if (host.isEmpty())
-				host = "127.0.0.1";
-
-			int port = Integer.parseInt(porta);
-
-			/* Obtém o Socket de comunicação entre o servidor e o jogador. */
-			this.player = new Socket(host, port);
-
-			/* Fluxo de dados do jogador para o servidor. */
-			this.input = new ObjectInputStream(this.player.getInputStream());
-
-			/* Fluxo de dados do servidor para o jogador. */
-			this.output = new ObjectOutputStream(this.player.getOutputStream());
-
-			return true;
-		} catch (IOException | IllegalArgumentException e) {
-			String msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
-			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
+	public String getIp() {
+		return ip.getText();
 	}
 
-	/**
-	 * Envia o objeto Actions para o servidor.
-	 * 
-	 * @throws IOException
-	 */
-	private void flushObject() throws IOException {
-		/* Escreve o objeto no fluxo de dados. */
-		output.writeObject(actions);
-		/* Envia o objeto para o servidor. */
-		output.flush();
-		/* Limpa o fluxo de dados. */
-		output.reset();
+	public String getPort() {
+		return port.getText();
 	}
 
-	/**
-	 * Retorna o objeto Actions do servidor.
-	 * 
-	 * @param player
-	 * @return
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private Actions getObject() throws IOException, ClassNotFoundException {
-		/* Retorna o objeto enviado pelo servidor. */
-		return (Actions) input.readObject();
+	public String getName() {
+		return name.getText();
+	}
+
+	public void setConected(boolean conected) {
+		this.conected = conected;
+	}	
+	
+	public void activeButton1() {
+		ip.enable();
+		port.enable();
+		bt.setText("Connect");
+		bt.setEnabled(true);
+	}
+	
+	public void activeButton2() {
+		bt.setText("Choose name");
+		bt.setEnabled(true);
+		name.enable();
 	}
 }
