@@ -97,27 +97,29 @@ public class ConectGUI extends JPanel {
 				} else {
 
 					try {
-						actions = getObject();
+						while (true) {
+							actions = getObject();
 
-						switch (actions.getId()) {
-						case Actions.GET_NAME:
-							actions.setFrom(name.getText());
-							flushObject();
-							break;
+							switch (actions.getId()) {
+							case Actions.GET_NAME:
+								actions.setFrom(name.getText());
+								flushObject();
+								break;
 
-						case Actions.LOAD_INTERFACE:
-							JOptionPane.showMessageDialog(null, "Interface Gráfica Carregada.");
-							System.out.println("Chosen.");
+							case Actions.LOAD_INTERFACE:
+								JOptionPane.showMessageDialog(null, "Interface Gráfica Carregada.");
+								System.out.println("Chosen.");
 
-							name.disable();
-							bt.setEnabled(false);
-							bt.setText("Waiting for game to start");
-							break;
+								name.disable();
+								bt.setEnabled(false);
+								bt.setText("Waiting for game to start");
+								return;
 
-						case Actions.SERVER_MESSAGE:
-							JOptionPane.showMessageDialog(null, name.getText() + ": " + actions.getMessage(),
-									"Mensagem", JOptionPane.WARNING_MESSAGE);
-							break;
+							case Actions.SERVER_MESSAGE:
+								JOptionPane.showMessageDialog(null, name.getText() + ": " + actions.getMessage(),
+										"Mensagem", JOptionPane.WARNING_MESSAGE);
+								break;
+							}
 						}
 					} catch (ClassNotFoundException | IOException e1) {
 						e1.printStackTrace();
