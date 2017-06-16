@@ -18,8 +18,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import ssc0103.coup.lan.Actions;
+
 @SuppressWarnings("serial")
 public class ConectGUI extends JPanel {
+	private Socket player;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
+	private Actions actions;
 	private boolean conected = false;
 
 	public ConectGUI() {
@@ -77,9 +83,9 @@ public class ConectGUI extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!conected) {
-					
+
 					connectHost(ip.getText(), port.getText());
-					
+
 					System.out.println("Conected.");
 
 					ip.disable();
@@ -89,12 +95,34 @@ public class ConectGUI extends JPanel {
 					bt.setText("Choose name");
 					conected = true;
 				} else {
-					// Implement set name
-					System.out.println("Chosen.");
 
-					name.disable();
-					bt.setEnabled(false);
-					bt.setText("Waiting for game to start");
+					try {
+						actions = getObject();
+
+						switch (actions.getId()) {
+						case Actions.GET_NAME:
+							actions.setFrom(name.getText());
+							flushObject();
+							break;
+
+						case Actions.LOAD_INTERFACE:
+							JOptionPane.showMessageDialog(null, "Interface Gráfica Carregada.");
+							System.out.println("Chosen.");
+
+							name.disable();
+							bt.setEnabled(false);
+							bt.setText("Waiting for game to start");
+							break;
+
+						case Actions.SERVER_MESSAGE:
+							JOptionPane.showMessageDialog(null, name.getText() + ": " + actions.getMessage(),
+									"Mensagem", JOptionPane.WARNING_MESSAGE);
+							break;
+						}
+					} catch (ClassNotFoundException | IOException e1) {
+						e1.printStackTrace();
+					}
+
 				}
 			}
 		});
@@ -132,13 +160,13 @@ public class ConectGUI extends JPanel {
 			int port = Integer.parseInt(porta);
 
 			/* Obtém o Socket de comunicação entre o servidor e o jogador. */
-			Socket player = new Socket(host, port);
+			this.player = new Socket(host, port);
 
 			/* Fluxo de dados do jogador para o servidor. */
-			ObjectInputStream input = new ObjectInputStream(player.getInputStream());
+			this.input = new ObjectInputStream(this.player.getInputStream());
 
 			/* Fluxo de dados do servidor para o jogador. */
-			ObjectOutputStream output = new ObjectOutputStream(player.getOutputStream());
+			this.output = new ObjectOutputStream(this.player.getOutputStream());
 
 			return true;
 		} catch (IOException | IllegalArgumentException e) {
@@ -146,5 +174,32 @@ public class ConectGUI extends JPanel {
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+	}
+
+	/**
+	 * Envia o objeto Actions para o servidor.
+	 * 
+	 * @throws IOException
+	 */
+	private void flushObject() throws IOException {
+		/* Escreve o objeto no fluxo de dados. */
+		output.writeObject(actions);
+		/* Envia o objeto para o servidor. */
+		output.flush();
+		/* Limpa o fluxo de dados. */
+		output.reset();
+	}
+
+	/**
+	 * Retorna o objeto Actions do servidor.
+	 * 
+	 * @param player
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private Actions getObject() throws IOException, ClassNotFoundException {
+		/* Retorna o objeto enviado pelo servidor. */
+		return (Actions) input.readObject();
 	}
 }
