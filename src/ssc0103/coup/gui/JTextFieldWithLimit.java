@@ -30,6 +30,16 @@ public class JTextFieldWithLimit extends JPanel {
 		textfield.setDocument(new JTextFieldLimit(limit));
 	}
 	
+	public void disable() {
+		textfield.setEditable(false);
+		textfield.setBackground(Color.GRAY);
+	}
+	
+	public void enable() {
+		textfield.setEditable(true);
+		textfield.setBackground(Color.WHITE);
+	}
+	
 	public String getText() {
 		return textfield.getText();
 	}

@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ConectGUI extends JPanel {
+	private boolean conected = false;
+	
 	public ConectGUI() {
 		super(new GridBagLayout());
 		
@@ -41,7 +43,7 @@ public class ConectGUI extends JPanel {
 		cons.gridx = 1;
 		cons.weightx = 0.1;
 		
-		JPanel center = new JPanel(new GridLayout(4, 2));
+		JPanel center = new JPanel(new GridLayout(4, 1));
 		center.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		add(center, cons);
 		
@@ -61,16 +63,33 @@ public class ConectGUI extends JPanel {
 		JTextFieldWithLimit port = new JTextFieldWithLimit("Port", 6);
 		JTextFieldWithLimit name = new JTextFieldWithLimit("Name", 15);
 
+		name.disable();
+		
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JButton bt = new JButton("Connect");
+		
 		
 		bt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Implementar conexão
-				System.out.println(ip.getText());
-				System.out.println(port.getText());
-				System.out.println(name.getText());
+				if(!conected) {
+					// Implement conection
+					System.out.println("Conected.");
+					
+					ip.disable();
+					port.disable();
+					name.enable();
+					
+					bt.setText("Choose name");
+					conected = true;
+				} else {
+					// Implement set name
+					System.out.println("Chosen.");
+					
+					name.disable();
+					bt.setEnabled(false);
+					bt.setText("Waiting for game to start");
+				}
 			}
 		});
 		
@@ -80,7 +99,7 @@ public class ConectGUI extends JPanel {
 		center.add(name);
 		center.add(btp);
 	}
-
+	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
