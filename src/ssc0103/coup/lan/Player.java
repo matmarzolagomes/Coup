@@ -69,8 +69,9 @@ public class Player {
 		try {
 			System.out.println("Pegando dados.");			
 			// this.host = JOptionPane.showInputDialog(msg);
-			while (true) {				
-				System.out.println("Player:" + Player.readConnectGUI());				
+						
+			while (true) {
+				conectGUI.removeFocusListener(null);
 				if(Player.readConnectGUI() == true)
 					break;
 			}
@@ -142,6 +143,7 @@ public class Player {
 					break;
 
 				case Actions.LOAD_PLAYER_ACTIONS:
+					conectGUI.setVisible(false);
 					loadPlayerActions();
 					break;
 
@@ -202,7 +204,7 @@ public class Player {
 		// this.playerName = JOptionPane.showInputDialog(this.playerName);
 		conectGUI.activeButton2();
 		while (true) {				
-			System.out.println("Player:" + Player.readConnectGUI());				
+			conectGUI.removeFocusListener(null);
 			if(Player.readConnectGUI() == true)
 				break;
 		}		
