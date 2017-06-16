@@ -116,11 +116,11 @@ public class ConectGUI extends JPanel {
 	public void frameAdd(ConectGUI conectGUI) {
 		JFrame frame = new JFrame("Game");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.NORMAL);
-		frame.setVisible(true);
-		
+		frame.setExtendedState(JFrame.NORMAL);	
 		frame.add(conectGUI);
-		frame.pack();
+		frame.pack();		
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);		
 	}
 	
 	public String getIpAdress() {
