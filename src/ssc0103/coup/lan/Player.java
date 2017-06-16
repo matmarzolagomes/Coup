@@ -67,14 +67,11 @@ public class Player {
 		String msg; // = "Informe o IP de conexão com o servidor do
 					// jogo:\nDefault: 127.0.0.1";
 		try {
-			System.out.println("Pegando dados.");			
+			System.out.println("Pegando dados.");
 			// this.host = JOptionPane.showInputDialog(msg);
-						
-			while (true) {
-				conectGUI.removeFocusListener(null);
-				if(Player.readConnectGUI() == true)
-					break;
-			}
+
+			while (Thread.currentThread().isAlive() && !Player.readConnectGUI)
+				continue;
 			System.out.println("Dados pegos.");
 			host = conectGUI.getIpAdress();
 			msg = conectGUI.getPorta();
@@ -203,11 +200,8 @@ public class Player {
 		// this.playerName = "Informe o seu nickname no jogo:";
 		// this.playerName = JOptionPane.showInputDialog(this.playerName);
 		conectGUI.activeButton2();
-		while (true) {				
-			conectGUI.removeFocusListener(null);
-			if(Player.readConnectGUI() == true)
-				break;
-		}		
+		while (Thread.currentThread().isAlive() && !Player.readConnectGUI)
+			continue;
 		this.playerName = conectGUI.getPlayerName();
 		actions.setFrom(this.playerName);
 		flushObject();
