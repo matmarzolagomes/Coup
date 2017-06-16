@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.gui.ConectGUI;
+import ssc0103.coup.gui.CoupGUI;
 import ssc0103.coup.gui.PopUp;
 import ssc0103.coup.gui.PopUpPlayer;
 
@@ -32,6 +33,7 @@ public class Player {
 	private Actions actions;
 	private PopUpPlayer popup;
 	private JFrame jframe;
+	private CoupGUI coupgui;
 	private ConectGUI conectGUI;
 	private static boolean readConnectGUI = false;
 
@@ -230,6 +232,15 @@ public class Player {
 	 */
 	private void loadInterface() {
 		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Carregada.");
+		jframe = new JFrame("Game");
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        jframe.setVisible(true);
+        
+        CoupGUI coupgui = new CoupGUI(playerName, actions.getPlayers());
+        
+        jframe.add(coupgui);
+        coupgui.updateAll(actions);
 	}
 
 	/**
@@ -237,6 +248,7 @@ public class Player {
 	 */
 	private void updateInterface() {
 		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Atualizada.");
+		coupgui.updateAll(actions);
 	}
 
 	/**
