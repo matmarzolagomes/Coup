@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ssc0103.coup.exception.GUIException;
@@ -36,17 +35,11 @@ public class Player {
 	/**
 	 * Construtor do Player, responsável por conectar o jogador com o servidor.
 	 */
-	public Player() {
-		JFrame frame = new JFrame("Game");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.NORMAL);
-		frame.setVisible(true);
-
+	public Player() {		
+		/* Tela de login. */
 		conectGUI = new ConectGUI();
-
-		frame.add(conectGUI);
-		frame.pack();
-
+		conectGUI.frameAdd(conectGUI);
+		
 		/* Conecta ao servidor do jogo. */
 		connectHost();
 

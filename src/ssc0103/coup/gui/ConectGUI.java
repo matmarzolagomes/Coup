@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -23,7 +24,7 @@ public class ConectGUI extends JPanel {
 
 	public ConectGUI() {
 		super(new GridBagLayout());
-
+								
 		GridBagConstraints cons = new GridBagConstraints();
 
 		cons.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -93,6 +94,16 @@ public class ConectGUI extends JPanel {
 		center.add(port);
 		center.add(name);
 		center.add(btp);
+	}
+	
+	public void frameAdd(ConectGUI conectGUI) {
+		JFrame frame = new JFrame("Game");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setExtendedState(JFrame.NORMAL);
+		frame.setVisible(true);
+		
+		frame.add(conectGUI);
+		frame.pack();
 	}
 
 	public boolean isBtEnable() {
