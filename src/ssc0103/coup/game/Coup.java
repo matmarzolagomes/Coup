@@ -5,6 +5,11 @@ import java.util.HashMap;
 import ssc0103.coup.exception.PException;
 import ssc0103.coup.lan.Actions;
 
+/**
+ * Classe com o objetivo de controlar a mecânica do jogo
+ * @author 
+ *
+ */
 public abstract class Coup {
 	private HashMap<String, Player> players;
 	private Deck board;
@@ -13,8 +18,8 @@ public abstract class Coup {
 	/**
 	 * Inicializa os atributos do jogo.
 	 * 
-	 * @param nplayers
-	 * @param order
+	 * @param nplayers (numero de jogadores)
+	 * @param order (string com os jogadores em ordem)
 	 */
 	public void instanceGame(int nplayers, String[] order) {
 		players = new HashMap<String, Player>();
@@ -24,17 +29,35 @@ public abstract class Coup {
 		board = new Deck();
 		board.startGame(players, nplayers);
 	}
-
+	
+	/**
+	 * Método abstrato para pegar a entrada
+	 * @param player (classe para representar um jogador)
+	 * @return array de strings
+	 */
 	abstract public String[] getInput(Player player);
-
+	
+	/**
+	 * Método para retornar as cartas do baralho
+	 * @return cartas do baralho
+	 */
 	public Deck getBoard() {
 		return board;
 	}
-
+	
+	/**
+	 * Método para retornar as cartas do cemitério
+	 * @return cartas do cemitério
+	 */
 	public Deck getDead() {
 		return dead;
 	}
-
+	
+	/**
+	 * Método que remove um jogador caso ele esteja eliminado
+	 * @param from jogador que fez a ação
+	 * @param to jogador que recebeu a ação
+	 */
 	private void isDead(String from, String to) {
 		if (from != null)
 			if (players.get(from).getHand().size() == 0)
@@ -43,11 +66,25 @@ public abstract class Coup {
 			if (players.get(to).getHand().size() == 0)
 				players.remove(to);
 	}
-
+	
+	/**
+	 * Método que retorna o hashmap com os jogadores que estão no jogo
+	 * @return jogadores que estão no jogo
+	 */
 	public HashMap<String, Player> getPlayers() {
 		return players;
 	}
-
+	
+	/**
+	 * Método que realiza as ações do jogo
+	 * @param action - código da ação
+	 * @param from - quem fez a ação
+	 * @param to - quem sofreu a ação
+	 * @param contest - se foi contestada
+	 * @param block - se foi bloqueada
+	 * @return se a execução foi bem sucedida
+	 * @throws PException - exceção
+	 */
 	public String play(int action, String from, String to, boolean contest, boolean block) throws PException {
 		boolean ret = false;
 		String winner = from;
