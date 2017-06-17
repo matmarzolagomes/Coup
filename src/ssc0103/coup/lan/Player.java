@@ -203,13 +203,13 @@ public class Player {
 	private void left() {
 		popup.popUpDerrota();
 		jframe.setVisible(false);
-		closeConnection();
+		//closeConnection();
 	}
 
 	private void winner() {
 		popup.popUpVitoria();
 		jframe.setVisible(false);
-		closeConnection();
+		//closeConnection();
 	}
 
 	/**
