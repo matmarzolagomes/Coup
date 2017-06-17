@@ -544,7 +544,7 @@ public class Board extends Coup {
 	 * @throws PException
 	 */
 	private String playCoup(int action) throws PException {
-		return super.play(action, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock());
+		return super.play(action, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock(), actions.getCards());
 	}
 
 	/**

@@ -85,7 +85,7 @@ public abstract class Coup {
 	 * @return se a execução foi bem sucedida
 	 * @throws PException - exceção
 	 */
-	public String play(int action, String from, String to, boolean contest, boolean block) throws PException {
+	public String play(int action, String from, String to, boolean contest, boolean block, String[] cards) throws PException {
 		boolean ret = false;
 		String winner = from;
 
@@ -226,10 +226,8 @@ public abstract class Coup {
 							ret = players.get(from).removeCard(getInput(players.get(from)), dead);
 						ret = false;
 
-						// PRECISA VERIFICAR COM QUAL CARTA ESPECIFICAMENTE O
-						// JOGADOR BLOQUEOU PARA RETIRÁ-LA DO BARALHO.
 						while (!ret)
-							ret = players.get(to).removeCard(getInput(players.get(to)), board);
+							ret = players.get(to).removeCard(cards, board);
 						players.get(to).draw(board, 1);
 						winner = to;
 
