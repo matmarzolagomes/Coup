@@ -13,6 +13,7 @@ import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.gui.ConectGUI;
 import ssc0103.coup.gui.CoupGUI;
+import ssc0103.coup.gui.MenuGUI;
 import ssc0103.coup.gui.PopUp;
 import ssc0103.coup.gui.PopUpPlayer;
 
@@ -34,6 +35,7 @@ public class Player {
 	private PopUpPlayer popup;
 	private JFrame jframe;
 	private CoupGUI coupgui;
+	private MenuGUI menu;
 	private ConectGUI conectGUI;
 	private static boolean readConnectGUI = false;
 
@@ -136,13 +138,13 @@ public class Player {
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 					jframe.setVisible(false);
-					//loadInterface();
+					loadInterface();
 					break;
 
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
 					// ATUALIZA A INTERFACE GRÀFICA
-					//updateInterface();
+					updateInterface();
 					break;
 
 				case Actions.GET_INPUT:
@@ -245,6 +247,9 @@ public class Player {
 		jframe.setExtendedState(JFrame.NORMAL);
 
 		coupgui = new CoupGUI(playerName, actions.getPlayers());
+		menu = new MenuGUI();
+		
+		jframe.setJMenuBar(menu);
 
 		jframe.add(coupgui);
 		coupgui.updateAll(actions);

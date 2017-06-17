@@ -6,6 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,6 +17,9 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import ssc0103.coup.exception.GUIException;
@@ -174,6 +180,12 @@ public class CoupGUI extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        MenuGUI menu = new MenuGUI();
+        
+        frame.setJMenuBar(menu);
+        
+        
         //frame.setResizable(false);
         //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -232,6 +244,7 @@ public class CoupGUI extends JPanel {
         players.put("bVictor25", new Player("bVictor25"));
         
         CoupGUI game = new CoupGUI("Rodrigo", players);
+      
         frame.add(game);
         
         Deck dead = new Deck();
