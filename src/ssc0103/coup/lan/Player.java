@@ -298,6 +298,7 @@ public class Player {
 		ArrayList<String> playersName = new ArrayList<String>();
 		
 		coupgui.startCount();
+		
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
 
@@ -331,7 +332,7 @@ public class Player {
 			actions.setTo(popup.popUpJogadores(new ArrayList<String>(actions.getPlayers().keySet()), this.playerName));
 			break;
 		}
-
+		
 		coupgui.stopCount();
 		
 		/* Envia a ação do jogador ao servidor. */

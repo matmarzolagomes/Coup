@@ -178,6 +178,10 @@ public class CoupGUI extends JPanel {
     	coing.stop();
     }
     
+    public boolean isConnected() {
+    	return coing.disconnect;
+    }
+    
     public static void main(String[] args) {
     }
 }
