@@ -159,7 +159,7 @@ public class Player {
 
 				case Actions.COUP:
 					coup();
-					return;
+					break;
 
 				case Actions.TAXES:
 					taxes();
