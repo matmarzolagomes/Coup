@@ -20,6 +20,7 @@ public class CoinGUI extends JPanel{
 	Timer tm;
 	TimerTask task;
 	private int counter, seconds, minutes;
+	boolean start = false;
 	
 	public CoinGUI(Player player) {
 		super();
@@ -50,21 +51,32 @@ public class CoinGUI extends JPanel{
 		numCoins.setText(String.format(" x %02d", player.getMoney()));
 	}
 	
+	public void start() {
+		start = true;
+	}
+	
+	public void stop() {
+		start = false;
+		counter = 121;
+	}
+	
 	private void runCounter() {
 		tm = new Timer();
 		
 		task = new TimerTask() {
 			@Override
 			public void run() {
-				counter -= 1;
-				seconds = counter % 60;
-				minutes = counter / 60;
+				if (start) {
+					counter -= 1;
+					seconds = counter % 60;
+					minutes = counter / 60;
 				
-				text.setText(String.format("%02d:%02d", minutes, seconds));
+					text.setText(String.format("%02d:%02d", minutes, seconds));
 				
-				if (counter == 0) {
-					counter = 121;
+					if (counter == 0) 
+						counter = 121;
 				}
+					
 			}
 		};
 		

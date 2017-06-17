@@ -170,6 +170,14 @@ public class CoupGUI extends JPanel {
         playerg.attTable(players);
     }
     
+    public void startCount() {
+    	coing.start();
+    }
+    
+    public void stopCount() {
+    	coing.stop();
+    }
+    
     public static void main(String[] args) {
     }
 }

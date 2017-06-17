@@ -296,6 +296,8 @@ public class Player {
 	private void loadPlayerActions() throws IOException {
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
+		
+		coupgui.startCount();
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
 
@@ -330,6 +332,7 @@ public class Player {
 			break;
 		}
 
+		coupgui.stopCount();
 		/* Envia a ação do jogador ao servidor. */
 		flushObject();
 	}
