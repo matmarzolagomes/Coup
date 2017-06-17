@@ -1,5 +1,6 @@
 package ssc0103.coup.gui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ public class HandGUI extends JPanel{
 
     public HandGUI() {
         super();
+        setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
     }
     
     public void showCards(Deck hand) throws GUIException {

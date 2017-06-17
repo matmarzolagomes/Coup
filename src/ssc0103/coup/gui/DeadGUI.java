@@ -20,7 +20,7 @@ public class DeadGUI extends JPanel {
     
     public DeadGUI(int nplayers) throws GUIException {
         super(new GridLayout(5, 1));
-        this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 30));
         
         if(nplayers > 6){
             maxcards = Integer.toString((int) Math.ceil(nplayers/2.0));
