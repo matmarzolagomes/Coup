@@ -174,8 +174,9 @@ public class CoupGUI extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setVisible(true);
+        //frame.setResizable(false);
+        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
         //frame.add(new JLabel(new ImageIcon("images/fundo.jpg")));
         
         HashMap<String, Player> players = new HashMap<>();
@@ -251,5 +252,8 @@ public class CoupGUI extends JPanel {
         
         game.updateAll(act);
         frame.pack();
+        
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }

@@ -231,15 +231,18 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void loadInterface() {
-		jframe = new JFrame("Game");
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        jframe.setVisible(true);
+		jframe = new JFrame(playerName);
+		jframe.setExtendedState(JFrame.NORMAL);
         
         coupgui = new CoupGUI(playerName, actions.getPlayers());
         
         jframe.add(coupgui);
         coupgui.updateAll(actions);
+        
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.pack();
+        jframe.setLocationRelativeTo(null);
+        jframe.setVisible(true);
 	}
 
 	/**
