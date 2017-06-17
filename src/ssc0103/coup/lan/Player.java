@@ -93,10 +93,10 @@ public class Player {
 			// System.exit(0);
 
 			this.port = Integer.parseInt(msg);
-			System.out.println("Conectando...");
+
 			/* Obtém o Socket de comunicação entre o servidor e o jogador. */
 			this.player = new Socket(this.host, this.port);
-			System.out.println("Conexão realizada com sucesso.");
+
 			/* Fluxo de dados do jogador para o servidor. */
 			this.input = new ObjectInputStream(player.getInputStream());
 
@@ -121,6 +121,10 @@ public class Player {
 				actions = getObject();
 
 				switch (actions.getId()) {
+				case Actions.LEFT:
+					left();
+					return;
+
 				case Actions.GET_NAME:
 					getName();
 					break;
@@ -132,20 +136,20 @@ public class Player {
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 					jframe.setVisible(false);
-					loadInterface();
+					//loadInterface();
 					break;
 
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
 					// ATUALIZA A INTERFACE GRÀFICA
-					updateInterface();
+					//updateInterface();
 					break;
 
 				case Actions.GET_INPUT:
 					getInput();
 					break;
 
-				case Actions.LOAD_PLAYER_ACTIONS:					
+				case Actions.LOAD_PLAYER_ACTIONS:
 					loadPlayerActions();
 					break;
 
@@ -194,6 +198,12 @@ public class Player {
 		}
 	}
 
+	private void left() {
+		popup.popUpDerrota();
+		jframe.setVisible(false);
+		closeConnection();
+	}
+
 	/**
 	 * Envia o nome do jogador ao servidor.
 	 * 
@@ -233,16 +243,16 @@ public class Player {
 	private void loadInterface() {
 		jframe = new JFrame(playerName);
 		jframe.setExtendedState(JFrame.NORMAL);
-        
-        coupgui = new CoupGUI(playerName, actions.getPlayers());
-        
-        jframe.add(coupgui);
-        coupgui.updateAll(actions);
-        
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.pack();
-        jframe.setLocationRelativeTo(null);
-        jframe.setVisible(true);
+
+		coupgui = new CoupGUI(playerName, actions.getPlayers());
+
+		jframe.add(coupgui);
+		coupgui.updateAll(actions);
+
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.pack();
+		jframe.setLocationRelativeTo(null);
+		jframe.setVisible(true);
 	}
 
 	/**
@@ -474,6 +484,19 @@ public class Player {
 		}
 
 		return ret;
+	}
+
+	private void closeConnection() {
+		try {
+			if (output != null)
+				output.close();
+			if (input != null)
+				input.close();
+			if (player != null)
+				player.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

@@ -331,6 +331,9 @@ public class Board extends Coup {
 
 			/* Verifica se o jogador foi retirado do jogo. */
 			if (!super.getPlayers().containsKey(this.playerName)) {
+				actions = new Actions();
+				actions.setId(Actions.LEFT);
+				flushObject(actions, this.playerName);
 				closeConnections(this.playerName);
 				iterator.remove();
 				return;
@@ -389,6 +392,9 @@ public class Board extends Coup {
 
 			/* Verifica se o jogador foi retirado do jogo. */
 			if (!super.getPlayers().containsKey(this.playerName)) {
+				actions = new Actions();
+				actions.setId(Actions.LEFT);
+				flushObject(actions, this.playerName);
 				closeConnections(this.playerName);
 				iterator.remove();
 				return;
