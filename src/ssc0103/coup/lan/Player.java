@@ -137,13 +137,14 @@ public class Player {
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 					jframe.setVisible(false);
-					//loadInterface();
+					loadInterface();
 					break;
 
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
 					// ATUALIZA A INTERFACE GRÀFICA
-					//updateInterface();
+					if(actions.getPlayers().containsKey(playerName))
+						updateInterface();
 					break;
 
 				case Actions.GET_INPUT:
