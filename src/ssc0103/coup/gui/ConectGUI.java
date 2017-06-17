@@ -108,7 +108,8 @@ public class ConectGUI extends JPanel {
 				}
 			}
 		});
-
+		
+		
 		btp.add(bt);
 		center.add(ip);
 		center.add(port);
@@ -123,6 +124,8 @@ public class ConectGUI extends JPanel {
 		frame.pack();		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);		
+		
+		getRootPane().setDefaultButton(bt);
 	}
 	
 	public String getIpAdress() {

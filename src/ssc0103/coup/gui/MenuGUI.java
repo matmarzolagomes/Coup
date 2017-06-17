@@ -7,6 +7,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+@SuppressWarnings("serial")
 public class MenuGUI extends JMenuBar{
 	JMenu help;
 	JMenuItem item;
@@ -29,8 +30,5 @@ public class MenuGUI extends JMenuBar{
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
-
 }

@@ -6,20 +6,13 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import ssc0103.coup.exception.GUIException;
@@ -178,95 +171,5 @@ public class CoupGUI extends JPanel {
     }
     
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        MenuGUI menu = new MenuGUI();
-        
-        frame.setJMenuBar(menu);
-        
-        
-        //frame.setResizable(false);
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
-        //frame.add(new JLabel(new ImageIcon("images/fundo.jpg")));
-        
-        HashMap<String, Player> players = new HashMap<>();
-        players.put("Rodrigo", new Player("Rodrigo"));
-        players.put("Tico Liro", new Player("Tico Liro"));
-        players.put("Victor", new Player("Victor"));
-        players.put("Victor1", new Player("Victor1"));
-        players.put("Victor2", new Player("Victor2"));
-        players.put("Victor3", new Player("Victor3"));
-        players.put("Victor4", new Player("Victor4"));
-        players.put("Victor5", new Player("Victor5"));
-        players.put("Victor6", new Player("Victor6"));
-        players.put("Victor7", new Player("Victor7"));
-        players.put("Victor8", new Player("Victor8"));
-        players.put("Victor9", new Player("Victor9"));
-        players.put("Victor0", new Player("Victor0"));
-        players.put("Victor11", new Player("Victor11"));
-        players.put("Victor12", new Player("Victor12"));
-        players.put("Victor31", new Player("Victor31"));
-        players.put("Victor25", new Player("Victor25"));
-        players.put("aVictor3", new Player("aVictor3"));
-        players.put("aVictor4", new Player("aVictor4"));
-        players.put("aVictor5", new Player("aVictor5"));
-        players.put("aVictor6", new Player("aVictor6"));
-        players.put("aVictor7", new Player("aVictor7"));
-        players.put("aVictor8", new Player("aVictor8"));
-        players.put("aVictor9", new Player("aVictor9"));
-        players.put("aVictor0", new Player("aVictor0"));
-        players.put("aVictor11", new Player("aVictor11"));
-        players.put("aVictor12", new Player("aVictor12"));
-        players.put("aVictor31", new Player("aVictor31"));
-        players.put("aVictor25", new Player("aVictor25"));
-        players.put("bVictor3", new Player("bVictor3"));
-        players.put("bVictor4", new Player("bVictor4"));
-        players.put("bVictor5", new Player("bVictor5"));
-        players.put("bVictor6", new Player("bVictor6"));
-        players.put("bVictor7", new Player("bVictor7"));
-        players.put("bVictor8", new Player("bVictor8"));
-        players.put("bVictor9", new Player("bVictor9"));
-        players.put("bVictor0", new Player("bVictor0"));
-        players.put("bVictor11", new Player("bVictor11"));
-        players.put("bVictor12", new Player("bVictor12"));
-        players.put("bVictor31", new Player("bVictor31"));
-        players.put("bVictor25", new Player("bVictor25"));
-        players.put("bVictor11", new Player("bVictor11"));
-        players.put("bVictor12", new Player("bVictor12"));
-        players.put("bVictor31", new Player("bVictor31"));
-        players.put("bVictor25", new Player("bVictor25"));
-        players.put("bVictor25", new Player("bVictor25"));
-        players.put("bVictor11", new Player("bVictor11"));
-        players.put("bVictor12", new Player("bVictor12"));
-        players.put("bVictor31", new Player("bVictor31"));
-        players.put("bVictor25", new Player("bVictor25"));
-        
-        CoupGUI game = new CoupGUI("Rodrigo", players);
-      
-        frame.add(game);
-        
-        Deck dead = new Deck();
-        dead.add("Condessa");
-        dead.add("Capitao");
-
-        Deck board = new Deck();
-        board.add("Assassino");
-        board.add("Capitao");
-        
-        players.get("Rodrigo").draw(board, 2);
-        players.get("Rodrigo").income();
-        
-        Actions act = new Actions();
-        act.setPlayers(players);
-        act.setDead(dead);
-        act.setLog("Update all.");
-        
-        game.updateAll(act);
-        frame.pack();
-        
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 }
