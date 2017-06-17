@@ -333,6 +333,7 @@ public class Player {
 		}
 
 		coupgui.stopCount();
+		
 		/* Envia a ação do jogador ao servidor. */
 		flushObject();
 	}

@@ -21,6 +21,7 @@ public class CoinGUI extends JPanel{
 	TimerTask task;
 	private int counter, seconds, minutes;
 	boolean start = false;
+	boolean disconnect = false;
 	
 	public CoinGUI(Player player) {
 		super();
@@ -73,8 +74,10 @@ public class CoinGUI extends JPanel{
 				
 					text.setText(String.format("%02d:%02d", minutes, seconds));
 				
-					if (counter == 0) 
+					if (counter == 0) {
 						counter = 121;
+						disconnect = true;
+					}
 				}
 					
 			}
