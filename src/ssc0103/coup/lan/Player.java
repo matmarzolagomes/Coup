@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ssc0103.coup.exception.GUIException;
+import ssc0103.coup.exception.LANExcpetion;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.gui.ConectGUI;
 import ssc0103.coup.gui.CoupGUI;
@@ -136,6 +137,7 @@ public class Player {
 
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
+					System.out.println(playerName);
 					jframe.setVisible(false);
 					loadInterface();
 					break;
@@ -185,31 +187,23 @@ public class Player {
 			System.out.println(e.getMessage());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (LANExcpetion e) {
+			System.out.println(e.getMessage());
 		} finally {
-			try {
-				if (this.output != null)
-					this.output.close();
-				if (this.input != null)
-					this.input.close();
-				if (this.player != null)
-					this.player.close();
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
+			closeConnection();
 		}
 	}
 
-	private void left() {
-		popup.popUpDerrota();
+	private void left() throws LANExcpetion {
 		jframe.setVisible(false);
-		//closeConnection();
+		popup.popUpDerrota();
+		throw new LANExcpetion("Derrota do Jogador " + playerName + ".");
 	}
 
-	private void winner() {
-		popup.popUpVitoria();
+	private void winner() throws LANExcpetion {
 		jframe.setVisible(false);
-		//closeConnection();
+		popup.popUpVitoria();
+		throw new LANExcpetion("Vitória do Jogador " + playerName + ".");
 	}
 
 	/**
@@ -218,8 +212,9 @@ public class Player {
 	 * @param output
 	 * @param actions
 	 * @throws IOException
+	 * @throws LANExcpetion
 	 */
-	private void getName() throws IOException {
+	private void getName() throws IOException, LANExcpetion {
 		// this.playerName = "Informe o seu nickname no jogo:";
 		// this.playerName = JOptionPane.showInputDialog(this.playerName);
 		conectGUI.activeButton2();
@@ -277,8 +272,9 @@ public class Player {
 	 * Retira cartas da mão do jogador.
 	 * 
 	 * @throws IOException
+	 * @throws LANExcpetion
 	 */
-	private void getInput() throws IOException {
+	private void getInput() throws IOException, LANExcpetion {
 		String[] cards;
 		/* Solicitar ao jogador para remover 1 ou 2 cartas. */
 		cards = popUp(actions.getPlayer().getHand(), actions.getPlayer().getHand().size() > 2 ? 2 : 1);
@@ -292,8 +288,9 @@ public class Player {
 	 * Carrega todas as ações que o jogador pode realizar.
 	 * 
 	 * @throws IOException
+	 * @throws LANExcpetion
 	 */
-	private void loadPlayerActions() throws IOException {
+	private void loadPlayerActions() throws IOException, LANExcpetion {
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
 
@@ -346,7 +343,7 @@ public class Player {
 
 	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
 
-	private void foreign() throws IOException {
+	private void foreign() throws IOException, LANExcpetion {
 		/* Verifica se jogador bloqueou ação. */
 		if (actions.isBlock()) {
 			/* Verifica se jogador deseja contestar. */
@@ -369,7 +366,7 @@ public class Player {
 		popup.popUpGolpe(actions.getFrom());
 	}
 
-	private void taxes() throws IOException {
+	private void taxes() throws IOException, LANExcpetion {
 		if (popup.popUpTaxas(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
@@ -386,8 +383,9 @@ public class Player {
 	 * @param actions
 	 * @return
 	 * @throws IOException
+	 * @throws LANExcpetion
 	 */
-	private void assassinate() throws IOException {
+	private void assassinate() throws IOException, LANExcpetion {
 		if (actions.isBlock()) {
 			if (popup.popUpCondessa(actions.getTo()) == 1)
 				actions.setContest(true);
@@ -411,7 +409,7 @@ public class Player {
 		flushObject();
 	}
 
-	private void steal() throws IOException {
+	private void steal() throws IOException, LANExcpetion {
 		if (actions.isBlock()) {
 			if (popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]) == 1)
 				actions.setContest(true);
@@ -439,7 +437,7 @@ public class Player {
 		flushObject();
 	}
 
-	private void swap() throws IOException {
+	private void swap() throws IOException, LANExcpetion {
 		if (popup.popUpTroca(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
@@ -455,8 +453,11 @@ public class Player {
 	 * Envia o objeto Actions para o servidor.
 	 * 
 	 * @throws IOException
+	 * @throws LANExcpetion
 	 */
-	private void flushObject() throws IOException {
+	private void flushObject() throws IOException, LANExcpetion {
+		if (player.isInputShutdown() || player.isOutputShutdown() || player.isClosed())
+			throw new LANExcpetion("Conexão finalizada.");
 		/* Escreve o objeto no fluxo de dados. */
 		output.writeObject(actions);
 		/* Envia o objeto para o servidor. */
@@ -472,8 +473,11 @@ public class Player {
 	 * @return
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws LANExcpetion
 	 */
-	private Actions getObject() throws IOException, ClassNotFoundException {
+	private Actions getObject() throws IOException, ClassNotFoundException, LANExcpetion {
+		if (player.isInputShutdown() || player.isOutputShutdown() || player.isClosed())
+			throw new LANExcpetion("Conexão finalizada.");
 		/* Retorna o objeto enviado pelo servidor. */
 		return (Actions) input.readObject();
 	}
@@ -509,12 +513,13 @@ public class Player {
 
 	private void closeConnection() {
 		try {
-			if (output != null)
-				output.close();
-			if (input != null)
-				input.close();
-			if (player != null)
+			if (player != null && !player.isClosed()) {
+				if (output != null && !player.isOutputShutdown())
+					output.close();
+				if (input != null && !player.isInputShutdown())
+					input.close();
 				player.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

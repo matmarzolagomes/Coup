@@ -172,12 +172,11 @@ public class Board extends Coup {
 			for (Iterator<String> it = it(); this.players.size() > LOOP_BREAK; it = !it.hasNext() ? it() : it)
 				coupHandler(it);
 
-			this.playerName = players.keySet().iterator().next();			
+			this.playerName = players.keySet().iterator().next();
 			actions = new Actions();
 			actions.setId(Actions.WINNER);
-			flushObject(actions, this.playerName);			
+			flushObject(actions, this.playerName);
 			System.out.println("Vitória do jogador: " + this.playerName);
-			//closeConnections(this.playerName);
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -339,7 +338,6 @@ public class Board extends Coup {
 				actions = new Actions();
 				actions.setId(Actions.LEFT);
 				flushObject(actions, this.playerName);
-				//closeConnections(this.playerName);
 				iterator.remove();
 				return;
 			}
@@ -400,7 +398,6 @@ public class Board extends Coup {
 				actions = new Actions();
 				actions.setId(Actions.LEFT);
 				flushObject(actions, this.playerName);
-				//closeConnections(this.playerName);
 				iterator.remove();
 				return;
 			}
@@ -559,8 +556,8 @@ public class Board extends Coup {
 	 * @throws IOException
 	 */
 	private void spreadActions(Actions actions, String playerName) throws IOException {
-		for (String player : players.keySet()) {
-			if (!player.equals(playerName))
+		for (String player : super.getPlayers().keySet()) {
+			if (!player.equals(playerName) && !players.get(player).isClosed())
 				flushObject(actions, player);
 		}
 	}
@@ -570,8 +567,8 @@ public class Board extends Coup {
 	 * pode ser um bloqueio ou um contestamento.
 	 */
 	private void getFastAction(Method method) {
-		for (String player : players.keySet()) {
-			if (!player.equals(this.playerName)) {
+		for (String player : super.getPlayers().keySet()) {
+			if (!player.equals(this.playerName) && !players.get(player).isClosed()) {
 				new Thread(() -> {
 					try {
 						Actions action;
@@ -648,12 +645,15 @@ public class Board extends Coup {
 	private void closeConnections(String playerName) {
 		/* Fecha todas conexões com o jogador. */
 		try {
-			if (inputs.get(playerName) != null)
-				inputs.remove(playerName).close();
-			if (outputs.get(playerName) != null)
-				outputs.remove(playerName).close();
-			if (players.get(playerName) != null)
+			player = players.get(playerName);
+			
+			if (player != null && !player.isClosed()) {
+				if (inputs.get(playerName) != null && !player.isInputShutdown())
+					inputs.remove(playerName).close();
+				if (outputs.get(playerName) != null && !player.isOutputShutdown())
+					outputs.remove(playerName).close();
 				players.get(playerName).close();
+			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
