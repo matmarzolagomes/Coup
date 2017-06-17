@@ -172,7 +172,12 @@ public class Board extends Coup {
 			for (Iterator<String> it = it(); this.players.size() > LOOP_BREAK; it = !it.hasNext() ? it() : it)
 				coupHandler(it);
 
-			System.out.println("Vitória do jogador: " + players.keySet().iterator().next());
+			this.playerName = players.keySet().iterator().next();			
+			actions = new Actions();
+			actions.setId(Actions.WINNER);
+			flushObject(actions, this.playerName);			
+			System.out.println("Vitória do jogador: " + this.playerName);
+			closeConnections(this.playerName);
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -273,9 +278,9 @@ public class Board extends Coup {
 					System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
 
 					/* Envia mensagem de aguardando demais jogadores. */
-//					actions.setId(Actions.SERVER_MESSAGE);
-//					actions.setMessage(msg);
-//					flushObject(actions, actions.getFrom());
+					// actions.setId(Actions.SERVER_MESSAGE);
+					// actions.setMessage(msg);
+					// flushObject(actions, actions.getFrom());
 					return;
 				}
 
@@ -544,7 +549,8 @@ public class Board extends Coup {
 	 * @throws PException
 	 */
 	private String playCoup(int action) throws PException {
-		return super.play(action, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock(), actions.getCards());
+		return super.play(action, actions.getFrom(), actions.getTo(), actions.isContest(), actions.isBlock(),
+				actions.getCards());
 	}
 
 	/**

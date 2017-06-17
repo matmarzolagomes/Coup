@@ -10,6 +10,7 @@ import ssc0103.coup.game.Player;
 public class Actions implements Serializable, Cloneable {
 	// CONSTANTES
 	public static final int LEFT = 99;
+	public static final int WINNER = 100;
 	public static final int INCOME = 0;
 	public static final int FOREIGN = 1;
 	public static final int COUP = 2;

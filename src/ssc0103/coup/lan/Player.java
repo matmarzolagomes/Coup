@@ -61,9 +61,6 @@ public class Player {
 
 		/* Inicializa o objeto de PopUps. */
 		popup = new PopUpPlayer();
-
-		System.out.println("Player Conectado.");
-		System.out.println("O player se juntou a mesa!");
 	}
 
 	/**
@@ -74,12 +71,10 @@ public class Player {
 		String msg; // = "Informe o IP de conexão com o servidor do
 					// jogo:\nDefault: 127.0.0.1";
 		try {
-			System.out.println("Pegando dados.");
 			// this.host = JOptionPane.showInputDialog(msg);
 
 			while (Thread.currentThread().isAlive() && !Player.readConnectGUI)
 				continue;
-			System.out.println("Dados pegos.");
 			host = conectGUI.getIpAdress();
 			msg = conectGUI.getPorta();
 
@@ -125,8 +120,12 @@ public class Player {
 				switch (actions.getId()) {
 				case Actions.LEFT:
 					left();
-					return;
-
+					break;
+					
+				case Actions.WINNER:
+					winner();
+					break;
+					
 				case Actions.GET_NAME:
 					getName();
 					break;
@@ -138,13 +137,13 @@ public class Player {
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 					jframe.setVisible(false);
-					loadInterface();
+					//loadInterface();
 					break;
 
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
 					// ATUALIZA A INTERFACE GRÀFICA
-					updateInterface();
+					//updateInterface();
 					break;
 
 				case Actions.GET_INPUT:
@@ -199,11 +198,17 @@ public class Player {
 			}
 		}
 	}
-
+	
 	private void left() {
 		popup.popUpDerrota();
 		jframe.setVisible(false);
 		closeConnection();
+	}
+	
+	private void winner() {
+		popup.popUpVitoria();
+		jframe.setVisible(false);
+		closeConnection();		
 	}
 
 	/**
