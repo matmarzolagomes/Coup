@@ -25,6 +25,7 @@ public class Actions implements Serializable, Cloneable {
 	public static final int GET_NAME = 11;
 	public static final int SERVER_MESSAGE = 12;
 	public static final int GET_INPUT = 13;
+	public static final int ON_HOLD = 14;
 
 	// ATRIBUTOS
 	private int id;

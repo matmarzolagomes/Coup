@@ -16,6 +16,7 @@ import ssc0103.coup.gui.ConectGUI;
 import ssc0103.coup.gui.CoupGUI;
 import ssc0103.coup.gui.MenuGUI;
 import ssc0103.coup.gui.PopUp;
+import ssc0103.coup.gui.PopUpAjuda;
 import ssc0103.coup.gui.PopUpPlayer;
 
 /**
@@ -130,6 +131,10 @@ public class Player {
 				case Actions.GET_NAME:
 					getName();
 					break;
+					
+				case Actions.ON_HOLD:
+					onHold();
+					break;
 
 				case Actions.SERVER_MESSAGE:
 					getMessage();
@@ -224,6 +229,11 @@ public class Player {
 		actions.setFrom(this.playerName);
 		flushObject();
 	}
+	
+	private void onHold() {
+		popup.PopUpHistoria();
+		new PopUpAjuda().popUpGeral();		
+	}
 
 	/**
 	 * Recebe uma mensagem do servidor e exibe na tela.
@@ -233,8 +243,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void getMessage() throws IOException {
-		JOptionPane.showMessageDialog(null, this.playerName + ": " + actions.getMessage(), "Mensagem",
-				JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, actions.getMessage(), "Mensagem", JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
