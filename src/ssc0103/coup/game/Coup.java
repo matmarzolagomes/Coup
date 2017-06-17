@@ -103,7 +103,7 @@ public abstract class Coup {
 					ret = false;
 
 					while (!ret)
-						ret = players.get(to).removeCard(new String[] { "Duque" }, dead);
+						ret = players.get(to).removeCard(new String[] { "Duque" }, board);
 					players.get(to).draw(board, 1);
 					winner = to;
 
@@ -133,7 +133,7 @@ public abstract class Coup {
 					ret = false;
 
 					while (!ret)
-						ret = players.get(from).removeCard(new String[] { "Duque" }, dead);
+						ret = players.get(from).removeCard(new String[] { "Duque" }, board);
 					players.get(from).draw(board, 1);
 
 					ret = players.get(from).taxes();
@@ -158,7 +158,7 @@ public abstract class Coup {
 						ret = false;
 
 						while (!ret)
-							ret = players.get(from).removeCard(new String[] { "Assassino" }, dead);
+							ret = players.get(from).removeCard(new String[] { "Assassino" }, board);
 						players.get(from).draw(board, 1);
 
 					} else {
@@ -176,7 +176,7 @@ public abstract class Coup {
 							ret = false;
 
 							while (!ret)
-								ret = players.get(to).removeCard(new String[] { "Condessa" }, dead);
+								ret = players.get(to).removeCard(new String[] { "Condessa" }, board);
 							ret = false;
 							players.get(to).draw(board, 1);
 
@@ -207,7 +207,7 @@ public abstract class Coup {
 					ret = false;
 
 					while (!ret)
-						ret = players.get(from).removeCard(new String[] { "Capitao" }, dead);
+						ret = players.get(from).removeCard(new String[] { "Capitao" }, board);
 					players.get(from).draw(board, 1);
 
 					ret = players.get(from).steal(players.get(to));
@@ -229,7 +229,7 @@ public abstract class Coup {
 						// PRECISA VERIFICAR COM QUAL CARTA ESPECIFICAMENTE O
 						// JOGADOR BLOQUEOU PARA RETIRÁ-LA DO BARALHO.
 						while (!ret)
-							ret = players.get(to).removeCard(getInput(players.get(to)), dead);
+							ret = players.get(to).removeCard(getInput(players.get(to)), board);
 						players.get(to).draw(board, 1);
 						winner = to;
 
@@ -256,7 +256,7 @@ public abstract class Coup {
 
 					players.get(from).draw(board, 2);
 					while (!ret)
-						ret = players.get(from).removeCard(getInput(players.get(from)), dead);
+						ret = players.get(from).removeCard(getInput(players.get(from)), board);
 
 				} else {
 					while (!ret)
@@ -266,7 +266,7 @@ public abstract class Coup {
 			} else {
 				players.get(from).draw(board, 2);
 				while (!ret)
-					ret = players.get(from).removeCard(getInput(players.get(from)), dead);
+					ret = players.get(from).removeCard(getInput(players.get(from)), board);
 			}
 			break;
 
