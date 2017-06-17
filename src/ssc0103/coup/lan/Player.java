@@ -231,7 +231,6 @@ public class Player {
 	 * @throws IOException
 	 */
 	private void loadInterface() {
-		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Carregada.");
 		jframe = new JFrame("Game");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -247,7 +246,6 @@ public class Player {
 	 * Atualiza a interface gráfica do jogador.
 	 */
 	private void updateInterface() {
-		JOptionPane.showMessageDialog(null, "Interface do Player " + this.playerName + " Atualizada.");
 		coupgui.updateAll(actions);
 	}
 
