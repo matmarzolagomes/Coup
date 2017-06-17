@@ -121,11 +121,11 @@ public class Player {
 				case Actions.LEFT:
 					left();
 					break;
-					
+
 				case Actions.WINNER:
 					winner();
 					break;
-					
+
 				case Actions.GET_NAME:
 					getName();
 					break;
@@ -143,7 +143,7 @@ public class Player {
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
 					// ATUALIZA A INTERFACE GRÀFICA
-					if(actions.getPlayers().containsKey(playerName))
+					if (actions.getPlayers().containsKey(playerName))
 						updateInterface();
 					break;
 
@@ -199,17 +199,17 @@ public class Player {
 			}
 		}
 	}
-	
+
 	private void left() {
 		popup.popUpDerrota();
 		jframe.setVisible(false);
 		closeConnection();
 	}
-	
+
 	private void winner() {
 		popup.popUpVitoria();
 		jframe.setVisible(false);
-		closeConnection();		
+		closeConnection();
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class Player {
 
 		coupgui = new CoupGUI(playerName, actions.getPlayers());
 		menu = new MenuGUI();
-		
+
 		jframe.setJMenuBar(menu);
 
 		jframe.add(coupgui);
@@ -296,9 +296,14 @@ public class Player {
 	private void loadPlayerActions() throws IOException {
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
-		
+
 		coupgui.startCount();
-		
+		new Thread(() -> {
+			while (!coupgui.isConnected() && coupgui.isTimeRunning())
+				continue;
+			if (coupgui.isConnected())
+				closeConnection();
+		}).start();
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
 
@@ -332,9 +337,9 @@ public class Player {
 			actions.setTo(popup.popUpJogadores(new ArrayList<String>(actions.getPlayers().keySet()), this.playerName));
 			break;
 		}
-		
+
 		coupgui.stopCount();
-		
+
 		/* Envia a ação do jogador ao servidor. */
 		flushObject();
 	}

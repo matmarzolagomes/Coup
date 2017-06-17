@@ -177,7 +177,7 @@ public class Board extends Coup {
 			actions.setId(Actions.WINNER);
 			flushObject(actions, this.playerName);			
 			System.out.println("Vitória do jogador: " + this.playerName);
-			closeConnections(this.playerName);
+			//closeConnections(this.playerName);
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -339,7 +339,7 @@ public class Board extends Coup {
 				actions = new Actions();
 				actions.setId(Actions.LEFT);
 				flushObject(actions, this.playerName);
-				closeConnections(this.playerName);
+				//closeConnections(this.playerName);
 				iterator.remove();
 				return;
 			}
@@ -400,7 +400,7 @@ public class Board extends Coup {
 				actions = new Actions();
 				actions.setId(Actions.LEFT);
 				flushObject(actions, this.playerName);
-				closeConnections(this.playerName);
+				//closeConnections(this.playerName);
 				iterator.remove();
 				return;
 			}
