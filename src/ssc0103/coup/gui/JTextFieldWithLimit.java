@@ -43,4 +43,8 @@ public class JTextFieldWithLimit extends JPanel {
 	public String getText() {
 		return textfield.getText();
 	}
+	
+	public void setText(String txt) {
+		textfield.setText(txt);
+	}
 }

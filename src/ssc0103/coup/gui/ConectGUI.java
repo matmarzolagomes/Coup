@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -75,6 +76,13 @@ public class ConectGUI extends JPanel {
 
 		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		bt = new JButton("Connect");
+		
+		Random random = new Random(System.currentTimeMillis());
+		int n = random.nextInt() % 100;
+		
+		ip.setText("127.0.0.1");
+		port.setText("12345");
+		name.setText("Player" + n);		
 		
 		ip.disable();
 		port.disable();
