@@ -182,6 +182,10 @@ public class CoupGUI extends JPanel {
     	return coing.disconnect;
     }
     
+    public boolean isTimeRunning() {
+    	return coing.start;
+    }
+    
     public static void main(String[] args) {
     }
 }
