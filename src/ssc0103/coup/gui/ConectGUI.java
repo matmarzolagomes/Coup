@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import ssc0103.coup.lan.Player;
 
@@ -124,6 +125,7 @@ public class ConectGUI extends JPanel {
 		frame.pack();		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);		
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		getRootPane().setDefaultButton(bt);
 	}

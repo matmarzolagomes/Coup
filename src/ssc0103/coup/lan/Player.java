@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.exception.LANExcpetion;
@@ -62,9 +63,12 @@ public class Player {
 
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				if(player != null && player.isConnected()) closeConnection();
-		        jframe.dispose();
-		        System.exit(0);
+				PopUpPlayer quit = new PopUpPlayer();
+				if(quit.popUpQuit() == 1) {
+					if(player != null && player.isConnected()) closeConnection();
+			        jframe.dispose();
+			        System.exit(0);
+				}
 		    }
 		});
 		
@@ -275,11 +279,15 @@ public class Player {
 		jframe.add(coupgui);
 		coupgui.updateAll(actions);
 
+		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				closeConnection();
-		        jframe.dispose();
-		        System.exit(0);
+				PopUpPlayer quit = new PopUpPlayer();
+				if(quit.popUpQuit() == 1) {
+					if(player != null && player.isConnected()) closeConnection();
+			        jframe.dispose();
+			        System.exit(0);
+				}
 		    }
 		});
 		
