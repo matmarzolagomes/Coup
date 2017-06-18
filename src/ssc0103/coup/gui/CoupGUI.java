@@ -139,11 +139,13 @@ public class CoupGUI extends JPanel {
     
     public void updateAll(Actions data) {
         try {
-            updateCoin(data.getPlayers().get(me));
-            updateDead(data.getDead());
-            updateHand(data.getPlayers().get(me).getHand());
-            updateLog(data.getLog());
-            updatePlayer(data.getPlayers());
+            if(data.getPlayers() != null) {
+            	updateCoin(data.getPlayers().get(me));
+            	updateHand(data.getPlayers().get(me).getHand());
+            	updatePlayer(data.getPlayers());
+            }
+            if(data.getDead() != null) updateDead(data.getDead());
+            if(data.getLog() != null) updateLog(data.getLog());
         } catch (GUIException ex) {
             System.out.println(ex.getMessage());
             System.exit(-1);
