@@ -62,7 +62,6 @@ public class Player {
 
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				// TODO Bruno coloca aqui o role
 				if(player != null && player.isConnected()) closeConnection();
 		        jframe.dispose();
 		        System.exit(0);
@@ -75,7 +74,7 @@ public class Player {
 		/* Inicializa o objeto de PopUps. */
 		popup = new PopUpPlayer();
 	}
-
+	
 	/**
 	 * Realiza uma conexão com o servidor do jogo.
 	 */
@@ -278,7 +277,6 @@ public class Player {
 
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				//TODO Bruno coloca de novo
 				closeConnection();
 		        jframe.dispose();
 		        System.exit(0);
