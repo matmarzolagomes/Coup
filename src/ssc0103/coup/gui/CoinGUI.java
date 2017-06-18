@@ -14,7 +14,7 @@ import ssc0103.coup.game.Player;
 @SuppressWarnings("serial")
 /**
  * Classe do GUI que contém o tempo e as moedas do jogador
- * @author 
+ * @author Matheus Marzola Gomes
  *
  */
 public class CoinGUI extends JPanel{
