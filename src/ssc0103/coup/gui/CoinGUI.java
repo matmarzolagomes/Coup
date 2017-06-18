@@ -12,6 +12,11 @@ import javax.swing.JPanel;
 import ssc0103.coup.game.Player;
 
 @SuppressWarnings("serial")
+/**
+ * Classe do GUI que contém o tempo e as moedas do jogador
+ * @author 
+ *
+ */
 public class CoinGUI extends JPanel{
 	ImageIcon image;
 	ImageIcon time;
@@ -22,7 +27,10 @@ public class CoinGUI extends JPanel{
 	private int counter, seconds, minutes;
 	boolean start = false;
 	boolean disconnect = false;
-	
+	/**
+	 * Construtor que inicializa o Panel
+	 * @param player Nome do jogador
+	 */
 	public CoinGUI(Player player) {
 		super();
 		counter = 121;
@@ -47,20 +55,29 @@ public class CoinGUI extends JPanel{
 
 		runCounter();
 	}
-
+	/**
+	 * Atualiza o texto do número de moedas
+	 * @param player Nome do jogador
+	 */
 	public void attCoins(Player player) {
 		numCoins.setText(String.format(" x %02d", player.getMoney()));
 	}
-	
+	/**
+	 * Inicializa a contagem do tempo
+	 */
 	public void start() {
 		start = true;
 	}
-	
+	/**
+	 * Para a contagem do tempo
+	 */
 	public void stop() {
 		start = false;
 		counter = 121;
 	}
-	
+	/**
+	 * Função que trata a thread do tempo
+	 */
 	private void runCounter() {
 		tm = new Timer();
 		

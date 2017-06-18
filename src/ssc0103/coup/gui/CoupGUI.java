@@ -19,7 +19,11 @@ import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 import ssc0103.coup.game.Player;
 import ssc0103.coup.lan.Actions;
-
+/**
+ * JPanel maior que contém todos os outros panels
+ * @author 
+ *
+ */
 @SuppressWarnings("serial")
 public class CoupGUI extends JPanel {
     private DeadGUI deadg;
