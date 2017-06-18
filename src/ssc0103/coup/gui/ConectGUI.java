@@ -118,7 +118,7 @@ public class ConectGUI extends JPanel {
 	}
 	
 	public void frameAdd(JFrame frame, ConectGUI conectGUI) {		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.NORMAL);	
 		frame.add(conectGUI);
 		frame.pack();		
