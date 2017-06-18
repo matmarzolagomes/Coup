@@ -181,7 +181,7 @@ public class CoupGUI extends JPanel {
     }
     
     public boolean isConnected() {
-    	return coing.disconnect;
+    	return !coing.disconnect;
     }
     
     public boolean isTimeRunning() {
