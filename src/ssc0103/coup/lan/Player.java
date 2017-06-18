@@ -207,6 +207,7 @@ public class Player {
 			System.out.println(e.getMessage());
 		} finally {
 			closeConnection();
+			System.exit(0);
 		}
 	}
 
