@@ -1,5 +1,7 @@
 package ssc0103.coup.lan;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,7 +32,7 @@ public class Player {
 	private String host;
 	private int port;
 	private String playerName;
-	private Socket player;
+	private Socket player = null;
 	private ObjectInputStream input;
 	private ObjectOutputStream output;
 	private Actions actions;
@@ -58,6 +60,15 @@ public class Player {
 		conectGUI = new ConectGUI();
 		conectGUI.frameAdd(jframe, conectGUI);
 
+		jframe.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				// TODO Bruno coloca aqui o role
+				if(player != null && player.isConnected()) closeConnection();
+		        jframe.dispose();
+		        System.exit(0);
+		    }
+		});
+		
 		/* Conecta ao servidor do jogo. */
 		connectHost();
 
@@ -264,7 +275,15 @@ public class Player {
 		jframe.add(coupgui);
 		coupgui.updateAll(actions);
 
-		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				//TODO Bruno coloca de novo
+				closeConnection();
+		        jframe.dispose();
+		        System.exit(0);
+		    }
+		});
+		
 		jframe.pack();
 		jframe.setLocationRelativeTo(null);
 		jframe.setVisible(true);
