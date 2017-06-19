@@ -11,11 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import ssc0103.coup.game.Player;
 /**
  * Classe do Panel com a tabela dos jogadores
  * @author Matheus Marzola Gomes
+ * @author Rodrigo Geurgas Zavarizz 9791080
  *
  */
 @SuppressWarnings("serial")
@@ -75,23 +77,24 @@ public class PlayerGUI extends JPanel {
 	 * @param players HashMap dos jogadores
 	 */
 	public void attTable(HashMap<String, Player> players) {
-
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
 		for (Player player : players.values()) {
-			for (int j = 0; j<tablesize; ++j) {
-				if (!players.containsKey(data[j][0])) {
-					data[j][1] = 0;
-					data[j][2] = 0;
-//					table.addRowSelectionInterval(j, j);
+			for (int j = 0; j < tablesize; ++j) {
+				if (!players.containsKey(model.getValueAt(j, 0))) {
+					model.setValueAt(0, j, 1);
+					model.setValueAt(0, j, 2);
+					table.addRowSelectionInterval(j, j);
 				} else if (player.getName().equals(data[j][0])){
-					if ((int) data[j][1] != player.getMoney()) 
-						data[j][1] = player.getMoney();
-					if ((int) data[j][2] != player.getHand().size()) 
-						data[j][2] = player.getHand().size();
+					if ((int) model.getValueAt(j, 1) != player.getMoney())
+						model.setValueAt(player.getMoney(), j, 1);
+					if ((int) model.getValueAt(j, 2) != player.getHand().size()) 
+						model.setValueAt(player.getHand().size(), j, 2);
 				}
 			}
 		}
 		
-		table.updateUI();
+//		table.updateUI();
 	}
 
 	public static void main(String[] args) {
