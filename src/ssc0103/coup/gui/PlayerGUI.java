@@ -13,7 +13,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ssc0103.coup.game.Player;
-
+/**
+ * Classe do Panel com a tabela dos jogadores
+ * @author Matheus Marzola Gomes
+ *
+ */
 @SuppressWarnings("serial")
 public class PlayerGUI extends JPanel {
 	JTable table;
@@ -21,7 +25,10 @@ public class PlayerGUI extends JPanel {
 	Object[][] data;
 	JScrollPane scrollPane;
 	int tablesize;
-
+	/**
+	 * Construtor da classe
+	 * @param players HashMap dos jogadores
+	 */
 	public PlayerGUI(HashMap<String, Player> players) {
 		super();
 		setLayout(new GridLayout(1, 1));
@@ -32,7 +39,10 @@ public class PlayerGUI extends JPanel {
 		data = new Object[players.size()][3];
 		createTable(players);
 	}
-
+	/**
+	 * Cria a tabela
+	 * @param players HashMap dos jogadores
+	 */
 	private void createTable(HashMap<String, Player> players) {
 		int i = 0;
 
@@ -60,7 +70,10 @@ public class PlayerGUI extends JPanel {
 
 		add(scrollPane);
 	}
-
+	/**
+	 * Atualiza a tabela
+	 * @param players HashMap dos jogadores
+	 */
 	public void attTable(HashMap<String, Player> players) {
 
 		for (Player player : players.values()) {

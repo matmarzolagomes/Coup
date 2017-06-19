@@ -7,7 +7,8 @@ import ssc0103.coup.lan.Actions;
 
 /**
  * Classe com o objetivo de controlar a mecânica do jogo
- * @author 
+ * @author Matheus Marzola Gomes
+ * @author Rodrigo Geurgas
  *
  */
 public abstract class Coup {

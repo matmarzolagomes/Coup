@@ -9,13 +9,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
+/**
+ * Panel do Log do jogo
+ * @author Matheus Marzola Gomes
+ *
+ */
 @SuppressWarnings("serial")
 public class LogGUI extends JPanel{
     JTextArea area;
     JScrollPane scrollPane;
     JLabel label;
-    
+    /**
+     * Construtor da classe
+     */
     public LogGUI() {
         super();
         setLayout(new GridLayout(1, 1));
@@ -32,7 +38,10 @@ public class LogGUI extends JPanel{
         // Adicionando o textarea com scroll
         add(scrollPane);
     }
-    
+    /**
+     * Insere um texto no log
+     * @param string Texto inserido
+     */
     public void insertLog(String string) {
         area.append(string+"\n");
         area.setCaretPosition(area.getText().length());

@@ -21,7 +21,8 @@ import ssc0103.coup.game.Player;
 import ssc0103.coup.lan.Actions;
 /**
  * JPanel maior que contém todos os outros panels
- * @author 
+ * @author Matheus Marzola Gomes
+ * @author Rodrigo Geurgas
  *
  */
 @SuppressWarnings("serial")
@@ -34,7 +35,11 @@ public class CoupGUI extends JPanel {
     private final PlayerGUI playerg;
     private final String me;
     private Image backgroundImage = null;
-    
+    /**
+     * Construtor da classe
+     * @param me Nome do jogador
+     * @param players HashMap dos Jogadores
+     */
     public CoupGUI(String me, HashMap<String, Player> players) {
         super(new GridBagLayout());
         this.me = me;
@@ -135,12 +140,17 @@ public class CoupGUI extends JPanel {
         
         pright.add(new JLabel(logo), cons);
     }
-    
+    /**
+     * Insere background do jogo
+     */
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(backgroundImage, 0, 0, this);
 	}
-    
+    /**
+     * Atualiza todos os panels internos
+     * @param data Variável actions verifica o que vai ser atualizado
+     */
     public void updateAll(Actions data) {
         try {
             if(data.getPlayers() != null) {
@@ -155,39 +165,66 @@ public class CoupGUI extends JPanel {
             System.exit(-1);
         }
     }
-    
+    /**
+     * Atualiza o Panel de moedas e tempo
+     * @param me Jogador 
+     */
     public void updateCoin(Player me) {
         coing.attCoins(me);
     }
-    
+    /**
+     * Atualiza a mao do jogador
+     * @param hand Mão do jogador
+     * @throws GUIException Exceção
+     */
     public void updateHand(Deck hand) throws GUIException {
         handg.showCards(hand);
     }
-    
+    /**
+     * Atualiza o Deck de cartas "mortas"
+     * @param dead Deck de cartas "mortas"
+     * @throws GUIException
+     */
     public void updateDead(Deck dead) throws GUIException {
         deadg.update(dead);
     }
-    
+    /**
+     * Atualiza o Log com a string inserida
+     * @param log String inserida
+     */
     public void updateLog(String log) {
         logg.insertLog(log);
     }
-    
+    /**
+     * Atualiza a tabela de jogadores
+     * @param players HashMap com os jogadores
+     */
     public void updatePlayer(HashMap<String,Player> players) {
         playerg.attTable(players);
     }
-    
+    /**
+     * Começa a contagem do panel de tempo
+     */
     public void startCount() {
     	coing.start();
     }
-    
+    /**
+     * Para a contagem do panel de tempo
+     */
     public void stopCount() {
     	coing.stop();
     }
-    
+    /**
+     * Verifica se o tempo do jogador acabou
+     * @return
+     */
     public boolean isConnected() {
     	return !coing.disconnect;
     }
-    
+    /**
+     * Verifica se o tempo está correndo no panel
+     * @return
+     */
     public boolean isTimeRunning() {
     	return coing.start;
     }
