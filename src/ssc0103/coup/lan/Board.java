@@ -446,11 +446,13 @@ public class Board extends Coup {
 	}
 
 	private void coup() throws PException, IOException {
+		String playerName = actions.getTo();
+		
 		/* Envia notificação ao player de que recebeu um golpe de estado. */
 		flushObject(actions, actions.getTo());
 
 		/* Executa ação e atualiza o jogo de todos os jogadores. */
-		msg = "O jogador " + playCoup(Actions.COUP) + " deu um golpe de estado no jogador " + actions.getTo() + ".";
+		msg = "O jogador " + playCoup(Actions.COUP) + " deu um golpe de estado no jogador " + playerName + ".";
 		updateAllPlayers(msg);
 	}
 

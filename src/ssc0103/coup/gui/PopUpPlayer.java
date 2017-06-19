@@ -284,10 +284,18 @@ public class PopUpPlayer {
 		for (String acao : acoes2)
 			acoes.add(acao);
 
-		while (ret == -1)
+		while (ret == -1) {
 			ret = JOptionPane.showOptionDialog(null, "          " + nome + " é a sua vez de jogar, escolha a sua ação!",
 					"Sua Vez", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, coup, acoes.toArray(),
 					acoes.get(0));
+			if (ret == -1) {
+				ret = popUpQuit();
+				if (ret == 0)
+					ret = -1;
+				else if (ret == 1)
+					return Actions.LEFT;
+			}
+		}
 
 		if (ret == 0)
 			return Actions.INCOME;
@@ -360,7 +368,7 @@ public class PopUpPlayer {
 		b.add("Golpe");
 
 		PopUpPlayer t = new PopUpPlayer();
-
+/*
 		System.out.println(t.popUpAssassino("Victor"));
 		System.out.println(t.popUpTaxas("Victor"));
 		System.out.println(t.popUpCondessa("Victor"));
@@ -377,5 +385,7 @@ public class PopUpPlayer {
 		t.PopUpHistoria();
 		t.popUpBloqueioAjuda("Victor");
 		t.popUpQuit();
+		*/
+		System.out.println(t.popUpAcoes(b, "Victor"));
 	}
 }
