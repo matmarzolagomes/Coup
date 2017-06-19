@@ -77,7 +77,7 @@ public class ConectGUI extends JPanel {
 
 		add(new JPanel(), cons);
 
-		ip = new JTextFieldWithLimit("IP Address: ", 15);
+		ip = new JTextFieldWithLimit("IP Address: ", 256);
 		port = new JTextFieldWithLimit("Host Port: ", 5);
 		name = new JTextFieldWithLimit("Nickname: ", 16);
 		
