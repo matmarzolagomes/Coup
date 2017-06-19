@@ -150,7 +150,7 @@ public class Player {
 				case Actions.LOAD_INTERFACE:
 					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
 					System.out.println(playerName);
-					jframe.setVisible(false);
+					jframe.dispose();
 					loadInterface();
 					break;
 
@@ -207,13 +207,13 @@ public class Player {
 	}
 
 	private void left() throws LANExcpetion {
-		jframe.setVisible(false);
+		jframe.dispose();
 		popup.popUpDerrota();
 		throw new LANExcpetion("Derrota do Jogador " + playerName + ".");
 	}
 
 	private void winner() throws LANExcpetion {
-		jframe.setVisible(false);
+		jframe.dispose();
 		popup.popUpVitoria();
 		throw new LANExcpetion("Vitória do Jogador " + playerName + ".");
 	}
@@ -236,7 +236,7 @@ public class Player {
 	}
 
 	private void onHold() {
-		//popup.PopUpHistoria();
+		// popup.PopUpHistoria();
 	}
 
 	/**
@@ -547,6 +547,8 @@ public class Player {
 
 	private void closeConnection() {
 		try {
+			if (jframe != null)
+				jframe.dispose();
 			if (player != null && !player.isClosed()) {
 				if (output != null && !player.isOutputShutdown())
 					output.close();
