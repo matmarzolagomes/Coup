@@ -77,22 +77,22 @@ public class PlayerGUI extends JPanel {
 	 * @param players HashMap dos jogadores
 	 */
 	public void attTable(HashMap<String, Player> players) {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		
-		for (Player player : players.values()) {
-			for (int j = 0; j < tablesize; ++j) {
-				if (!players.containsKey(model.getValueAt(j, 0))) {
-					model.setValueAt(0, j, 1);
-					model.setValueAt(0, j, 2);
-					table.addRowSelectionInterval(j, j);
-				} else if (player.getName().equals(data[j][0])){
-					if ((int) model.getValueAt(j, 1) != player.getMoney())
-						model.setValueAt(player.getMoney(), j, 1);
-					if ((int) model.getValueAt(j, 2) != player.getHand().size()) 
-						model.setValueAt(player.getHand().size(), j, 2);
-				}
-			}
-		}
+//		DefaultTableModel model = (DefaultTableModel) table.getModel();
+//		
+//		for (Player player : players.values()) {
+//			for (int j = 0; j < tablesize; ++j) {
+//				if (!players.containsKey(model.getValueAt(j, 0))) {
+//					model.setValueAt(0, j, 1);
+//					model.setValueAt(0, j, 2);
+//					table.addRowSelectionInterval(j, j);
+//				} else if (player.getName().equals(data[j][0])){
+//					if ((int) model.getValueAt(j, 1) != player.getMoney())
+//						model.setValueAt(player.getMoney(), j, 1);
+//					if ((int) model.getValueAt(j, 2) != player.getHand().size()) 
+//						model.setValueAt(player.getHand().size(), j, 2);
+//				}
+//			}
+//		}
 		
 //		table.updateUI();
 	}
