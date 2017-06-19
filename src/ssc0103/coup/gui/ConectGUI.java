@@ -130,7 +130,7 @@ public class ConectGUI extends JPanel {
 	 * @param frame JFrame a ser adicionado.
 	 */
 	public void frameAdd(JFrame frame) {	
-		frame.setExtendedState(JFrame.NORMAL);	
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);	
 		frame.add(this);
 		frame.pack();		
 		frame.setLocationRelativeTo(null);

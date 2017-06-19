@@ -275,7 +275,7 @@ public class Player {
 		System.out.println(playerName);
 		jframe.dispose();
 		jframe = new JFrame(playerName);
-		jframe.setExtendedState(JFrame.NORMAL);
+		jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		coupgui = new CoupGUI(playerName, actions.getPlayers());
 		menu = new MenuGUI();

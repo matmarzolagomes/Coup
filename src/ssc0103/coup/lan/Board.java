@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import ssc0103.coup.exception.LANExcpetion;
 import ssc0103.coup.exception.PException;
 import ssc0103.coup.game.Coup;
+import ssc0103.coup.util.EntradaTeclado;
 
 /**
  * Classe Board, caracteriza-se por ser o servidor local do jogo, gerenciando as
