@@ -1,27 +1,23 @@
 package ssc0103.coup.gui;
 
-//import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-//import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
 
-//import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import ssc0103.coup.exception.GUIException;
 
 import ssc0103.coup.game.Deck;
 
 @SuppressWarnings("serial")
-public class PopUp extends JDialog /*implements ActionListener*/ {
+public class PopUp extends JDialog {
     private final LinkedList<String> ret;
     private final int removen;
     
@@ -31,7 +27,7 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
         ret = new LinkedList<>();
         
         toFront();
-        setModal(true);
+        setModalityType(DEFAULT_MODALITY_TYPE);
         
         JPanel content = new JPanel(new GridBagLayout());
         
@@ -53,21 +49,13 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
             content.add(panel[i]);
         }
         
-//        cons.gridx = 0;
-//        cons.gridy = 1;
-//        cons.gridwidth = panel.length;
-//        cons.weightx = 1;
-//        cons.weighty = 0.3;
-//
-//        JPanel btp = new JPanel(new BorderLayout());
-//        btp.setPreferredSize(new Dimension(0, 100));
-//        JButton bt = new JButton("Remove");
-//        bt.setFont(new Font("Arial", Font.PLAIN, 40));
-//
-//        bt.addActionListener(this);
-//
-//        btp.add(bt, BorderLayout.CENTER);
-//        content.add(btp, cons);
+        cons.gridx = 0;
+        cons.gridy = 1;
+        cons.weightx = 1;
+        cons.weighty = 0.3;
+        cons.gridwidth = cards.size();
+        
+        content.add(new JLabel("Escolha " + removen + " cartas para retirar de sua mão."), cons);
 
         add(content);
         pack();
@@ -105,11 +93,6 @@ public class PopUp extends JDialog /*implements ActionListener*/ {
         @Override
         public void mouseReleased(MouseEvent arg0) {}
     }
-    
-//	@Override
-//	public void actionPerformed(ActionEvent arg0) {
-//		dispose();
-//	}
     
     public LinkedList<String> showPopUp() {
         setVisible(true);

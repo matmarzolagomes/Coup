@@ -128,10 +128,5 @@ public class PopUpAjuda {
 	}
 
 	public static void main(String[] args) {
-
-		PopUpAjuda p = new PopUpAjuda();
-		new PopUpPlayer().PopUpHistoria();
-		p.popUpGeral();
 	}
-
 }

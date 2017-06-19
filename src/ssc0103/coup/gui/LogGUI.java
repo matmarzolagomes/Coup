@@ -4,11 +4,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
 /**
  * Panel do Log do jogo
  * @author Matheus Marzola Gomes
@@ -19,6 +19,7 @@ public class LogGUI extends JPanel{
     JTextArea area;
     JScrollPane scrollPane;
     JLabel label;
+    
     /**
      * Construtor da classe
      */
@@ -38,6 +39,7 @@ public class LogGUI extends JPanel{
         // Adicionando o textarea com scroll
         add(scrollPane);
     }
+    
     /**
      * Insere um texto no log
      * @param string Texto inserido
@@ -49,23 +51,5 @@ public class LogGUI extends JPanel{
     }
     
     public static void main(String[] args) {
-    	LogGUI log = new LogGUI();
-    	JFrame frame = new JFrame("Game");
-    	frame.setVisible(true);
-    	log.insertLog("1");
-    	log.insertLog("2");
-    	log.insertLog("3");
-    	log.insertLog("4");
-    	log.insertLog("5");
-    	log.insertLog("6");
-    	log.insertLog("7");
-    	log.insertLog("8");
-    	log.insertLog("9");
-    	
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        frame.add(log);
-        frame.pack();
     }
-    
 }
