@@ -14,10 +14,19 @@ import javax.swing.SwingConstants;
 import ssc0103.coup.exception.GUIException;
 import ssc0103.coup.game.Deck;
 
+/**
+ * Classe criada para mostrar o morto.
+ * @author Rodrigo Geurgas Zavarizz 9791080
+ */
 @SuppressWarnings("serial")
 public class DeadGUI extends JPanel {
     private final String maxcards;
-    
+
+    /**
+     * Construtor da classe.
+     * @param nplayers quantos jogadores tem.
+     * @throws GUIException
+     */
     public DeadGUI(int nplayers) throws GUIException {
         super(new GridLayout(5, 1));
         this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 30));
@@ -29,6 +38,11 @@ public class DeadGUI extends JPanel {
         }
     }
     
+    /**
+     * Atualiza o morto.
+     * @param dead morto.
+     * @throws GUIException
+     */
     public void update(Deck dead) throws GUIException {
         removeAll();
 
@@ -77,6 +91,11 @@ public class DeadGUI extends JPanel {
 
     }
     
+    /**
+     * Função para debug.
+     * @param args
+     * @throws GUIException
+     */
     public static void main(String[] args) throws GUIException {
     }
 }

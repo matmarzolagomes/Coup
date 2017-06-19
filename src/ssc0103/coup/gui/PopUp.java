@@ -18,11 +18,22 @@ import ssc0103.coup.exception.GUIException;
 
 import ssc0103.coup.game.Deck;
 
+/**
+ * PopUp para retirar cartas da mão do jogador.
+ * @author Rodrigo Geurgas Zavarizz 9791080
+ *
+ */
 @SuppressWarnings("serial")
 public class PopUp extends JDialog {
     private final LinkedList<String> ret;
     private final int removen;
     
+    /**
+     * Construtor da classe.
+     * @param cards a mão do jogador.
+     * @param removen quantas cartas a serem removidas.
+     * @throws GUIException
+     */
     public PopUp(Deck cards, int removen) throws GUIException {
         super();
         this.removen = removen;
@@ -71,6 +82,11 @@ public class PopUp extends JDialog {
         setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
     }
     
+    /**
+     * Espera as cartas serem clicadas e adiciona elas ao retorno.
+     * @author Rodrigo Geurgas Zavarizz 9791080
+     *
+     */
     private class PanelListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent event) {
@@ -100,11 +116,20 @@ public class PopUp extends JDialog {
         public void mouseReleased(MouseEvent arg0) {}
     }
     
+    /**
+     * Mostra o PopUp e retorna quais cartas a serem retiradas.
+     * @return cartas selecionadas.
+     */
     public LinkedList<String> showPopUp() {
         setVisible(true);
         return ret;
     }
     
+    /**
+     * Função para debug.
+     * @param args
+     * @throws GUIException
+     */
     public static void main(String[] args) throws GUIException {
     }
 }

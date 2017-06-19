@@ -5,7 +5,7 @@ import java.util.Random;
 
 /**
  * Classe usada para representar um jogador
- * @author 
+ * @author Rodrigo Geurgas Zavarizz 9791080
  */
 @SuppressWarnings("serial")
 public class Player implements Serializable, Cloneable {

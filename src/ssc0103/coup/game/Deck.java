@@ -6,7 +6,7 @@ import java.util.LinkedList;
 /**
  * Classe criada para representar as cartas
  * 
- * @author
+ * @author Rodrigo Geurgas Zavarizz 9791080
  *
  */
 @SuppressWarnings("serial")
