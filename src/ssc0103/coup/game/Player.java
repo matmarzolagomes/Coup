@@ -141,7 +141,7 @@ public class Player implements Serializable, Cloneable {
 	/**
 	 * Método que remove uma carta do jogador
 	 * @param cards Array com as cartas
-	 * @param dead Cemitério para onde a carta vai
+	 * @param dead Para onde a carta vai
 	 * @return se a ação foi ou não bem sucedida
 	 */
 	public boolean removeCard(String[] cards, Deck dead) {

@@ -92,7 +92,7 @@ public abstract class Coup {
 				p.removeCard(p.getHand().toArray(new String[p.getHand().size()]), dead);
 			}
 			isDead(playerName, null);
-		}		
+		}
 	}
 
 	/**
@@ -258,7 +258,8 @@ public abstract class Coup {
 				// se o segundo cara tentar bloquear com o capitao ou embaixador
 				if (contest) {
 					// se o primeiro contestar o bloqueio do segundo
-					if (players.get(to).checkCard("Embaixador") || players.get(to).checkCard("Capitao")) {
+					if ((players.get(to).checkCard("Embaixador") && cards[0].equals("Embaixador"))
+							|| (players.get(to).checkCard("Capitao") && cards[0].equals("Capitao"))) {
 						while (!ret)
 							ret = players.get(from).removeCard(getInput(players.get(from)), dead);
 						ret = false;
