@@ -82,10 +82,10 @@ public class Board extends Coup {
 		msg = "Informe a porta de conexão com o jogo:";
 
 		try {
-			//msg = JOptionPane.showInputDialog(msg);
+			// msg = JOptionPane.showInputDialog(msg);
 			System.out.println(msg);
 			msg = EntradaTeclado.leString();
-			
+
 			if (msg == null)
 				System.exit(0);
 
@@ -105,7 +105,7 @@ public class Board extends Coup {
 	private void getNumPlayers() {
 		msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
 		try {
-			//msg = JOptionPane.showInputDialog(msg);
+			// msg = JOptionPane.showInputDialog(msg);
 			System.out.println(msg);
 			msg = EntradaTeclado.leString();
 
@@ -178,14 +178,21 @@ public class Board extends Coup {
 			for (Iterator<String> it = it(); this.players.size() > LOOP_BREAK; it = !it.hasNext() ? it() : it)
 				coupHandler(it);
 
+			/* Pequeno tempo de espera. */
+			Thread.sleep(2000);
+			
 			this.playerName = players.keySet().iterator().next();
 			actions = new Actions();
 			actions.setId(Actions.WINNER);
 			flushObject(actions, this.playerName);
 			System.out.println("Vitória do jogador: " + this.playerName);
-
+			
+			/* Pequeno tempo de espera. */
+			Thread.sleep(3000);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} finally {
 			/* Finaliza o servidor e fecha as conexões restantes. */
 			shutdownBoard();
@@ -732,7 +739,8 @@ public class Board extends Coup {
 	/**
 	 * Encerra todas as conexões com um jogador.
 	 * 
-	 * @param playerName Nome do jogador.
+	 * @param playerName
+	 *            Nome do jogador.
 	 */
 	private void closeConnections(String playerName) {
 		/* Fecha todas conexões com o jogador. */
