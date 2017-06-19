@@ -19,7 +19,7 @@ public class HandGUI extends JPanel{
 	 */
     public HandGUI() {
         super();
-        setBorder(BorderFactory.createEmptyBorder(100, 0, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
     }
     /**
      * Mostra as cartas do jogador

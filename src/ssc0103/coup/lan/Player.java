@@ -19,7 +19,6 @@ import ssc0103.coup.gui.ConectGUI;
 import ssc0103.coup.gui.CoupGUI;
 import ssc0103.coup.gui.MenuGUI;
 import ssc0103.coup.gui.PopUp;
-import ssc0103.coup.gui.PopUpAjuda;
 import ssc0103.coup.gui.PopUpPlayer;
 
 /**
@@ -237,8 +236,7 @@ public class Player {
 	}
 
 	private void onHold() {
-		popup.PopUpHistoria();
-		new PopUpAjuda().popUpGeral();
+		//popup.PopUpHistoria();
 	}
 
 	/**
