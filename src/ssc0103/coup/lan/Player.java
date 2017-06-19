@@ -25,7 +25,7 @@ import ssc0103.coup.gui.PopUpPlayer;
  * Classe Player, caracteriza-se por executar as ações recebidas pelo servidor e
  * enviar uma resposta.
  * 
- * @author Bruno M.
+ * @author Bruno Mendes da Costa - Nº USP 9779433
  *
  */
 public class Player {
@@ -43,10 +43,22 @@ public class Player {
 	private ConectGUI conectGUI;
 	private static boolean readConnectGUI = false;
 
+	/**
+	 * 
+	 * @return Retorna um boolean referente ao jogador ter pressionado o botão
+	 *         na tela de login.
+	 */
 	public static boolean readConnectGUI() {
 		return readConnectGUI;
 	}
 
+	/**
+	 * Atribui a variável estática o estado de pressionamento do botão da classe
+	 * ConectGUI.
+	 * 
+	 * @param button
+	 *            Define o estado de pressionamento do botão.
+	 */
 	public static void setReadConnectGUI(boolean button) {
 		Player.readConnectGUI = button;
 	}
@@ -148,17 +160,12 @@ public class Player {
 					break;
 
 				case Actions.LOAD_INTERFACE:
-					// CARREGA PELA PRIMEIRA VEZ A INTERFACE GRÁFICA
-					System.out.println(playerName);
-					jframe.dispose();
 					loadInterface();
 					break;
 
 				case Actions.UPDATE_ALL_INTERFACE:
 				case Actions.UPDATE_INTERFACE:
-					// ATUALIZA A INTERFACE GRÀFICA
-					if (actions.getPlayers().containsKey(playerName))
-						updateInterface();
+					updateInterface();
 					break;
 
 				case Actions.GET_INPUT:
@@ -206,12 +213,22 @@ public class Player {
 		}
 	}
 
+	/**
+	 * Remove o jogador da partida e exibe o popup de derrota.
+	 * 
+	 * @throws LANExcpetion
+	 */
 	private void left() throws LANExcpetion {
 		jframe.dispose();
 		popup.popUpDerrota();
 		throw new LANExcpetion("Derrota do Jogador " + playerName + ".");
 	}
 
+	/**
+	 * Remove o jogador da partida e exibe o popup de vitória.
+	 * 
+	 * @throws LANExcpetion
+	 */
 	private void winner() throws LANExcpetion {
 		jframe.dispose();
 		popup.popUpVitoria();
@@ -221,8 +238,6 @@ public class Player {
 	/**
 	 * Envia o nome do jogador ao servidor.
 	 * 
-	 * @param output
-	 * @param actions
 	 * @throws IOException
 	 * @throws LANExcpetion
 	 */
@@ -235,15 +250,17 @@ public class Player {
 		flushObject();
 	}
 
+	/**
+	 * Entra em estado de espera após conectar com o servidor.
+	 */
 	private void onHold() {
+		/* Exibe a história do jogo ao conectar. */
 		// popup.PopUpHistoria();
 	}
 
 	/**
 	 * Recebe uma mensagem do servidor e exibe na tela.
 	 * 
-	 * @param output
-	 * @param actions
 	 * @throws IOException
 	 */
 	private void getMessage() throws IOException {
@@ -253,10 +270,10 @@ public class Player {
 	/**
 	 * Carrega a interface gráfica do jogador.
 	 * 
-	 * @param output
-	 * @throws IOException
 	 */
 	private void loadInterface() {
+		System.out.println(playerName);
+		jframe.dispose();
 		jframe = new JFrame(playerName);
 		jframe.setExtendedState(JFrame.NORMAL);
 
@@ -290,11 +307,12 @@ public class Player {
 	 * Atualiza a interface gráfica do jogador.
 	 */
 	private void updateInterface() {
-		coupgui.updateAll(actions);
+		if (actions.getPlayers().containsKey(playerName))
+			coupgui.updateAll(actions);
 	}
 
 	/**
-	 * Retira cartas da mão do jogador.
+	 * Retira as cartas da mão do jogador.
 	 * 
 	 * @throws IOException
 	 * @throws LANExcpetion
@@ -316,10 +334,11 @@ public class Player {
 	 * @throws LANExcpetion
 	 */
 	private void loadPlayerActions() throws IOException, LANExcpetion {
-		
+
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
 
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
 
@@ -356,12 +375,16 @@ public class Player {
 			break;
 		}
 
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
 
 		/* Envia a ação do jogador ao servidor. */
 		flushObject();
 	}
-	
+
+	/**
+	 * Thread que conta o tempo em paralelo.
+	 */
 	void timeThread() {
 		Runnable r = new Runnable() {
 			public void run() {
@@ -387,9 +410,18 @@ public class Player {
 
 	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
 
+	/**
+	 * Método que pergunta ao jogador se ele deseja bloquear ou contestar ação
+	 * de ajuda externa.
+	 * 
+	 * @throws IOException
+	 * @throws LANExcpetion
+	 */
 	private void foreign() throws IOException, LANExcpetion {
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
+		
 		/* Verifica se jogador bloqueou ação. */
 		if (actions.isBlock()) {
 			/* Verifica se jogador deseja contestar. */
@@ -403,26 +435,40 @@ public class Player {
 				actions.setBlock(true);
 			}
 		}
-		
+
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
+		
 		/* Envia resposta ao servidor. */
 		flushObject();
 	}
 
+	/**
+	 * Método que exibe notificação de golpe de estado ao jogador.
+	 */
 	private void coup() {
 		popup.popUpGolpe(actions.getFrom());
 	}
 
+	/**
+	 * Método que pergunta ao jogador se ele deseja contestar ação de taxas.
+	 * 
+	 * @throws IOException
+	 * @throws LANExcpetion
+	 */
 	private void taxes() throws IOException, LANExcpetion {
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
-		
+
 		if (popup.popUpTaxas(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
 
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
+		
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}
@@ -430,16 +476,14 @@ public class Player {
 	/**
 	 * Envia ao servidor a resposta do jogador sobre estar sendo assassinado.
 	 * 
-	 * @param output
-	 * @param actions
-	 * @return
 	 * @throws IOException
 	 * @throws LANExcpetion
 	 */
 	private void assassinate() throws IOException, LANExcpetion {
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
-		
+
 		if (actions.isBlock()) {
 			if (popup.popUpCondessa(actions.getTo()) == 1)
 				actions.setContest(true);
@@ -458,16 +502,26 @@ public class Player {
 				break;
 			}
 		}
-		
+
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
 
 		/* Envia objeto ao servidor. */
 		flushObject();
 	}
 
+	/**
+	 * Método que pergunta ao jogador se ele deseja bloquear ou contestar
+	 * extorquir.
+	 * 
+	 * @throws IOException
+	 * @throws LANExcpetion
+	 */
 	private void steal() throws IOException, LANExcpetion {
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
+		
 		if (actions.isBlock()) {
 			if (popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]) == 1)
 				actions.setContest(true);
@@ -491,21 +545,33 @@ public class Player {
 				break;
 			}
 		}
-		
+
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
 
+		/* Envia objeto ao servidor. */
 		flushObject();
 	}
 
+	/**
+	 * Método que pergunta ao jogador se ele deseja contestar troca de cartas.
+	 * 
+	 * @throws IOException
+	 * @throws LANExcpetion
+	 */
 	private void swap() throws IOException, LANExcpetion {
+		/* Inicia o cronômetro de tempo. */
 		coupgui.startCount();
 		timeThread();
+		
 		if (popup.popUpTroca(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
 
+		/* Finaliza o cronômetro de tempo. */
 		coupgui.stopCount();
+		
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}
@@ -530,10 +596,9 @@ public class Player {
 	}
 
 	/**
-	 * Retorna o objeto Actions do servidor.
+	 * Retorna o Objeto Actions do servidor.
 	 * 
-	 * @param player
-	 * @return
+	 * @return Retorna o Objeto Actions recebido do servidor.
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 * @throws LANExcpetion
@@ -551,9 +616,10 @@ public class Player {
 	 * Remove cartas da mão do jogador.
 	 * 
 	 * @param hand
+	 *            Cartas da mão do jogador.
 	 * @param numCards
 	 *            Número de cartas que será removido.
-	 * @return
+	 * @return Cartas removidas pelo jogador.
 	 */
 	public String[] popUp(Deck hand, int numCards) {
 		String[] ret = null;
@@ -574,6 +640,9 @@ public class Player {
 		return ret;
 	}
 
+	/**
+	 * Fecha as conexões abertas pelo jogador.
+	 */
 	private void closeConnection() {
 		try {
 			if (jframe != null)
