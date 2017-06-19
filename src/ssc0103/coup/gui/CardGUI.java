@@ -10,8 +10,19 @@ import javax.swing.ImageIcon;
 
 import ssc0103.coup.exception.GUIException;
 
+/**
+ * ImageIcon escalado para a resolução escolhida.
+ * @author Rodrigo Geurgas Zavarizz 9791080
+ */
 @SuppressWarnings("serial")
 public class CardGUI extends ImageIcon {
+	/**
+	 * Construtor da classe.
+	 * @param card nome da imagem a ser carregada.
+	 * @param w largura da imagem escalada.
+	 * @param h altura da imagem escalada.
+	 * @throws GUIException
+	 */
     public CardGUI(String card, int w, int h) throws GUIException {
         super("images/" + card + ".png");
         
@@ -19,6 +30,13 @@ public class CardGUI extends ImageIcon {
         this.setImage(scaleImage(getImage(), w, h));
     }
     
+    /**
+     * Escala uma imagem para a resolução escolhida.
+     * @param srcImg imagem a ser escalada.
+     * @param w largura da imagem escalada.
+     * @param h altura da imagem escalada.
+     * @return imagem escalada.
+     */
     private Image scaleImage(Image srcImg, int w, int h) {
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();
@@ -30,6 +48,11 @@ public class CardGUI extends ImageIcon {
         return resizedImg;
     }
     
+    /**
+     * Função para debug.
+     * @param args
+     * @throws GUIException
+     */
     public static void main(String[] args) throws GUIException {
     }
 }

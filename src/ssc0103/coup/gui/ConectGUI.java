@@ -17,6 +17,10 @@ import javax.swing.WindowConstants;
 
 import ssc0103.coup.lan.Player;
 
+/**
+ * Classe criada para a criação do JPanel de conexão.
+ * @author Rodrigo Geurgas Zavarizz 9791080
+ */
 @SuppressWarnings("serial")
 public class ConectGUI extends JPanel {
 	private boolean conected = false;
@@ -28,6 +32,9 @@ public class ConectGUI extends JPanel {
 	private JTextFieldWithLimit port;
 	private JTextFieldWithLimit name;
 
+	/**
+	 * Construtor da classe.
+	 */
 	public ConectGUI() {
 		super(new GridBagLayout());
 								
@@ -118,10 +125,13 @@ public class ConectGUI extends JPanel {
 		center.add(btp);
 	}
 	
-	public void frameAdd(JFrame frame, ConectGUI conectGUI) {		
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	/**
+	 * Adiciona o JPanel a um JFrame.
+	 * @param frame JFrame a ser adicionado.
+	 */
+	public void frameAdd(JFrame frame) {	
 		frame.setExtendedState(JFrame.NORMAL);	
-		frame.add(conectGUI);
+		frame.add(this);
 		frame.pack();		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);		
@@ -129,23 +139,42 @@ public class ConectGUI extends JPanel {
 		
 		getRootPane().setDefaultButton(bt);
 	}
-	
+
+	/**
+	 * Retorna o IP digitado.
+	 * @return IP digitado no JTextField.
+	 */
 	public String getIpAdress() {
 		return ipAdress;
 	}
 
+	/**
+	 * Retorna a Porta digitada.
+	 * @return Porta digitada no JTextField.
+	 */
 	public String getPorta() {
 		return porta;
 	}
 
+	/**
+	 * Retorna o nome digitado.
+	 * @return nome digitado no JTextField.
+	 */
 	public String getPlayerName() {
 		return playerName;
 	}	
 
+	/**
+	 * Atribui um boolean à variável conected.
+	 * @param conected valor a ser atribuido.
+	 */
 	public void setConected(boolean conected) {
 		this.conected = conected;
 	}	
 	
+	/**
+	 * Ativa o primeiro botão.
+	 */
 	public void activeButton1() {
 		ip.enable();
 		port.enable();
@@ -154,6 +183,9 @@ public class ConectGUI extends JPanel {
 		Player.setReadConnectGUI(false);
 	}
 	
+	/**
+	 * Ativa o segundo botão.
+	 */
 	public void activeButton2() {
 		bt.setText("Choose name");
 		bt.setEnabled(true);

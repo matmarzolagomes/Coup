@@ -58,7 +58,7 @@ public class Player {
 		/* Tela de login. */
 		jframe = new JFrame("Coup Login");
 		conectGUI = new ConectGUI();
-		conectGUI.frameAdd(jframe, conectGUI);
+		conectGUI.frameAdd(jframe);
 
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
