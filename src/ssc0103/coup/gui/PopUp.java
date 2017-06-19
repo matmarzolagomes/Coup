@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import ssc0103.coup.exception.GUIException;
 
 import ssc0103.coup.game.Deck;
@@ -55,7 +57,7 @@ public class PopUp extends JDialog {
         cons.weighty = 0.3;
         cons.gridwidth = cards.size();
         
-        content.add(new JLabel("Escolha " + removen + " cartas para retirar de sua mão."), cons);
+        content.add(new JLabel("Escolha " + removen + " cartas para retirar de sua mão.", SwingConstants.CENTER), cons);
 
         add(content);
         pack();
