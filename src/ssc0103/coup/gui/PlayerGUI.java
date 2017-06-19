@@ -77,22 +77,16 @@ public class PlayerGUI extends JPanel {
 	public void attTable(HashMap<String, Player> players) {
 
 		for (Player player : players.values()) {
-			
 			for (int j = 0; j<tablesize; ++j) {
 				if (!players.containsKey(data[j][0])) {
 					data[j][1] = 0;
 					data[j][2] = 0;
-					table.addRowSelectionInterval(j, j);
-					continue;
-				}
-				
-				if (player.getName().equals(data[j][0])){
-					
+//					table.addRowSelectionInterval(j, j);
+				} else if (player.getName().equals(data[j][0])){
 					if ((int) data[j][1] != player.getMoney()) 
 						data[j][1] = player.getMoney();
-					
 					if ((int) data[j][2] != player.getHand().size()) 
-					data[j][2] = player.getHand().size();
+						data[j][2] = player.getHand().size();
 				}
 			}
 		}
