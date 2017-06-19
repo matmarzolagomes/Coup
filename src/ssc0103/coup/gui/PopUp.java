@@ -57,7 +57,11 @@ public class PopUp extends JDialog {
         cons.weighty = 0.3;
         cons.gridwidth = cards.size();
         
-        content.add(new JLabel("Escolha " + removen + " cartas para retirar de sua mão.", SwingConstants.CENTER), cons);
+        String cartas;
+        if(removen == 1) cartas = " carta";
+        else cartas = " cartas";
+        
+        content.add(new JLabel("Escolha " + removen + cartas + " para retirar de sua mão.", SwingConstants.CENTER), cons);
 
         add(content);
         pack();

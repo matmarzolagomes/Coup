@@ -34,6 +34,9 @@ public class HandGUI extends JPanel{
         
         for (String string : hand)
             add(new JLabel(new CardGUI(string, 300, 500)));
+        
+        revalidate();
+        repaint();
     }
     
     public static void main(String[] args) throws GUIException {
