@@ -19,7 +19,6 @@ import javax.swing.JOptionPane;
 import ssc0103.coup.exception.LANExcpetion;
 import ssc0103.coup.exception.PException;
 import ssc0103.coup.game.Coup;
-import ssc0103.coup.util.EntradaTeclado;
 
 /**
  * Classe Board, caracteriza-se por ser o servidor local do jogo, gerenciando as
@@ -83,9 +82,7 @@ public class Board extends Coup {
 		msg = "Informe a porta de conexão com o jogo:";
 
 		try {
-			// msg = JOptionPane.showInputDialog(msg);
-			System.out.println(msg);
-			msg = EntradaTeclado.leString();
+			msg = JOptionPane.showInputDialog(msg);
 
 			if (msg == null)
 				System.exit(0);
@@ -106,9 +103,7 @@ public class Board extends Coup {
 	private void getNumPlayers() {
 		msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
 		try {
-			// msg = JOptionPane.showInputDialog(msg);
-			System.out.println(msg);
-			msg = EntradaTeclado.leString();
+			msg = JOptionPane.showInputDialog(msg);
 
 			if (msg == null) {
 				board.close();
