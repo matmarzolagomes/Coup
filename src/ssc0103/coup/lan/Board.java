@@ -22,9 +22,9 @@ import ssc0103.coup.game.Coup;
 
 /**
  * Classe Board, caracteriza-se por ser o servidor local do jogo, gerenciando as
- * conexões com os jogadores da partida.
+ * conexões com os jogadores da partida e suas ações.
  * 
- * @author Bruno M.
+ * @author Bruno Mendes da Costa - Nº USP 9779433
  *
  */
 public class Board extends Coup {
@@ -71,7 +71,7 @@ public class Board extends Coup {
 		/* Inicializa o HashMap de conexões de saída. */
 		this.outputs = new HashMap<String, ObjectOutputStream>(this.numPlayers);
 
-		/* Inicializa o log da partida. */
+		/* Inicializa o log de backup da partida. */
 		gameLog = new ArrayList<String>();
 	}
 
@@ -98,7 +98,7 @@ public class Board extends Coup {
 	}
 
 	/**
-	 * Obtém o número de players da partida e verifica a sua validade.
+	 * Obtém o número de jogadores da partida e verifica a sua validade.
 	 */
 	private void getNumPlayers() {
 		msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
@@ -220,7 +220,7 @@ public class Board extends Coup {
 			}).start();
 		}
 
-		/* Aguarda Threads adiconais serem finalizadas para prosseguir. */
+		/* Aguarda Threads adicionais serem finalizadas para prosseguir. */
 		waitThreads();
 	}
 
@@ -228,8 +228,11 @@ public class Board extends Coup {
 	 * Recebe o nome do jogador e o insere em um HashMap.
 	 * 
 	 * @param player
+	 *            Conexão com o jogador.
 	 * @param output
+	 *            Fluxo de dados de saída do jogador.
 	 * @param input
+	 *            Fluxo de dados de entrada do jogador.
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
@@ -308,7 +311,6 @@ public class Board extends Coup {
 	/**
 	 * Notifica todos os players para iniciar o jogo.
 	 * 
-	 * @param coup
 	 * @throws IOException
 	 */
 	private void startGame() throws IOException {
@@ -322,13 +324,8 @@ public class Board extends Coup {
 	/**
 	 * Gerencia as ações feitas pelos jogadores.
 	 * 
-	 * @param coup
 	 * @param iterator
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * @throws PException
-	 * @throws SecurityException
-	 * @throws NoSuchMethodException
+	 *            Iterator da estrutura de repetição utilizada.
 	 */
 	private void coupHandler(Iterator<String> iterator) {
 		try {
@@ -415,11 +412,26 @@ public class Board extends Coup {
 
 	// ############# AÇÕES DO JOGADOR ############# //
 
+	/**
+	 * Método que executa a ação de renda no servidor.
+	 * 
+	 * @throws PException
+	 * @throws IOException
+	 */
 	private void income() throws PException, IOException {
 		/* Executa ação e atualiza o jogo de todos os jogadores. */
 		updateAllPlayers("O jogador " + playCoup(Actions.INCOME) + " recebeu 1 moeda.");
 	}
 
+	/**
+	 * Método que executa a ação de ajuda externa no servidor.
+	 * 
+	 * @throws IOException
+	 * @throws PException
+	 * @throws ClassNotFoundException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	private void foreign()
 			throws IOException, PException, ClassNotFoundException, NoSuchMethodException, SecurityException {
 		updateAllPlayers("O jogador " + actions.getFrom() + " solicitou ajuda externa.");
@@ -445,9 +457,15 @@ public class Board extends Coup {
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.FOREIGN) + ".");
 	}
 
+	/**
+	 * Método que executa a ação golpe de estado no servidor.
+	 * 
+	 * @throws PException
+	 * @throws IOException
+	 */
 	private void coup() throws PException, IOException {
 		String playerName = actions.getTo();
-		
+
 		/* Envia notificação ao player de que recebeu um golpe de estado. */
 		flushObject(actions, actions.getTo());
 
@@ -456,6 +474,14 @@ public class Board extends Coup {
 		updateAllPlayers(msg);
 	}
 
+	/**
+	 * Método que executa a ação de taxas no servidor.
+	 * 
+	 * @throws IOException
+	 * @throws PException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	private void taxes() throws IOException, PException, NoSuchMethodException, SecurityException {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Duque e solicitou taxas.");
 
@@ -472,6 +498,13 @@ public class Board extends Coup {
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.TAXES) + ".");
 	}
 
+	/**
+	 * Método que executa a ação de assassinato no servidor.
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws PException
+	 */
 	private void assassinate() throws IOException, ClassNotFoundException, PException {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Assassino e pretende assassinar o jogador "
 				+ actions.getTo() + ".");
@@ -496,6 +529,13 @@ public class Board extends Coup {
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.ASSASSINATE) + ".");
 	}
 
+	/**
+	 * Método que executa a ação de extorquir no servidor.
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws PException
+	 */
 	private void steal() throws IOException, ClassNotFoundException, PException {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o Capitão e deseja roubar o jogador "
 				+ actions.getTo() + ".");
@@ -519,6 +559,14 @@ public class Board extends Coup {
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.STEAL) + ".");
 	}
 
+	/**
+	 * Método que executa a ação de troca de cartas no servidor.
+	 * 
+	 * @throws IOException
+	 * @throws PException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	private void swap() throws IOException, PException, NoSuchMethodException, SecurityException {
 		updateAllPlayers("O jogador " + actions.getFrom() + " diz ser o embaixador e deseja trocar cartas.");
 
@@ -535,7 +583,7 @@ public class Board extends Coup {
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.SWAP) + ".");
 	}
 
-	// ############# MÈTODOS AUXILIARES DO SERVIDOR ############# //
+	// ############# MÉTODOS AUXILIARES DO SERVIDOR ############# //
 
 	/**
 	 * Espera até que todas as Threads adicionais tenham sido finalizadas.
@@ -550,6 +598,9 @@ public class Board extends Coup {
 	/**
 	 * Executa uma ação no jogo.
 	 * 
+	 * @param action
+	 *            Número referente a ação do jogador.
+	 * @return
 	 * @throws PException
 	 */
 	private String playCoup(int action) throws PException {
@@ -560,6 +611,10 @@ public class Board extends Coup {
 	/**
 	 * Envia ação para todos os players menos o do parâmetro.
 	 * 
+	 * @param actions
+	 *            Objeto Actions que será enviado aos jogadores.
+	 * @param playerName
+	 *            Nome passado por parâmetro.
 	 * @throws IOException
 	 */
 	private void spreadActions(Actions actions, String playerName) throws IOException {
@@ -573,6 +628,8 @@ public class Board extends Coup {
 	 * Obtém a ação de resposta mais rápida entre os jogadores oponentes. A ação
 	 * pode ser um bloqueio ou um contestamento.
 	 * 
+	 * @param method
+	 *            Método que será acionado.
 	 * @throws IOException
 	 */
 	private void getFastAction(Method method) throws IOException {
@@ -603,8 +660,12 @@ public class Board extends Coup {
 	}
 
 	/**
-	 * Envia o objeto Actions para um jogador.
+	 * Envia o Objeto Actions para um jogador.
 	 * 
+	 * @param actions
+	 *            Objeto Actions que será enviado ao jogador.
+	 * @param player
+	 *            Nome do jogador que receberá o objeto.
 	 * @throws IOException
 	 */
 	private void flushObject(Actions actions, String player) throws IOException {
@@ -626,7 +687,9 @@ public class Board extends Coup {
 	 * Retorna o objeto Actions de um jogador.
 	 * 
 	 * @param player
-	 * @return
+	 *            Nome do jogador que está enviando o objeto Actions de volta
+	 *            para o servidor.
+	 * @return Retorna o Objeto Actions enviado pelo jogador.
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
@@ -644,6 +707,8 @@ public class Board extends Coup {
 	/**
 	 * Atualiza o jogo de todos os players.
 	 * 
+	 * @param msg
+	 *            Mensagem do log que será enviada aos jogadores.
 	 * @throws IOException
 	 */
 	private void updateAllPlayers(String msg) throws IOException {
@@ -663,7 +728,7 @@ public class Board extends Coup {
 	/**
 	 * Encerra todas as conexões com um jogador.
 	 * 
-	 * @throws IOException
+	 * @param playerName Nome do jogador.
 	 */
 	private void closeConnections(String playerName) {
 		/* Fecha todas conexões com o jogador. */
