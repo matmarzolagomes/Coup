@@ -182,7 +182,6 @@ public class Board extends Coup {
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
 		} finally {
 			/* Finaliza o servidor e fecha as conexões restantes. */
 			shutdownBoard();
@@ -608,7 +607,8 @@ public class Board extends Coup {
 	 */
 	private void flushObject(Actions actions, String player) throws IOException {
 		this.playerException = player;
-		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+		if ((players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+				&& (actions.getId() != Actions.LEFT && actions.getId() != Actions.WINNER))
 			throw new IOException("Jogador " + this.playerException + " desconectado.");
 		/* Fluxo de dados do servidor para o cliente. */
 		ObjectOutputStream output = outputs.get(player);
@@ -630,7 +630,8 @@ public class Board extends Coup {
 	 */
 	private Actions getObject(String player) throws IOException, ClassNotFoundException {
 		this.playerException = player;
-		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+		if ((players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+				&& (actions.getId() != Actions.LEFT && actions.getId() != Actions.WINNER))
 			throw new IOException("Jogador " + this.playerException + " desconectado.");
 		/* Fluexo de dados do cliente para o servidor. */
 		ObjectInputStream input = inputs.get(player);
