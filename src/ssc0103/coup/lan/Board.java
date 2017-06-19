@@ -597,7 +597,7 @@ public class Board extends Coup {
 
 		if (exception) {
 			exception = false;
-			throw new IOException("O jogador " + this.playerException + " desconetado.");
+			throw new IOException("Jogador " + this.playerException + " desconectado.");
 		}
 	}
 
@@ -609,7 +609,7 @@ public class Board extends Coup {
 	private void flushObject(Actions actions, String player) throws IOException {
 		this.playerException = player;
 		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
-			throw new IOException("O jogador " + this.playerException + " desconetado.");
+			throw new IOException("Jogador " + this.playerException + " desconectado.");
 		/* Fluxo de dados do servidor para o cliente. */
 		ObjectOutputStream output = outputs.get(player);
 		/* Escreve o objeto no fluxo. */
@@ -631,7 +631,7 @@ public class Board extends Coup {
 	private Actions getObject(String player) throws IOException, ClassNotFoundException {
 		this.playerException = player;
 		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
-			throw new IOException("O jogador " + this.playerException + " desconetado.");
+			throw new IOException("Jogador " + this.playerException + " desconectado.");
 		/* Fluexo de dados do cliente para o servidor. */
 		ObjectInputStream input = inputs.get(player);
 		/* Retorna o objeto enviado pelo cliente. */
