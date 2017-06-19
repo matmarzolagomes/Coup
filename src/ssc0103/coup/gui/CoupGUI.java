@@ -46,7 +46,8 @@ public class CoupGUI extends JPanel {
         
         GridBagConstraints cons = new GridBagConstraints();
         
-        logo = new ImageIcon("images/coup_logo.png");        
+        logo = new ImageIcon("images/coup_logo.png");
+        logo.setImage(logo.getImage().getScaledInstance(300, 70, 100));
         
         try {
 			backgroundImage = ImageIO.read(new File("images/background.jpg")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
@@ -138,7 +139,6 @@ public class CoupGUI extends JPanel {
         cons.ipady = 0;
         
         pright.add(new JLabel(logo), cons);
-        
     }
     /**
      * Insere background do jogo
