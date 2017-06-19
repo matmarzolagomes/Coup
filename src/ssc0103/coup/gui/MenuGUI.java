@@ -6,7 +6,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
+/**
+ * Classe que faz a barra de Menu usando um JMenuBar
+ * @author Matheus Marzola Gomes
+ *
+ */
 @SuppressWarnings("serial")
 public class MenuGUI extends JMenuBar{
 	JMenu ajuda;
@@ -14,7 +18,9 @@ public class MenuGUI extends JMenuBar{
 	JMenuItem story;
 	PopUpAjuda pophelp;
 	PopUpPlayer popstory;
-	
+	/**
+	 * Construtor da classe
+	 */
 	public MenuGUI() {
 		super();
 		ajuda = new JMenu("Ajuda");

@@ -385,7 +385,7 @@ public class Player {
 	/**
 	 * Thread que conta o tempo em paralelo.
 	 */
-	void timeThread() {
+	private void timeThread() {
 		Runnable r = new Runnable() {
 			public void run() {
 				while (Thread.currentThread().isAlive() && coupgui.isConnected() && coupgui.isTimeRunning())
