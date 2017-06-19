@@ -92,7 +92,7 @@ public class CoinGUI extends JPanel{
 					text.setText(String.format("%02d:%02d", minutes, seconds));
 				
 					if (counter == 0) {
-						counter = 121;
+						stop();
 						disconnect = true;
 					}
 				}

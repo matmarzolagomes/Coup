@@ -331,17 +331,18 @@ public class Player {
 
 		coupgui.startCount();
 		new Thread(() -> {
-			while (coupgui.isConnected() && coupgui.isTimeRunning())
-				continue;
+			while (coupgui.isConnected() && coupgui.isTimeRunning());
+			
 			if (!coupgui.isConnected()) {
 				try {
 					left();
 				} catch (LANExcpetion e) {
-					e.printStackTrace();
+					System.out.println(e.getMessage());
+				} finally {
+					closeConnection();
+					System.exit(0);
 				}
-				// RODRIGO, MEXE AQUI
 			}
-				
 		}).start();
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
