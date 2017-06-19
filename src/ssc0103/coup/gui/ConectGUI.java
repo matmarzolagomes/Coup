@@ -79,7 +79,7 @@ public class ConectGUI extends JPanel {
 		bt = new JButton("Connect");
 		
 		Random random = new Random(System.currentTimeMillis());
-		int n = random.nextInt() % 100;
+		int n = Math.abs(random.nextInt()) % 100;
 		
 		ip.setText("127.0.0.1");
 		port.setText("12345");
