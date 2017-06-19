@@ -316,25 +316,12 @@ public class Player {
 	 * @throws LANExcpetion
 	 */
 	private void loadPlayerActions() throws IOException, LANExcpetion {
+		
 		ArrayList<String> loadActions = new ArrayList<String>();
 		ArrayList<String> playersName = new ArrayList<String>();
 
 		coupgui.startCount();
-		new Thread(() -> {
-			while (coupgui.isConnected() && coupgui.isTimeRunning())
-				;
-
-			if (!coupgui.isConnected()) {
-				try {
-					left();
-				} catch (LANExcpetion e) {
-					System.out.println(e.getMessage());
-				} finally {
-					closeConnection();
-					System.exit(0);
-				}
-			}
-		}).start();
+		timeThread();
 
 		int money = actions.getPlayers().get(this.playerName).getMoney();
 
@@ -373,6 +360,29 @@ public class Player {
 
 		/* Envia a ação do jogador ao servidor. */
 		flushObject();
+	}
+	
+	void timeThread() {
+		Runnable r = new Runnable() {
+			public void run() {
+				while (Thread.currentThread().isAlive() && coupgui.isConnected() && coupgui.isTimeRunning())
+					continue;
+
+				if (!coupgui.isConnected()) {
+					System.out.println("entrou no primeiro");
+					try {
+						left();
+					} catch (LANExcpetion e) {
+						System.out.println(e.getMessage());
+					} finally {
+						closeConnection();
+						System.exit(0);
+					}
+				}
+			}
+		};
+		Thread time = new Thread(r);
+		time.start();
 	}
 
 	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
