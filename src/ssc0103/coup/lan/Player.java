@@ -279,7 +279,7 @@ public class Player {
 		jframe.add(coupgui);
 		coupgui.updateAll(actions);
 
-		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		/*jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				PopUpPlayer quit = new PopUpPlayer();
@@ -289,7 +289,7 @@ public class Player {
 			        System.exit(0);
 				}
 		    }
-		});
+		});*/
 		
 		jframe.pack();
 		jframe.setLocationRelativeTo(null);
