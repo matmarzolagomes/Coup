@@ -558,6 +558,8 @@ public class Player {
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		} finally {
+			System.exit(0);
 		}
 	}
 
