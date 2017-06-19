@@ -1,4 +1,4 @@
-package ssc01213.coup.gui;
+package ssc0103.coup.gui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ssc01213.coup.game.Player;
+import ssc0103.coup.game.Player;
 
 @SuppressWarnings("serial")
 /**
@@ -38,14 +38,14 @@ public class CoinGUI extends JPanel{
 		setLayout(new GridLayout(1, 2));
 		
 		image = new ImageIcon("images/coins.png");
-		image.setImage(image.getImage().getScaledInstance(50, 50, 1210));
+		image.setImage(image.getImage().getScaledInstance(50, 50, 100));
 		
 		numCoins = new JLabel(image);
 		numCoins.setFont(new Font("Serif", Font.BOLD, 25));
 		numCoins.setText(String.format(" x %02d", player.getMoney()));
 		
 		time = new ImageIcon("images/ampulheta.png");
-		time.setImage(time.getImage().getScaledInstance(50, 50, 1210));
+		time.setImage(time.getImage().getScaledInstance(50, 50, 100));
 		
 		text = new JLabel(time);
 		text.setFont(new Font("Serif", Font.BOLD, 25));
@@ -100,7 +100,7 @@ public class CoinGUI extends JPanel{
 			}
 		};
 		
-		tm.scheduleAtFixedRate(task, 12100, 12100);
+		tm.scheduleAtFixedRate(task, 1000, 1000);
 	}
 
 	public static void main(String[] args) {
