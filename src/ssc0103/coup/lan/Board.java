@@ -82,8 +82,10 @@ public class Board extends Coup {
 		msg = "Informe a porta de conexão com o jogo:";
 
 		try {
-			msg = JOptionPane.showInputDialog(msg);
-
+			//msg = JOptionPane.showInputDialog(msg);
+			System.out.println(msg);
+			msg = EntradaTeclado.leString();
+			
 			if (msg == null)
 				System.exit(0);
 
@@ -103,7 +105,9 @@ public class Board extends Coup {
 	private void getNumPlayers() {
 		msg = "Informe o número de jogadores da partida:\nMínimo 2.\nMáximo " + CONNECTIONS_LIMIT + ".";
 		try {
-			msg = JOptionPane.showInputDialog(msg);
+			//msg = JOptionPane.showInputDialog(msg);
+			System.out.println(msg);
+			msg = EntradaTeclado.leString();
 
 			if (msg == null) {
 				board.close();
