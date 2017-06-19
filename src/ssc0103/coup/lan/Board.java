@@ -44,9 +44,11 @@ public class Board extends Coup {
 	private Map<String, ObjectOutputStream> outputs;
 	private List<String> gameLog;
 	private String playerName;
+	private String playerException;
 	private Socket player;
 	private String msg;
 	private Actions actions;
+	private static boolean exception = false;
 
 	/**
 	 * Construtor da Classe Board, responsável por iniciliazar o servidor do
@@ -278,7 +280,9 @@ public class Board extends Coup {
 
 					/* Envia mensagem de aguardando demais jogadores. */
 					actions.setId(Actions.ON_HOLD);
-					flushObject(actions, actions.getFrom());
+					output.writeObject(actions);
+					output.flush();
+					output.reset();
 					return;
 				}
 
@@ -402,8 +406,11 @@ public class Board extends Coup {
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IOException | PException | ClassNotFoundException e) {
+			/* Jogador desconectou do jogo. */
+			super.removePlayer(playerException);
+			if (playerException.equals(this.playerName))
+				iterator.remove();
 			System.out.println(e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
@@ -564,8 +571,10 @@ public class Board extends Coup {
 	/**
 	 * Obtém a ação de resposta mais rápida entre os jogadores oponentes. A ação
 	 * pode ser um bloqueio ou um contestamento.
+	 * 
+	 * @throws IOException
 	 */
-	private void getFastAction(Method method) {
+	private void getFastAction(Method method) throws IOException {
 		for (String player : super.getPlayers().keySet()) {
 			if (!player.equals(this.playerName) && !players.get(player).isClosed()) {
 				new Thread(() -> {
@@ -576,7 +585,8 @@ public class Board extends Coup {
 							actions = action;
 					} catch (ClassNotFoundException | IOException | IllegalAccessException | IllegalArgumentException
 							| InvocationTargetException e) {
-						e.printStackTrace();
+						exception = true;
+						System.out.println(e.getMessage());
 					}
 				}).start();
 			}
@@ -584,6 +594,11 @@ public class Board extends Coup {
 
 		/* Aguarda até que todas as threads tenham terminado. */
 		waitThreads();
+
+		if (exception) {
+			exception = false;
+			throw new IOException("O jogador " + this.playerException + " desconetado.");
+		}
 	}
 
 	/**
@@ -592,6 +607,9 @@ public class Board extends Coup {
 	 * @throws IOException
 	 */
 	private void flushObject(Actions actions, String player) throws IOException {
+		this.playerException = player;
+		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+			throw new IOException("O jogador " + this.playerException + " desconetado.");
 		/* Fluxo de dados do servidor para o cliente. */
 		ObjectOutputStream output = outputs.get(player);
 		/* Escreve o objeto no fluxo. */
@@ -611,6 +629,9 @@ public class Board extends Coup {
 	 * @throws ClassNotFoundException
 	 */
 	private Actions getObject(String player) throws IOException, ClassNotFoundException {
+		this.playerException = player;
+		if (players.get(player).isClosed() || !super.getPlayers().containsKey(player))
+			throw new IOException("O jogador " + this.playerException + " desconetado.");
 		/* Fluexo de dados do cliente para o servidor. */
 		ObjectInputStream input = inputs.get(player);
 		/* Retorna o objeto enviado pelo cliente. */
@@ -643,19 +664,23 @@ public class Board extends Coup {
 	 */
 	private void closeConnections(String playerName) {
 		/* Fecha todas conexões com o jogador. */
+		player = players.get(playerName);
 		try {
-			player = players.get(playerName);
-
 			if (player != null && !player.isClosed()) {
 				if (inputs.get(playerName) != null && !player.isInputShutdown())
 					inputs.remove(playerName).close();
 				if (outputs.get(playerName) != null && !player.isOutputShutdown())
 					outputs.remove(playerName).close();
-				players.get(playerName).close();
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+		} finally {
+			try {
+				if (player != null && !player.isClosed())
+					players.get(playerName).close();
+			} catch (IOException e) {
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 
@@ -672,7 +697,6 @@ public class Board extends Coup {
 				board.close();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
 		}
 	}
 

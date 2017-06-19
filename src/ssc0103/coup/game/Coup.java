@@ -7,6 +7,7 @@ import ssc0103.coup.lan.Actions;
 
 /**
  * Classe com o objetivo de controlar a mecânica do jogo
+ * 
  * @author Matheus Marzola Gomes
  * @author Rodrigo Geurgas
  *
@@ -19,8 +20,10 @@ public abstract class Coup {
 	/**
 	 * Inicializa os atributos do jogo.
 	 * 
-	 * @param nplayers (numero de jogadores)
-	 * @param order (string com os jogadores em ordem)
+	 * @param nplayers
+	 *            (numero de jogadores)
+	 * @param order
+	 *            (string com os jogadores em ordem)
 	 */
 	public void instanceGame(int nplayers, String[] order) {
 		players = new HashMap<String, Player>();
@@ -30,34 +33,41 @@ public abstract class Coup {
 		board = new Deck();
 		board.startGame(players, nplayers);
 	}
-	
+
 	/**
 	 * Método abstrato para pegar a entrada
-	 * @param player (classe para representar um jogador)
+	 * 
+	 * @param player
+	 *            (classe para representar um jogador)
 	 * @return array de strings
 	 */
 	abstract public String[] getInput(Player player);
-	
+
 	/**
 	 * Método para retornar as cartas do baralho
+	 * 
 	 * @return cartas do baralho
 	 */
 	public Deck getBoard() {
 		return board;
 	}
-	
+
 	/**
 	 * Método para retornar as cartas do cemitério
+	 * 
 	 * @return cartas do cemitério
 	 */
 	public Deck getDead() {
 		return dead;
 	}
-	
+
 	/**
 	 * Método que remove um jogador caso ele esteja eliminado
-	 * @param from jogador que fez a ação
-	 * @param to jogador que recebeu a ação
+	 * 
+	 * @param from
+	 *            jogador que fez a ação
+	 * @param to
+	 *            jogador que recebeu a ação
 	 */
 	private void isDead(String from, String to) {
 		if (from != null)
@@ -67,26 +77,52 @@ public abstract class Coup {
 			if (players.get(to).getHand().size() == 0)
 				players.remove(to);
 	}
-	
+
+	/**
+	 * Força a remoção do jogador da lista de jogadores caso ele tenha se
+	 * desconectado. Suas cartas serão adicionadas ao cemitério de cartas.
+	 * 
+	 * @param playerName
+	 *            Nome do jogador a ser removido.
+	 */
+	public void removePlayer(String playerName) {
+		if (players.containsKey(playerName)) {
+			Player p = players.get(playerName);
+			if (p.getHand().size() > 0) {
+				p.removeCard(p.getHand().toArray(new String[p.getHand().size()]), dead);
+			}
+			isDead(playerName, null);
+		}		
+	}
+
 	/**
 	 * Método que retorna o hashmap com os jogadores que estão no jogo
+	 * 
 	 * @return jogadores que estão no jogo
 	 */
 	public HashMap<String, Player> getPlayers() {
 		return players;
 	}
-	
+
 	/**
 	 * Método que realiza as ações do jogo
-	 * @param action - código da ação
-	 * @param from - quem fez a ação
-	 * @param to - quem sofreu a ação
-	 * @param contest - se foi contestada
-	 * @param block - se foi bloqueada
+	 * 
+	 * @param action
+	 *            - código da ação
+	 * @param from
+	 *            - quem fez a ação
+	 * @param to
+	 *            - quem sofreu a ação
+	 * @param contest
+	 *            - se foi contestada
+	 * @param block
+	 *            - se foi bloqueada
 	 * @return se a execução foi bem sucedida
-	 * @throws PException - exceção
+	 * @throws PException
+	 *             - exceção
 	 */
-	public String play(int action, String from, String to, boolean contest, boolean block, String[] cards) throws PException {
+	public String play(int action, String from, String to, boolean contest, boolean block, String[] cards)
+			throws PException {
 		boolean ret = false;
 		String winner = from;
 

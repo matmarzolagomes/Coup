@@ -64,31 +64,30 @@ public class Player {
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				PopUpPlayer quit = new PopUpPlayer();
-				if(quit.popUpQuit() == 1) {
-					if(player != null && player.isConnected()) closeConnection();
-			        jframe.dispose();
-			        System.exit(0);
+				if (quit.popUpQuit() == 1) {
+					if (player != null && player.isConnected())
+						closeConnection();
+					jframe.dispose();
+					System.exit(0);
 				}
-		    }
+			}
 		});
-		
+
 		/* Conecta ao servidor do jogo. */
 		connectHost();
 
 		/* Inicializa o objeto de PopUps. */
 		popup = new PopUpPlayer();
 	}
-	
+
 	/**
 	 * Realiza uma conexão com o servidor do jogo.
 	 */
 	private void connectHost() {
 		conectGUI.activeButton1();
-		String msg; // = "Informe o IP de conexão com o servidor do
-					// jogo:\nDefault: 127.0.0.1";
-		try {
-			// this.host = JOptionPane.showInputDialog(msg);
+		String msg;
 
+		try {
 			while (Thread.currentThread().isAlive() && !Player.readConnectGUI)
 				continue;
 			host = conectGUI.getIpAdress();
@@ -98,12 +97,6 @@ public class Player {
 				System.exit(0);
 			else if (host.isEmpty())
 				host = "127.0.0.1";
-
-			// msg = "Informe a porta de conexão com o servidor do jogo:";
-			// msg = JOptionPane.showInputDialog(msg);
-
-			// if (msg == null)
-			// System.exit(0);
 
 			this.port = Integer.parseInt(msg);
 
@@ -117,6 +110,7 @@ public class Player {
 			this.output = new ObjectOutputStream(player.getOutputStream());
 
 			conectGUI.setConected(true);
+
 		} catch (IOException | IllegalArgumentException e) {
 			msg = "Não foi possível realizar a conexão no host e porta informados.\nTente outra conexão.";
 			JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
@@ -145,7 +139,7 @@ public class Player {
 				case Actions.GET_NAME:
 					getName();
 					break;
-					
+
 				case Actions.ON_HOLD:
 					onHold();
 					break;
@@ -200,7 +194,6 @@ public class Player {
 					swap();
 					break;
 				}
-
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -235,8 +228,6 @@ public class Player {
 	 * @throws LANExcpetion
 	 */
 	private void getName() throws IOException, LANExcpetion {
-		// this.playerName = "Informe o seu nickname no jogo:";
-		// this.playerName = JOptionPane.showInputDialog(this.playerName);
 		conectGUI.activeButton2();
 		while (Thread.currentThread().isAlive() && !Player.readConnectGUI)
 			continue;
@@ -244,10 +235,10 @@ public class Player {
 		actions.setFrom(this.playerName);
 		flushObject();
 	}
-	
+
 	private void onHold() {
 		popup.PopUpHistoria();
-		new PopUpAjuda().popUpGeral();		
+		new PopUpAjuda().popUpGeral();
 	}
 
 	/**
@@ -283,14 +274,15 @@ public class Player {
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				PopUpPlayer quit = new PopUpPlayer();
-				if(quit.popUpQuit() == 1) {
-					if(player != null && player.isConnected()) closeConnection();
-			        jframe.dispose();
-			        System.exit(0);
+				if (quit.popUpQuit() == 1) {
+					if (player != null && player.isConnected())
+						closeConnection();
+					jframe.dispose();
+					System.exit(0);
 				}
-		    }
+			}
 		});
-		
+
 		jframe.pack();
 		jframe.setLocationRelativeTo(null);
 		jframe.setVisible(true);
@@ -331,8 +323,9 @@ public class Player {
 
 		coupgui.startCount();
 		new Thread(() -> {
-			while (coupgui.isConnected() && coupgui.isTimeRunning());
-			
+			while (coupgui.isConnected() && coupgui.isTimeRunning())
+				;
+
 			if (!coupgui.isConnected()) {
 				try {
 					left();
@@ -564,7 +557,7 @@ public class Player {
 				player.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
