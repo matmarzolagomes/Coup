@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,6 +28,7 @@ import ssc0103.coup.lan.Actions;
 @SuppressWarnings("serial")
 public class CoupGUI extends JPanel {
     private DeadGUI deadg;
+    private ImageIcon logo;
     private final CoinGUI coing;
     private final HandGUI handg;
     private final LogGUI logg;
@@ -47,11 +46,7 @@ public class CoupGUI extends JPanel {
         
         GridBagConstraints cons = new GridBagConstraints();
         
-        ImageIcon logo = new ImageIcon("images/coup_logo.png");
-        ImageIcon bozo = new ImageIcon("images/bozo.jpg");
-        logo.setImage(logo.getImage().getScaledInstance(300, 70, 100));
-        bozo.setImage(bozo.getImage().getScaledInstance(300, 70, 100));
-        
+        logo = new ImageIcon("images/coup_logo.png");        
         
         try {
 			backgroundImage = ImageIO.read(new File("images/background.jpg")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
@@ -142,33 +137,8 @@ public class CoupGUI extends JPanel {
         
         cons.ipady = 0;
         
-        JLabel logol = new JLabel(logo);
+        pright.add(new JLabel(logo), cons);
         
-        logol.addMouseListener(new MouseListener(){
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				logol.setIcon(bozo);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				logol.setIcon(logo);
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
-        });
-        
-        pright.add(logol, cons);
     }
     /**
      * Insere background do jogo
