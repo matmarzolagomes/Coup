@@ -277,13 +277,8 @@ public class Board extends Coup {
 					System.out.println("Jogador " + actions.getFrom() + " se juntou a mesa.");
 
 					/* Envia mensagem de aguardando demais jogadores. */
-					//
-					 actions.setId(Actions.SERVER_MESSAGE);
-					 actions.setMessage(msg);
-					 flushObject(actions, actions.getFrom());
-					 //
-					//actions.setId(Actions.ON_HOLD);
-					//flushObject(actions, actions.getFrom());
+					actions.setId(Actions.ON_HOLD);
+					flushObject(actions, actions.getFrom());
 					return;
 				}
 

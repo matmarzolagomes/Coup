@@ -33,7 +33,7 @@ public class CoinGUI extends JPanel{
 	 */
 	public CoinGUI(Player player) {
 		super();
-		counter = 121;
+		counter = 10;
 		
 		setLayout(new GridLayout(1, 2));
 		
@@ -73,7 +73,7 @@ public class CoinGUI extends JPanel{
 	 */
 	public void stop() {
 		start = false;
-		counter = 121;
+		counter = 10;
 	}
 	/**
 	 * Função que trata a thread do tempo
