@@ -1,7 +1,6 @@
 package ssc0103.coup.gui;
 
 import java.awt.Font;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -26,10 +25,9 @@ public class LogGUI extends JPanel{
      */
     public LogGUI() {
         super();
-        setLayout(new GridLayout(1, 1));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
         
-        area = new JTextArea(6, 0);
+        area = new JTextArea(6, 50);
         area.setEditable(false);
         area.setAutoscrolls(true);
         area.setFont(new Font("Serif", Font.PLAIN, 16));
