@@ -447,7 +447,10 @@ public class Player {
 	 * Método que exibe notificação de golpe de estado ao jogador.
 	 */
 	private void coup() {
+		coupgui.startCount();
+		timeThread();
 		popup.popUpGolpe(actions.getFrom());
+		coupgui.stopCount();
 	}
 
 	/**
@@ -623,6 +626,8 @@ public class Player {
 	 */
 	public String[] popUp(Deck hand, int numCards) {
 		String[] ret = null;
+		coupgui.startCount();
+		timeThread();
 
 		try {
 			boolean cont = true;
@@ -636,6 +641,7 @@ public class Player {
 			System.out.println(ex.getMessage());
 			System.exit(-1);
 		}
+		coupgui.stopCount();
 
 		return ret;
 	}
