@@ -388,6 +388,8 @@ public class Player {
 	// ############# AÇÕES DE RESPOSTA DO JOGADOR ############# //
 
 	private void foreign() throws IOException, LANExcpetion {
+		coupgui.startCount();
+		timeThread();
 		/* Verifica se jogador bloqueou ação. */
 		if (actions.isBlock()) {
 			/* Verifica se jogador deseja contestar. */
@@ -401,7 +403,8 @@ public class Player {
 				actions.setBlock(true);
 			}
 		}
-
+		
+		coupgui.stopCount();
 		/* Envia resposta ao servidor. */
 		flushObject();
 	}
@@ -411,11 +414,15 @@ public class Player {
 	}
 
 	private void taxes() throws IOException, LANExcpetion {
+		coupgui.startCount();
+		timeThread();
+		
 		if (popup.popUpTaxas(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
 
+		coupgui.stopCount();
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}
@@ -430,6 +437,9 @@ public class Player {
 	 * @throws LANExcpetion
 	 */
 	private void assassinate() throws IOException, LANExcpetion {
+		coupgui.startCount();
+		timeThread();
+		
 		if (actions.isBlock()) {
 			if (popup.popUpCondessa(actions.getTo()) == 1)
 				actions.setContest(true);
@@ -448,12 +458,16 @@ public class Player {
 				break;
 			}
 		}
+		
+		coupgui.stopCount();
 
 		/* Envia objeto ao servidor. */
 		flushObject();
 	}
 
 	private void steal() throws IOException, LANExcpetion {
+		coupgui.startCount();
+		timeThread();
 		if (actions.isBlock()) {
 			if (popup.popUpBloqueioExtorcao(actions.getTo(), actions.getCards()[0]) == 1)
 				actions.setContest(true);
@@ -477,16 +491,21 @@ public class Player {
 				break;
 			}
 		}
+		
+		coupgui.stopCount();
 
 		flushObject();
 	}
 
 	private void swap() throws IOException, LANExcpetion {
+		coupgui.startCount();
+		timeThread();
 		if (popup.popUpTroca(actions.getFrom()) == 1) {
 			actions.setTo(playerName);
 			actions.setContest(true);
 		}
 
+		coupgui.stopCount();
 		/* Envia objeto de resposta ao servidor. */
 		flushObject();
 	}

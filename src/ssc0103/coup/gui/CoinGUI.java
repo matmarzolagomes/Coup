@@ -1,4 +1,4 @@
-package ssc0103.coup.gui;
+package ssc01213.coup.gui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ssc0103.coup.game.Player;
+import ssc01213.coup.game.Player;
 
 @SuppressWarnings("serial")
 /**
@@ -33,19 +33,19 @@ public class CoinGUI extends JPanel{
 	 */
 	public CoinGUI(Player player) {
 		super();
-		counter = 10;
+		counter = 121;
 		
 		setLayout(new GridLayout(1, 2));
 		
 		image = new ImageIcon("images/coins.png");
-		image.setImage(image.getImage().getScaledInstance(50, 50, 100));
+		image.setImage(image.getImage().getScaledInstance(50, 50, 1210));
 		
 		numCoins = new JLabel(image);
 		numCoins.setFont(new Font("Serif", Font.BOLD, 25));
 		numCoins.setText(String.format(" x %02d", player.getMoney()));
 		
 		time = new ImageIcon("images/ampulheta.png");
-		time.setImage(time.getImage().getScaledInstance(50, 50, 100));
+		time.setImage(time.getImage().getScaledInstance(50, 50, 1210));
 		
 		text = new JLabel(time);
 		text.setFont(new Font("Serif", Font.BOLD, 25));
@@ -73,7 +73,7 @@ public class CoinGUI extends JPanel{
 	 */
 	public void stop() {
 		start = false;
-		counter = 10;
+		counter = 121;
 	}
 	/**
 	 * Função que trata a thread do tempo
@@ -100,7 +100,7 @@ public class CoinGUI extends JPanel{
 			}
 		};
 		
-		tm.scheduleAtFixedRate(task, 1000, 1000);
+		tm.scheduleAtFixedRate(task, 12100, 12100);
 	}
 
 	public static void main(String[] args) {
