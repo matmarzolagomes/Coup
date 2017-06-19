@@ -529,7 +529,7 @@ public class Board extends Coup {
 		getFastAction(Actions.class.getDeclaredMethod("isContest", (Class<?>[]) null));
 
 		if (actions.isContest())
-			updateAllPlayers("O jogador " + actions.getTo() + "contesta.");
+			updateAllPlayers("O jogador " + actions.getTo() + " contesta.");
 
 		/* Executa a ação e notifica a todos. */
 		updateAllPlayers("Ação bem sucedida do jogador " + playCoup(Actions.SWAP) + ".");
