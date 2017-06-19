@@ -87,7 +87,7 @@ public class PlayerGUI extends JPanel {
 					model.setValueAt(0, j, 1);
 					model.setValueAt(0, j, 2);
 					table.addRowSelectionInterval(j, j);
-				} else if (player.getName().equals(data[j][0])){
+				} else if (player.getName().equals(model.getValueAt(j, 0))){
 					if ((int) model.getValueAt(j, 1) != player.getMoney())
 						model.setValueAt(player.getMoney(), j, 1);
 					if ((int) model.getValueAt(j, 2) != player.getHand().size()) 
@@ -95,8 +95,6 @@ public class PlayerGUI extends JPanel {
 				}
 			}
 		}
-		
-//		table.updateUI();
 	}
 
 	public static void main(String[] args) {
