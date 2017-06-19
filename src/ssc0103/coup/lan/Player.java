@@ -246,8 +246,8 @@ public class Player {
 	}
 	
 	private void onHold() {
-		popup.PopUpHistoria();
-		new PopUpAjuda().popUpGeral();		
+		//popup.PopUpHistoria();
+		//new PopUpAjuda().popUpGeral();		
 	}
 
 	/**

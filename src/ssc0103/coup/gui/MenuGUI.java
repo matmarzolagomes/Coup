@@ -9,24 +9,35 @@ import javax.swing.JMenuItem;
 
 @SuppressWarnings("serial")
 public class MenuGUI extends JMenuBar{
-	JMenu help;
-	JMenuItem item;
+	JMenu ajuda;
+	JMenuItem help;
+	JMenuItem story;
 	PopUpAjuda pophelp;
+	PopUpPlayer popstory;
 	
 	public MenuGUI() {
 		super();
-		help = new JMenu("Ajuda");
-		item = new JMenuItem("Regras");
+		ajuda = new JMenu("Ajuda");
+		help = new JMenuItem("Regras");
+		story = new JMenuItem("História do Jogo");		
 		
-		item.addActionListener(new ActionListener(){
+		help.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				pophelp = new PopUpAjuda();
 				pophelp.popUpGeral();
 			}
 		});
 		
-		help.add(item);
-		add(help);
+		story.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				popstory = new PopUpPlayer();
+				popstory.PopUpHistoria();
+			}
+		});
+		
+		ajuda.add(help);
+		ajuda.add(story);
+		add(ajuda);
 	}
 	
 	public static void main(String[] args) {
