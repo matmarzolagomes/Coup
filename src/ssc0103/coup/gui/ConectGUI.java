@@ -47,7 +47,7 @@ public class ConectGUI extends JPanel {
 		super(new GridBagLayout());
 		
 		try {
-			backgroundImage = ImageIO.read(new File("images/background.png")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
+			backgroundImage = ImageIO.read(new File("images/background.png")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 50, 100);
 		} catch (HeadlessException | IOException e) {
 			System.out.println("Failed to load background.");
 			System.exit(-1);
@@ -83,6 +83,7 @@ public class ConectGUI extends JPanel {
 		cons.weightx = 0.1;
 
 		JPanel center = new JPanel(new GridLayout(4, 1));
+		center.setOpaque(false);
 		center.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		add(center, cons);
 
@@ -108,8 +109,9 @@ public class ConectGUI extends JPanel {
 		port = new JTextFieldWithLimit("Host Port: ", 5);
 		name = new JTextFieldWithLimit("Nickname: ", 16);
 		
-
-		JPanel btp = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel btp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		btp.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+		
 		bt = new JButton("Connect");
 		
 		Random random = new Random(System.currentTimeMillis());

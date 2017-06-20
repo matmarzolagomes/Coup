@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.WindowConstants;
 
 import ssc0103.coup.exception.GUIException;
@@ -67,11 +69,24 @@ public class Player {
 	 * Construtor do Player, responsável por conectar o jogador com o servidor.
 	 */
 	public Player() {
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		}
+		
 		/* Tela de login. */
 		jframe = new JFrame("Coup Login");
 		conectGUI = new ConectGUI();
 		conectGUI.frameAdd(jframe);
 
+		menu = new MenuGUI();
+		jframe.setJMenuBar(menu);
+		
 		jframe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				PopUpPlayer quit = new PopUpPlayer();
@@ -278,7 +293,6 @@ public class Player {
 		jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		coupgui = new CoupGUI(playerName, actions.getPlayers());
-		menu = new MenuGUI();
 
 		jframe.setJMenuBar(menu);
 
