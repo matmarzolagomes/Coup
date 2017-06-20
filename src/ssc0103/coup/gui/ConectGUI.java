@@ -2,13 +2,20 @@ package ssc0103.coup.gui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,13 +38,21 @@ public class ConectGUI extends JPanel {
 	private JTextFieldWithLimit ip;
 	private JTextFieldWithLimit port;
 	private JTextFieldWithLimit name;
+	private Image backgroundImage = null;
 
 	/**
 	 * Construtor da classe.
 	 */
 	public ConectGUI() {
 		super(new GridBagLayout());
-								
+		
+		try {
+			backgroundImage = ImageIO.read(new File("images/background.png")).getScaledInstance((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 100);
+		} catch (HeadlessException | IOException e) {
+			System.out.println("Failed to load background.");
+			System.exit(-1);
+		}
+		
 		GridBagConstraints cons = new GridBagConstraints();
 
 		cons.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -49,14 +64,20 @@ public class ConectGUI extends JPanel {
 		cons.weightx = 1;
 		cons.weighty = 0.45;
 
-		add(new JPanel(), cons);
+		JPanel aux = new JPanel();
+		aux.setOpaque(false);
+		
+		add(aux, cons);
 
 		cons.gridy = 1;
 		cons.gridwidth = 1;
 		cons.weightx = 0.45;
 		cons.weighty = 0.1;
 
-		add(new JPanel(), cons);
+		aux = new JPanel();
+		aux.setOpaque(false);
+		
+		add(aux, cons);
 
 		cons.gridx = 1;
 		cons.weightx = 0.1;
@@ -68,14 +89,20 @@ public class ConectGUI extends JPanel {
 		cons.gridx = 2;
 		cons.weightx = 0.45;
 
-		add(new JPanel(), cons);
+		aux = new JPanel();
+		aux.setOpaque(false);
+		
+		add(aux, cons);
 
 		cons.gridx = 0;
 		cons.gridwidth = 3;
 		cons.gridy = 2;
 		cons.weighty = 0.45;
 
-		add(new JPanel(), cons);
+		aux = new JPanel();
+		aux.setOpaque(false);
+		
+		add(aux, cons);
 
 		ip = new JTextFieldWithLimit("IP Address: ", 16);
 		port = new JTextFieldWithLimit("Host Port: ", 5);
@@ -126,11 +153,19 @@ public class ConectGUI extends JPanel {
 	}
 	
 	/**
+     * Insere background do jogo
+     */
+    public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(backgroundImage, 0, 0, this);
+	}
+	
+	/**
 	 * Adiciona o JPanel a um JFrame.
 	 * @param frame JFrame a ser adicionado.
 	 */
 	public void frameAdd(JFrame frame) {	
-		frame.setExtendedState(JFrame.NORMAL);	
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);	
 		frame.add(this);
 		frame.pack();		
 		frame.setLocationRelativeTo(null);
