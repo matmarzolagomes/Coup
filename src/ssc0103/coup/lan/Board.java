@@ -112,7 +112,7 @@ public class Board extends Coup {
 
 			this.numPlayers = Integer.parseInt(msg);
 
-			if (this.numPlayers < 1 || this.numPlayers > CONNECTIONS_LIMIT)
+			if (this.numPlayers < 2 || this.numPlayers > CONNECTIONS_LIMIT)
 				throw new IllegalArgumentException();
 
 		} catch (IllegalArgumentException e) {
