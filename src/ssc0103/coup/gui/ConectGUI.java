@@ -77,7 +77,7 @@ public class ConectGUI extends JPanel {
 
 		add(new JPanel(), cons);
 
-		ip = new JTextFieldWithLimit("IP Address: ", 256);
+		ip = new JTextFieldWithLimit("IP Address: ", 16);
 		port = new JTextFieldWithLimit("Host Port: ", 5);
 		name = new JTextFieldWithLimit("Nickname: ", 16);
 		
@@ -130,7 +130,7 @@ public class ConectGUI extends JPanel {
 	 * @param frame JFrame a ser adicionado.
 	 */
 	public void frameAdd(JFrame frame) {	
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);	
+		frame.setExtendedState(JFrame.NORMAL);	
 		frame.add(this);
 		frame.pack();		
 		frame.setLocationRelativeTo(null);
